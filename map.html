@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <script src="leaflet.geometryutil.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_canal_towpath_walking {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    
+                    <style>
+                        .foliumtooltip {
+                            
+			background-color: #F0EFEF;
+			border: 2px solid black;
+			border-radius: 3px;
+			box-shadow: 3px;
+			font-size: 12pt;
+		
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_canal_towpath_walking" ></div>
+        
+</body>
+<script>
+    
+    
+            const canvasRenderer = L.canvas({
+                tolerance: 2
+            });
+
+            var map_canal_towpath_walking = L.map(
+                "map_canal_towpath_walking",
+                {
+                    center: [55.0, -2.0],
+                    crs: L.CRS.EPSG3857,
+					renderer: canvasRenderer,
+                    ...{
+  "zoom": 6,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_canal_towpath_walking);
+
+            
+
+        
+    
+            var tile_layer_5836a393699949c6a00944e7c2eeaee9 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_5836a393699949c6a00944e7c2eeaee9.addTo(map_canal_towpath_walking);
+        
+    
+
+        function geo_json_watercourses_onEachFeature(feature, layer) {
+
+            layer.on({
+            });
+        };
+        var geo_json_watercourses = L.geoJson(null, {
+                onEachFeature: geo_json_watercourses_onEachFeature,
+            
+            ...{
+}
+        });
+
+        function geo_json_watercourses_add (data) {
+            geo_json_watercourses
+                .addData(data);
+        }
+            $.ajax("watercourses.geojson", {dataType: 'json', async: false})
+                .done(geo_json_watercourses_add);
+        geo_json_watercourses.setStyle(function(feature) {return feature.properties.style;});
+
+        
+    
+    geo_json_watercourses.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["id", "tags"];
+    let aliases = ["ID", ""];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i].toLocaleString()}</th>
+            
+            <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "maxWidth": 800,
+  "sticky": true,
+  "className": "foliumtooltip",
+});
+                     
+    
+            geo_json_watercourses.addTo(map_canal_towpath_walking);
+        
+    
+                var lat_lng_popup_17536b6db68534ad360126c71ba4462f = L.popup();
+                function latLngPop(e) {
+                    lat_lng_popup_17536b6db68534ad360126c71ba4462f
+                        .setLatLng(e.latlng)
+                        .setContent("Latitude: " + e.latlng.lat.toFixed(4) +
+                                    "<br>Longitude: " + e.latlng.lng.toFixed(4))
+                        .openOn(map_canal_towpath_walking);
+                    }
+                map_canal_towpath_walking.on('click', latLngPop);
+            
+    
+				// var custom_code_3c8583d8020b476ab1c4ffa101537465 = L.popup();
+				function latLngPop(e) {
+					// custom_code_3c8583d8020b476ab1c4ffa101537465
+					//     .setLatLng(e.latlng)
+					//     .setContent("Latitude: " + e.latlng.lat.toFixed(4) +
+					//                 "<br>Longitude: " + e.latlng.lng.toFixed(4))
+					//     .openOn(map_canal_towpath_walking);
+					
+					console.log("Latitude: " + e.latlng.lat.toFixed(4));
+					console.log("Longitude: " + e.latlng.lng.toFixed(4));
+				
+				
+					const coordinates_array = geo_json_watercourses.getLayers().map(l => l.feature.geometry.coordinates)
+						 console.log(coordinates_array);
+					let closest_latlng = L.GeometryUtil.closest(map_canal_towpath_walking, coordinates_array, [e.latlng.lng, e.latlng.lat])
+					console.log("Closest Latitude: " + closest_latlng.lat.toFixed(4));
+					console.log("Closest Longitude: " + closest_latlng.lng.toFixed(4));
+					markerClosestPolyline1 = L.marker(closest_latlng).addTo(map_canal_towpath_walking).bindPopup('Closest point on polyline1');
+						 
+					// const eventLayerPoint = map_canal_towpath_walking.latLngToLayerPoint(map_canal_towpath_walking.containerPointToLatLng(event.containerPoint));
+					// var nearestPoint = map_canal_towpath_walking.layerPointToLatLng(
+					// this.trackLine.polyLine.closestLayerPoint(eventLayerPoint));
+					// this.trackTracing.dot.setLatLng(this.trackTracing.nearestPoint);
+					// this.trackTracing.trace.setLatLngs([event.latlng, this.trackTracing.nearestPoint]);
+						 
+					L.marker(
+						//e.latlng,
+						[closest_latlng.lng, closest_latlng.lat],
+						{}
+					).addTo(map_canal_towpath_walking);
+				}
+
+				map_canal_towpath_walking.on('click', latLngPop);
+			
+</script>
+</html>
