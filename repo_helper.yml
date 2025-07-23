@@ -1,0 +1,17 @@
+# Configuration for 'repo_helper' (https://github.com/repo-helper/repo_helper)
+---
+modname: 'towpath-walk-tracker'
+copyright_years: '2025'
+author: 'Dominic Davis-Foster'
+email: 'dominic@davis-foster.co.uk'
+username: 'domdfcoding'
+version: '0.0.0'
+license: 'MIT'
+short_desc: 'Track walks along canal towpaths.'
+
+enable_conda: false
+enable_tests: false
+enable_docs: false
+
+on_pypi: false
+use_whey: true
