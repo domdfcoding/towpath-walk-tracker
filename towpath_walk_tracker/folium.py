@@ -26,6 +26,9 @@ Extensions/changes to folium.
 #  OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+# stdlib
+from typing import Optional
+
 # 3rd party
 import folium
 from domdf_python_tools.compat import importlib_resources
@@ -59,11 +62,28 @@ class ZoomStateJS(folium.MacroElement):
 	Update URL with current zoom/position.
 	"""
 
-	_template = _load_template("zoom_state_js.jinja2")
+	_template = Template(
+			"""
+		{% macro script(this, kwargs) %}
+			setupZoomState({{this._parent.get_name()}})
+		{% endmacro %}
+		"""
+			)
 
 	def __init__(self):
 		super().__init__()
 		self._name = "ZoomStateJS"
+
+	def add_to(
+			self,
+			parent: folium.Element,
+			name: Optional[str] = None,
+			index: Optional[int] = None,
+			) -> "ZoomStateJS":
+		super().add_to(parent, name, index)
+		assert isinstance(parent, folium.Map)
+		parent.add_js_link("zoom-state", "/static/zoom_state.js")
+		return self
 
 
 class Sidebar(folium.MacroElement):

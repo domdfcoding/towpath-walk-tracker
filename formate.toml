@@ -27,7 +27,17 @@ lines_between_types = 0
 use_parentheses = true
 remove_redundant_aliases = true
 default_section = "THIRDPARTY"
-known_third_party = [ "domdf_python_tools", "flask", "folium", "geopandas", "osm2geojson", "requests",]
+known_third_party = [
+    "domdf_python_tools",
+    "flask",
+    "flask_caching",
+    "flask_compress",
+    "folium",
+    "networkx",
+    "osm2geojson",
+    "requests",
+    "scipy",
+]
 known_first_party = [ "towpath_walk_tracker",]
 
 [config]
