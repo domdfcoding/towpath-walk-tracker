@@ -39,7 +39,14 @@ def create_map(
 	g._id = "watercourses"
 
 	folium.LatLngPopup().add_to(m)
-	WalkStartEnd().add_to(m)
+
+	feature_group_walk_markers = folium.FeatureGroup("Walk Markers").add_to(m)
+	feature_group_walk_markers._id = "walk_markers"
+	WalkStartEnd().add_to(feature_group_walk_markers)
+
+	feature_group_walks = folium.FeatureGroup("Walks").add_to(m)
+	feature_group_walks._id = "walks"
+
 	ZoomStateJS().add_to(m)
 	folium.LayerControl().add_to(m)
 	Sidebar().add_to(m)

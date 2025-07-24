@@ -52,12 +52,13 @@ def watercourses_geojson():
 
 
 @app.route("/map")
+@cache.cached()
 def leaflet_map():
-	zoom_level = int(request.args.get("zoom", 6))
-	lat = float(request.args.get("lat", 55))
-	lng = float(request.args.get("lng", -2))
-	print(zoom_level, lat, lng)
-	m = create_map("http://localhost:5000/watercourses.geojson", (lat, lng), zoom_level)
+	# zoom_level = int(request.args.get("zoom", 6))
+	# lat = float(request.args.get("lat", 55))
+	# lng = float(request.args.get("lng", -2))
+	# print(zoom_level, lat, lng)
+	m = create_map("http://localhost:5000/watercourses.geojson")  #, (lat, lng), zoom_level)
 	return m.get_root().render()
 
 

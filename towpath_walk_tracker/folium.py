@@ -65,7 +65,8 @@ class ZoomStateJS(folium.MacroElement):
 	_template = Template(
 			"""
 		{% macro script(this, kwargs) %}
-			setupZoomState({{this._parent.get_name()}})
+			zoomStateFromURL({{this._parent.get_name()}});
+			setupZoomState({{this._parent.get_name()}});
 		{% endmacro %}
 		"""
 			)

@@ -39,7 +39,8 @@
             .then(res => res.json())
             .then(coords => {
                 poly_line_walk =  L.polyline(coords, {"bubblingMouseEvents": true, "color": "#ff0000", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ff0000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
-                    ).addTo({{this._parent.get_name()}});
+                    // ).addTo({{this._parent.get_name()}});
+                    ).addTo(feature_group_walks);
                 console.log("Request complete! response:", coords);
                 placedMarkerLatLng = [];
                 placedMarkerCount = 0;
