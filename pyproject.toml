@@ -29,6 +29,10 @@ python-implementations = [ "CPython",]
 platforms = [ "Windows", "macOS", "Linux",]
 license-key = "MIT"
 package = "towpath_walk_tracker"
+additional-files = [
+    "recursive-include towpath_walk_tracker/static *",
+    "recursive-include towpath_walk_tracker/templates *.jinja2",
+]
 
 [tool.importcheck]
 

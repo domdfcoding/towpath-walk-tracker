@@ -7,17 +7,25 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
-    <script src="leaflet.geometryutil.js"></script>
+    <script src="/static/leaflet.geometryutil.js"></script>
+    <script src="/static/leaflet-sidebar.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/leaflet-sidebar.min.css"/>
     
+			<title>Towpath Walk Tracker</title>
+
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+			<meta charset="utf-8">
+
             <style>
+
                 #map_canal_towpath_walking {
                     position: relative;
                     width: 100.0%;
@@ -28,13 +36,14 @@
                 .leaflet-container { font-size: 1rem; }
             </style>
 
-            <style>html, body {
-                width: 100%;
-                height: 100%;
+			<style>html, body {
+                // width: 100%;
+                // height: 100%;
                 margin: 0;
                 padding: 0;
             }
             </style>
+
 
             <style>#map {
                 position:absolute;
@@ -44,6 +53,7 @@
                 left:0;
                 }
             </style>
+
 
             <script>
                 L_NO_TOUCH = false;
@@ -55,12 +65,12 @@
                     <style>
                         .foliumtooltip {
                             
-			background-color: #F0EFEF;
-			border: 2px solid black;
-			border-radius: 3px;
-			box-shadow: 3px;
-			font-size: 12pt;
-		
+background-color: #F0EFEF;
+border: 2px solid black;
+border-radius: 3px;
+box-shadow: 3px;
+font-size: 12pt;
+
                         }
                        .foliumtooltip table{
                             margin: auto;
@@ -73,11 +83,83 @@
                         }
                     </style>
             
+    
+				<style>
+					.sidebar.collapsed {
+						width: 42px !important;
+						}
+					body {
+						padding: 0;
+						margin: 0;
+					}
+
+					html, body, #map {
+						height: 100%;
+						font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+					}
+
+					.lorem {
+						font-style: italic;
+						color: #AAA;
+					}
+            	</style>
+			
 </head>
 <body>
     
     
-            <div class="folium-map" id="map_canal_towpath_walking" ></div>
+
+	<div id="sidebar" class="sidebar collapsed">
+        <!-- Nav tabs -->
+        <div class="sidebar-tabs">
+            <ul role="tablist">
+                <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
+                <li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li>
+                <li><a href="https://github.com/Turbo87/sidebar-v2" role="tab" target="_blank"><i class="fa fa-github"></i></a></li>
+            </ul>
+
+            <ul role="tablist">
+                <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="sidebar-content">
+            <div class="sidebar-pane" id="home">
+                <h1 class="sidebar-header">
+                    sidebar-v2
+                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+
+                <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
+
+                <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+
+                <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+
+                <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+
+                <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+            </div>
+
+            <div class="sidebar-pane" id="profile">
+                <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            </div>
+
+            <div class="sidebar-pane" id="messages">
+                <h1 class="sidebar-header">Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            </div>
+
+            <div class="sidebar-pane" id="settings">
+                <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            </div>
+        </div>
+    </div>
+
+			
+    
+            <div class="folium-map sidebar-map" id="map_canal_towpath_walking" ></div>
         
 </body>
 <script>
@@ -107,7 +189,7 @@
 
         
     
-            var tile_layer_5836a393699949c6a00944e7c2eeaee9 = L.tileLayer(
+            var tile_layer_60b6b1921b270c51f87940c0308d9e58 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -124,7 +206,7 @@
             );
         
     
-            tile_layer_5836a393699949c6a00944e7c2eeaee9.addTo(map_canal_towpath_walking);
+            tile_layer_60b6b1921b270c51f87940c0308d9e58.addTo(map_canal_towpath_walking);
         
     
 
@@ -189,9 +271,9 @@
             geo_json_watercourses.addTo(map_canal_towpath_walking);
         
     
-                var lat_lng_popup_17536b6db68534ad360126c71ba4462f = L.popup();
+                var lat_lng_popup_6025420451514777e6d83c5e71554a6f = L.popup();
                 function latLngPop(e) {
-                    lat_lng_popup_17536b6db68534ad360126c71ba4462f
+                    lat_lng_popup_6025420451514777e6d83c5e71554a6f
                         .setLatLng(e.latlng)
                         .setContent("Latitude: " + e.latlng.lat.toFixed(4) +
                                     "<br>Longitude: " + e.latlng.lng.toFixed(4))
@@ -200,39 +282,97 @@
                 map_canal_towpath_walking.on('click', latLngPop);
             
     
-				// var custom_code_3c8583d8020b476ab1c4ffa101537465 = L.popup();
+				// var walk_start_end_05376e7c71249ad728b37fa1f59e31a7 = L.popup();
+				var placedMarkerCount = 0;
+				var placedMarkerLatLng = [];
+				var poly_line_walk = null;
 				function latLngPop(e) {
-					// custom_code_3c8583d8020b476ab1c4ffa101537465
+					// walk_start_end_05376e7c71249ad728b37fa1f59e31a7
 					//     .setLatLng(e.latlng)
 					//     .setContent("Latitude: " + e.latlng.lat.toFixed(4) +
 					//                 "<br>Longitude: " + e.latlng.lng.toFixed(4))
 					//     .openOn(map_canal_towpath_walking);
-					
+
 					console.log("Latitude: " + e.latlng.lat.toFixed(4));
 					console.log("Longitude: " + e.latlng.lng.toFixed(4));
-				
-				
+
+
 					const coordinates_array = geo_json_watercourses.getLayers().map(l => l.feature.geometry.coordinates)
-						 console.log(coordinates_array);
+					// console.log(coordinates_array);
 					let closest_latlng = L.GeometryUtil.closest(map_canal_towpath_walking, coordinates_array, [e.latlng.lng, e.latlng.lat])
 					console.log("Closest Latitude: " + closest_latlng.lat.toFixed(4));
 					console.log("Closest Longitude: " + closest_latlng.lng.toFixed(4));
 					markerClosestPolyline1 = L.marker(closest_latlng).addTo(map_canal_towpath_walking).bindPopup('Closest point on polyline1');
-						 
-					// const eventLayerPoint = map_canal_towpath_walking.latLngToLayerPoint(map_canal_towpath_walking.containerPointToLatLng(event.containerPoint));
-					// var nearestPoint = map_canal_towpath_walking.layerPointToLatLng(
-					// this.trackLine.polyLine.closestLayerPoint(eventLayerPoint));
-					// this.trackTracing.dot.setLatLng(this.trackTracing.nearestPoint);
-					// this.trackTracing.trace.setLatLngs([event.latlng, this.trackTracing.nearestPoint]);
-						 
+
 					L.marker(
-						//e.latlng,
 						[closest_latlng.lng, closest_latlng.lat],
 						{}
 					).addTo(map_canal_towpath_walking);
+
+					placedMarkerLatLng.push([closest_latlng.lng, closest_latlng.lat])
+					placedMarkerCount += 1;
+
+					if (placedMarkerCount == 2) {
+						fetch("/add", {
+							method: "POST",
+							headers: {'Content-Type': 'application/json'},
+							body: JSON.stringify(placedMarkerLatLng)
+						})
+						.then(res => res.json())
+						.then(coords => {
+							poly_line_walk =  L.polyline(coords, {"bubblingMouseEvents": true, "color": "#ff0000", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ff0000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            					).addTo(map_canal_towpath_walking);
+							console.log("Request complete! response:", coords);
+							placedMarkerLatLng = [];
+							placedMarkerCount = 0;
+						});
+					}
+
 				}
 
 				map_canal_towpath_walking.on('click', latLngPop);
 			
+    
+				function updateQueryStringParam(key, value) {
+					let url = new URL(window.location.href);
+					url.searchParams.set(key, value); // Add or update the parameter
+					// window.history.pushState({}, null, url);
+					window.history.replaceState({}, '', url);
+				}
+
+				map_canal_towpath_walking.on('zoomend', function() {
+					var zoomLvl = map_canal_towpath_walking.getZoom();
+					updateQueryStringParam('zoom', zoomLvl)
+				});
+
+				map_canal_towpath_walking.on('moveend', function() {
+					var centre = map_canal_towpath_walking.getCenter();
+					updateQueryStringParam('lat', centre.lat);
+					updateQueryStringParam('lng', centre.lng);
+				});
+			
+    
+            var layer_control_074b9debfa37fbe944b8e3f3fb96dfb5_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_60b6b1921b270c51f87940c0308d9e58,
+                },
+                overlays :  {
+                    "Watercourses" : geo_json_watercourses,
+                },
+            };
+            let layer_control_074b9debfa37fbe944b8e3f3fb96dfb5 = L.control.layers(
+                layer_control_074b9debfa37fbe944b8e3f3fb96dfb5_layers.base_layers,
+                layer_control_074b9debfa37fbe944b8e3f3fb96dfb5_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_canal_towpath_walking);
+
+        
+    
+				var sidebar = L.control.sidebar('sidebar').addTo(map_canal_towpath_walking);
+	        
 </script>
 </html>

@@ -18,8 +18,6 @@ The original search was:
 out geom;
 """
 
-import json
-import pprint
 # import overpass
 # api = overpass.API(timeout=240)
 
@@ -31,10 +29,11 @@ import pprint
 # );
 # 				   """)
 
-# print(response)
+# stdlib
+import json
 
-
-import requests, osm2geojson
+# this package
+from towpath_walk_tracker.watercourses import query_overpass
 
 query = """
 [out:json][timeout:200];
@@ -60,14 +59,7 @@ out geom;
 # out geom;
 # """
 
-resp = requests.post("https://overpass-api.de/api/interpreter", data=query, headers={"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"})
+data = query_overpass(query)
 
-resp.raise_for_status()
-# print(resp)
-# print(resp.text)
-# pprint.pprint(resp.json())
-
-data = osm2geojson.json2geojson(resp.json())
-
-with open("data.geojson", "w", encoding="UTF-8") as fp:
+with open("data.geojson", 'w', encoding="UTF-8") as fp:
 	json.dump(data, fp, indent=2)

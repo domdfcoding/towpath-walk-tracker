@@ -15,3 +15,7 @@ enable_docs: false
 
 on_pypi: false
 use_whey: true
+
+manifest_additional:
+ - recursive-include towpath_walk_tracker/static *
+ - recursive-include towpath_walk_tracker/templates *.jinja2
