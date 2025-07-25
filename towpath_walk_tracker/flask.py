@@ -6,8 +6,17 @@ from flask_compress import Compress
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
 from networkx import all_shortest_paths
-from wtforms import DateTimeLocalField, StringField, TextAreaField, TimeField
-from wtforms.validators import DataRequired
+from wtforms import (
+		DateTimeLocalField,
+		FieldList,
+		FloatField,
+		FormField,
+		IntegerField,
+		StringField,
+		TextAreaField,
+		TimeField
+		)
+from wtforms.validators import DataRequired, InputRequired, NumberRange
 
 # this package
 from towpath_walk_tracker.map import create_map
@@ -41,6 +50,7 @@ app.config["COMPRESS_MIMETYPES"] = [
 app.config["CACHE_TYPE"] = "SimpleCache"
 app.config["CACHE_DEFAULT_TIMEOUT"] = 300
 app.config["SECRET_KEY"] = "1234"
+app.jinja_env.globals["enumerate"] = enumerate
 
 Compress(app)
 cache = Cache(app)
@@ -110,11 +120,25 @@ def add_walk():
 	return coords
 
 
+class PointForm(FlaskForm):
+	latitude = FloatField(
+			"latitude", validators=[InputRequired(), NumberRange(min=-180, max=180, message="Invalid coordinate")]
+			)
+	longitude = FloatField(
+			"longitude",
+			validators=[InputRequired(), NumberRange(min=-180, max=180, message="Invalid coordinate")]
+			)
+	id = IntegerField("id", validators=[InputRequired()])
+	enabled = IntegerField(
+			"id", validators=[InputRequired(), NumberRange(min=0, max=1, message="Invalid Value")], default=0
+			)
+
+
 class WalkForm(FlaskForm):
+	points = FieldList(FormField(PointForm), min_entries=50, validators=[DataRequired()])
+	title = StringField("Title")  # , validators=[DataRequired()])
 	start = DateTimeLocalField("Start")  # , validators=[DataRequired()])
 	duration = TimeField("Duration")  # , validators=[DataRequired()])
-	start_point = StringField("Start Point")  # , validators=[DataRequired()])
-	end_point = StringField("End Point")  # , validators=[DataRequired()])
 	notes = TextAreaField("Notes")  # , validators=[DataRequired()])
 
 
