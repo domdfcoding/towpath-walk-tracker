@@ -42,17 +42,19 @@ def create_map(
 
 	feature_group_walk_markers = folium.FeatureGroup("Walk Markers").add_to(m)
 	feature_group_walk_markers._id = "walk_markers"
-	WalkStartEnd().add_to(feature_group_walk_markers)
 
 	feature_group_walks = folium.FeatureGroup("Walks").add_to(m)
 	feature_group_walks._id = "walks"
 
-	ZoomStateJS().add_to(m)
-	folium.LayerControl().add_to(m)
+	folium.LayerControl().add_to(m)._id = "layer_control"
 	Sidebar().add_to(m)
+	WalkStartEnd().add_to(m)
+	ZoomStateJS().add_to(m)
 
+	m.add_js_link("walk", "/static/walk.js")
 	m.add_js_link("leaflet.geometryutil", "/static/leaflet.geometryutil.js")
 	m.add_js_link("leaflet-sidebar.js", "/static/leaflet-sidebar.min.js")
+	m.add_js_link("htmx.min", "/static/htmx.min.js")
 	m.add_css_link(
 			"font-awesome.min",
 			"https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css",

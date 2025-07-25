@@ -1,9 +1,13 @@
 # 3rd party
 from domdf_python_tools.paths import PathPlus
-from flask import Flask, Response, json, request
+from flask import Flask, Response, json, redirect, render_template, request
 from flask_caching import Cache
 from flask_compress import Compress
+from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
 from networkx import all_shortest_paths
+from wtforms import DateTimeLocalField, StringField, TextAreaField, TimeField
+from wtforms.validators import DataRequired
 
 # this package
 from towpath_walk_tracker.map import create_map
@@ -36,9 +40,11 @@ app.config["COMPRESS_MIMETYPES"] = [
 		]
 app.config["CACHE_TYPE"] = "SimpleCache"
 app.config["CACHE_DEFAULT_TIMEOUT"] = 300
+app.config["SECRET_KEY"] = "1234"
 
 Compress(app)
 cache = Cache(app)
+csrf = CSRFProtect(app)
 
 
 @app.route("/watercourses.geojson")
@@ -63,6 +69,7 @@ def leaflet_map():
 
 
 @app.route("/add", methods=["POST"])
+@csrf.exempt
 def add_walk():
 	start, end = request.get_json()
 	print(f"Create walk from {tuple(start)} to {tuple(end)}")
@@ -101,3 +108,20 @@ def add_walk():
 		coords.append((G.nodes[node]["lat"], G.nodes[node]["lng"]))
 
 	return coords
+
+
+class WalkForm(FlaskForm):
+	start = DateTimeLocalField("Start")  # , validators=[DataRequired()])
+	duration = TimeField("Duration")  # , validators=[DataRequired()])
+	start_point = StringField("Start Point")  # , validators=[DataRequired()])
+	end_point = StringField("End Point")  # , validators=[DataRequired()])
+	notes = TextAreaField("Notes")  # , validators=[DataRequired()])
+
+
+@app.route("/walk", methods=["GET", "POST"])
+def walk():
+	form = WalkForm()
+	if form.validate_on_submit():
+		print(form.data)
+		return redirect("/success")
+	return render_template("walk_form.jinja2", form=form)

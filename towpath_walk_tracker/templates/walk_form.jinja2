@@ -1,0 +1,9 @@
+<form method="POST" action="{{ url_for('walk') }}">
+    {{ form.csrf_token }}
+    {{ form.start.label }} {{ form.start(size=20) }}
+    {{ form.duration.label }} {{ form.duration(size=20) }}
+    {{ form.start_point.label }} {{ form.start_point(size=20) }}
+    {{ form.end_point.label }} {{ form.end_point(size=20) }}
+    {{ form.notes.label }} {{ form.notes(size=20) }}
+    <input type="submit" value="Go">
+</form>

@@ -1,6 +1,7 @@
 
 {% macro script(this, kwargs) %}
     var sidebar = L.control.sidebar('sidebar').addTo({{ this._parent.get_name() }});
+    var sidebar_add_walk_pane = sidebar._container.querySelector('#add');
 {% endmacro %}
 
 {% macro header(this, kwargs) %}
@@ -41,7 +42,10 @@
                     <a href="#messages" role="tab"><i class="fa fa-envelope"></i></a>
                 </li>
                 <li>
-                    <a href="https://github.com/Turbo87/sidebar-v2"
+                    <a href="#add" role="tab"><i class="fa fa-solid fa-plus"></i></a>
+                </li>
+                <li>
+                    <a href="https://github.com/domdfcoding/towpath-walk-tracker"
                        role="tab"
                        target="_blank"><i class="fa fa-github"></i></a>
                 </li>
@@ -93,6 +97,13 @@
                 <h1 class="sidebar-header">
                     Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
+            </div>
+
+            <div class="sidebar-pane" id="add">
+                <h1 class="sidebar-header">
+                    Add a Walk<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+                <div hx-get="/walk" hx-trigger="load"></div>
             </div>
 
             <div class="sidebar-pane" id="settings">
