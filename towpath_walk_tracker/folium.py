@@ -44,7 +44,7 @@ def _load_template(name: str) -> Template:
 
 
 class Map(folium.Map):
-	_template = _load_template("map.jinja2")
+	_template = _load_template("folium_map.jinja2")
 
 
 class WalkStartEnd(folium.MacroElement):
