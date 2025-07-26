@@ -35,7 +35,7 @@
 
     var mapOptions = {{this.options|tojavascript}};
     var defaultZoom = mapOptions["zoom"] ?? 0;
-    var urlZoomState = zoomStateFromURL(defaultZoom, {{ this.location|tojson }});
+    var urlZoomState = zoomStateFromURL(defaultZoom, L.latLng({{ this.location|tojson }}));
     mapOptions["zoom"] = urlZoomState["zoomLvl"]
 
     var {{ this.get_name() }} = L.map(
