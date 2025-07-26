@@ -27,12 +27,14 @@ Extensions/changes to folium.
 #
 
 # stdlib
-from typing import Optional
+from typing import Any, Optional, Union
 
 # 3rd party
 import folium
 from domdf_python_tools.compat import importlib_resources
+from folium.map import Layer
 from folium.template import Template
+from folium.utilities import remove_empty
 
 __all__ = ["Map", "Sidebar", "WalkStartEnd", "ZoomStateJS"]
 
@@ -85,6 +87,67 @@ class ZoomStateJS(folium.MacroElement):
 		assert isinstance(parent, folium.Map)
 		parent.add_js_link("zoom-state", "/static/zoom_state.js")
 		return self
+
+
+class WatercoursesGeoJson(folium.GeoJson):
+
+	def __init__(
+			self,
+			data: Any,
+			popup_keep_highlighted: bool = False,
+			name: Optional[str] = None,
+			overlay: bool = True,
+			control: bool = True,
+			show: bool = True,
+			smooth_factor: Optional[float] = None,
+			tooltip: Union[str, folium.Tooltip, "folium.GeoJsonTooltip", None] = None,
+			popup: Optional["folium.GeoJsonPopup"] = None,
+			zoom_on_click: bool = False,
+			on_each_feature: Optional[folium.JsCode] = None,
+			marker: Union[folium.Circle, folium.CircleMarker, folium.Marker, None] = None,
+			**kwargs: Any,
+			):
+		Layer.__init__(self, name=name, overlay=overlay, control=control, show=show)
+		self._name = "GeoJson"
+		self.embed = False
+		self.embed_link: Optional[str] = data
+		self.json = None
+		self.parent_map = None
+		self.smooth_factor = smooth_factor
+		self.style = False
+		self.highlight = False
+		self.zoom_on_click = zoom_on_click
+		if marker and not isinstance(marker, (folium.Circle, folium.CircleMarker, folium.Marker)):
+			raise TypeError("Only Marker, Circle, and CircleMarker are supported as GeoJson marker types.")
+
+		if popup_keep_highlighted and popup is None:
+			raise ValueError("A popup is needed to use the popup_keep_highlighted feature")
+		self.popup_keep_highlighted = popup_keep_highlighted
+
+		self.marker = marker
+		self.on_each_feature = on_each_feature
+		self.options = remove_empty(**kwargs)
+
+		if isinstance(tooltip, (folium.GeoJsonTooltip, folium.Tooltip)):
+			self.add_child(tooltip)
+		elif tooltip is not None:
+			self.add_child(folium.Tooltip(tooltip))
+		if isinstance(popup, (folium.GeoJsonPopup, folium.Popup)):
+			self.add_child(popup)
+
+
+class GeoJsonTooltip(folium.GeoJsonTooltip):
+
+	def render(self, **kwargs):
+		if not isinstance(self._parent, (folium.GeoJson, folium.TopoJson)):
+			raise TypeError(f"You cannot add a {self._name} to anything other than a GeoJson or TopoJson object.")
+
+		self.get_root().header.add_child(
+				folium.Element(_load_template("geojson_tooltip_css.jinja2").render(this=self)),
+				name=self.get_name() + "tablestyle",
+				)
+
+		folium.MacroElement.render(self)
 
 
 class Sidebar(folium.MacroElement):

@@ -5,7 +5,14 @@ from typing import Tuple
 import folium
 
 # this package
-from towpath_walk_tracker.folium import Map, Sidebar, WalkStartEnd, ZoomStateJS
+from towpath_walk_tracker.folium import (
+		GeoJsonTooltip,
+		Map,
+		Sidebar,
+		WalkStartEnd,
+		WatercoursesGeoJson,
+		ZoomStateJS
+		)
 
 __all__ = ["create_map"]
 
@@ -25,7 +32,7 @@ def create_map(
 	m = Map(map_centre, zoom_start=zoom_level, control_scale=True)
 	m._id = "canal_towpath_walking"
 
-	tooltip = folium.GeoJsonTooltip(
+	tooltip = GeoJsonTooltip(
 			fields=["id", "tags"],
 			aliases=["ID", ''],
 			localize=True,
@@ -35,7 +42,7 @@ def create_map(
 			max_width=800,
 			)
 
-	g = folium.GeoJson(watercourses_geojson_file, embed=False, tooltip=tooltip, name="Watercourses").add_to(m)
+	g = WatercoursesGeoJson(watercourses_geojson_file, embed=False, tooltip=tooltip, name="Watercourses").add_to(m)
 	g._id = "watercourses"
 
 	folium.LatLngPopup().add_to(m)
