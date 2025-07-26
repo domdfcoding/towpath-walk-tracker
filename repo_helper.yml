@@ -19,3 +19,9 @@ use_whey: true
 manifest_additional:
  - recursive-include towpath_walk_tracker/static *
  - recursive-include towpath_walk_tracker/templates *.jinja2
+
+python_versions:
+ - "3.9"
+ - "3.10"
+ - "3.11"
+ - "3.12"

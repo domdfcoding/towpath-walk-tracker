@@ -24,7 +24,7 @@ Homepage = "https://github.com/domdfcoding/towpath-walk-tracker"
 
 [tool.whey]
 base-classifiers = []
-python-versions = [ "3.8",]
+python-versions = [ "3.9", "3.10", "3.11", "3.12",]
 python-implementations = [ "CPython",]
 platforms = [ "Windows", "macOS", "Linux",]
 license-key = "MIT"
@@ -37,7 +37,7 @@ additional-files = [
 [tool.importcheck]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 namespace_packages = true
 check_untyped_defs = true
 warn_unused_ignores = true
