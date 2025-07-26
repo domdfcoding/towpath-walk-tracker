@@ -10,13 +10,13 @@
         let closest_latlng = snapCoordToLine(e.latlng.lat, e.latlng.lng);
         addMarker(closest_latlng.lat, closest_latlng.lng);
 
-        if (placedMarkerCount == 2) createWalk();
+        refreshWalkPreview();
 
     }
 
-    sidebar.on('closing', function(e) {
+    {# sidebar.on('closing', function(e) {
         if (sidebar_add_walk_pane.classList.contains("active")) clearMarkers();
-    });
+    }); #}
 
     {{this._parent.get_name()}}.on('click', latLngPop);
 {% endmacro %}

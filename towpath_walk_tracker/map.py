@@ -26,8 +26,17 @@ font-size: 12pt;
 
 
 def create_map(
-		watercourses_geojson_file: str, map_centre: Tuple[float, float] = (55, -2), zoom_level: int = 6
+		watercourses_geojson_file: str,
+		map_centre: Tuple[float, float] = (55, -2),
+		zoom_level: int = 6,
 		) -> Map:
+	"""
+	Create a folium/leaflet map showing the given watersources.
+
+	:param watercourses_geojson_file:
+	:param map_centre: The default map centre position.
+	:param zoom_level: The default map zoom level.
+	"""
 
 	m = Map(map_centre, zoom_start=zoom_level, control_scale=True)
 	m._id = "canal_towpath_walking"
@@ -53,6 +62,9 @@ def create_map(
 
 	feature_group_walks = folium.FeatureGroup("Walks").add_to(m)
 	feature_group_walks._id = "walks"
+
+	feature_group_walks = folium.FeatureGroup("Current Walk").add_to(m)
+	feature_group_walks._id = "current_walk"
 
 	folium.LayerControl().add_to(m)._id = "layer_control"
 	Sidebar().add_to(m)

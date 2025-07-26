@@ -43,7 +43,7 @@ def _load_template(name: str) -> Template:
 	return Template(importlib_resources.read_text("towpath_walk_tracker.templates", name))
 
 
-class Map(folium.Map):
+class Map(folium.Map):  # noqa: D101
 	_template = _load_template("folium_map.jinja2")
 
 
@@ -76,12 +76,12 @@ class ZoomStateJS(folium.MacroElement):
 		super().__init__()
 		self._name = "ZoomStateJS"
 
-	def add_to(
-			self,
-			parent: folium.Element,
-			name: Optional[str] = None,
-			index: Optional[int] = None,
-			) -> "ZoomStateJS":
+	def add_to(  # noqa: D102
+		self,
+		parent: folium.Element,
+		name: Optional[str] = None,
+		index: Optional[int] = None,
+		) -> "ZoomStateJS":
 		super().add_to(parent, name, index)
 		assert isinstance(parent, folium.Map)
 		parent.add_js_link("zoom-state", "/static/zoom_state.js")
@@ -137,7 +137,7 @@ class WatercoursesGeoJson(folium.GeoJson):
 
 class GeoJsonTooltip(folium.GeoJsonTooltip):
 
-	def render(self, **kwargs):
+	def render(self, **kwargs) -> None:
 		if not isinstance(self._parent, (folium.GeoJson, folium.TopoJson)):
 			raise TypeError(f"You cannot add a {self._name} to anything other than a GeoJson or TopoJson object.")
 
@@ -150,6 +150,9 @@ class GeoJsonTooltip(folium.GeoJsonTooltip):
 
 
 class Sidebar(folium.MacroElement):
+	"""
+	JavaScript implementation for ``folium-sidebar-v2``.
+	"""
 
 	_template = _load_template("sidebar.jinja2")
 
@@ -157,16 +160,16 @@ class Sidebar(folium.MacroElement):
 		super().__init__()
 		self._name = "Sidebar"
 
-	def render(self, **kwargs):
-		super().render(**kwargs)
+	# def render(self, **kwargs):
+	# 	super().render(**kwargs)
 
-		figure = self.get_root()
-		html = figure.html._children
-		us = html[self.get_name()]
-		new_html = html.__class__()
-		new_html[self.get_name()] = us
-		for k, v in html.items():
-			if k != self.get_name():
-				new_html[k] = v
+	# 	figure = self.get_root()
+	# 	html = figure.html._children
+	# 	us = html[self.get_name()]
+	# 	new_html = html.__class__()
+	# 	new_html[self.get_name()] = us
+	# 	for k, v in html.items():
+	# 		if k != self.get_name():
+	# 			new_html[k] = v
 
-		figure.html._children = new_html
+	# 	figure.html._children = new_html

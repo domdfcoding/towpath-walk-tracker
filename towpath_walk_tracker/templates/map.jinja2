@@ -1,0 +1,204 @@
+{% extends "layout.jinja2" %}
+
+{% block extrahead %}
+    {{ header|safe }}
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+table.walk-points th.point-idx, table.walk-points td {vertical-align: top;}
+div.walk-points-scroll {
+    overflow-y: scroll;
+    height:400px;
+}
+    </style>
+{% endblock extrahead %}
+
+{% block content %}
+
+    <div id="sidebar" class="sidebar collapsed">
+        <!-- Nav tabs -->
+        <div class="sidebar-tabs">
+            <ul role="tablist">
+                <li>
+                    <a href="#home" role="tab"><i class="fa fa-bars"></i></a>
+                </li>
+                <li>
+                    <a href="#profile" role="tab"><i class="fa fa-user"></i></a>
+                </li>
+                <li class="disabled">
+                    <a href="#messages" role="tab"><i class="fa fa-envelope"></i></a>
+                </li>
+                <li>
+                    <a href="#add" role="tab"><i class="fa fa-solid fa-plus"></i></a>
+                </li>
+                <li>
+                    <a href="https://github.com/domdfcoding/towpath-walk-tracker"
+                       role="tab"
+                       target="_blank"><i class="fa fa-github"></i></a>
+                </li>
+            </ul>
+
+            <ul role="tablist">
+                <li>
+                    <a href="#settings" role="tab"><i class="fa fa-gear"></i></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="sidebar-content">
+            <div class="sidebar-pane" id="home">
+                <h1 class="sidebar-header">
+                    sidebar-v2
+                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+
+                <p>
+                    A responsive sidebar for mapping libraries like <a href="https://leafletjs.com/">Leaflet</a> or <a href="https://openlayers.org/">OpenLayers</a>.
+                </p>
+
+                <p class="lorem">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+
+                <p class="lorem">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+
+                <p class="lorem">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+
+                <p class="lorem">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+            </div>
+
+            <div class="sidebar-pane" id="profile">
+                <h1 class="sidebar-header">
+                    Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+            </div>
+
+            <div class="sidebar-pane" id="messages">
+                <h1 class="sidebar-header">
+                    Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+            </div>
+
+            <div class="sidebar-pane" id="add">
+                <h1 class="sidebar-header">
+                    Add a Walk<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+                <form class="needs-validation"
+                      id="walk-form"
+                      novalidate
+                      method="POST"
+                      action="{{ url_for('main_page') }}">
+                    {#  onsubmit="submitWalkForm();return false" #}
+
+                    {{ form.csrf_token }}
+                    <div class="row g-3">
+                        <div class="col-12">
+                            {{ form.title.label(class_='form-label') }}
+                            {{ form.title(class_='form-control') }}
+                        </div>
+
+                        <div class="col-sm-8">
+                            {{ form.start.label(class_='form-label') }}
+                            {{ form.start(class_='form-control') }}
+                        </div>
+
+                        <div class="col-sm-4">
+                            {{ form.duration.label(class_='form-label') }}
+                            {{ form.duration(class_='form-control html-duration-picker', **{"data-hide-seconds": ''}) }}
+                        </div>
+
+                        <div class="col-12">
+                            {{ form.notes.label(class_='form-label') }}
+                            {{ form.notes(class_='form-control') }}
+                        </div>
+
+                        <label class="form-label">Points</label>
+                        <div class="walk-points-scroll">
+                            <table class="walk-points">
+                                {% for idx, point in enumerate(form.points) %}
+                                    <tr id="points-{{ idx }}">
+                                        <th class="point-idx">
+                                            <div class="input-group">
+                                                <span class="input-group-text">{{ idx }}</span>
+                                            </div>
+                                        </th>
+                                        <td>
+                                            <div class="input-group has-validation">
+                                                {{ point.latitude(class_='form-control point-latitude') }}
+                                                <span class="input-group-text">° N</span>
+                                                <div class="invalid-feedback">A value is required.</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group has-validation ">
+                                                {{ point.longitude(class_='form-control point-longitude') }}
+                                                <span class="input-group-text">° E</span>
+                                                <div class="invalid-feedback">A value is required.</div>
+                                            </div>
+                                        </td>
+                                        <td class="d-none">{{ point.enabled(class_='form-control point-enabled') }}</td>
+                                        <td class="h-100">
+                                            <button class="h-100 w10 btn btn-danger btn-sm point-delete"
+                                                    id="points-{{ idx }}-delete"
+                                                    type="button">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="gap-2 d-md-flex justify-content-md-center">
+                        <button class="col-sm-5 btn btn-primary btn-lg" type="submit">Save Walk</button>
+                        <button class="col-sm-5 btn btn-danger btn-lg" type="reset">Reset and Clear Points</button>
+                    </div>
+
+                    {# <input type="submit" value="Go"> #}
+                </form>
+            </div>
+
+            <div class="sidebar-pane" id="settings">
+                <h1 class="sidebar-header">
+                    Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    {{ body|safe }}
+
+{% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+
+    {{ scripts|safe }}
+
+    <script src="/static/walk_form.js"></script>
+    <script src="/static/bootstrap_form_validator.js"></script>
+
+    <script>{{ script|safe }}</script>
+    <script src="https://cdn.jsdelivr.net/gh/domdfcoding/html-duration-picker.js@bootstrap/dist/html-duration-picker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+	flatpickr(".form-control#start", {enableTime: true, dateFormat: "Y-m-d H:i"});
+	var form = document.getElementById("walk-form")
+	form.reset()  // Remove any elements from before page refreshed  // TODO: doesn't seem to work
+
+    </script>
+
+
+
+{% endblock scripts %}
