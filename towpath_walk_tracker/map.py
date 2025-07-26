@@ -31,6 +31,7 @@ def create_map(
 
 	m = Map(map_centre, zoom_start=zoom_level, control_scale=True)
 	m._id = "canal_towpath_walking"
+	ZoomStateJS().add_to(m)
 
 	tooltip = GeoJsonTooltip(
 			fields=["id", "tags"],
@@ -56,7 +57,6 @@ def create_map(
 	folium.LayerControl().add_to(m)._id = "layer_control"
 	Sidebar().add_to(m)
 	WalkStartEnd().add_to(m)
-	ZoomStateJS().add_to(m)
 
 	m.add_js_link("walk", "/static/walk.js")
 	m.add_js_link("leaflet.geometryutil", "/static/leaflet.geometryutil.js")

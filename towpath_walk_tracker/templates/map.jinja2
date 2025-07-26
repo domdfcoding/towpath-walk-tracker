@@ -33,14 +33,18 @@
         tolerance: 2
     });
 
+    var mapOptions = {{this.options|tojavascript}};
+    var defaultZoom = mapOptions["zoom"] ?? 0;
+    var urlZoomState = zoomStateFromURL(defaultZoom, {{ this.location|tojson }});
+    mapOptions["zoom"] = urlZoomState["zoomLvl"]
+
     var {{ this.get_name() }} = L.map(
         {{ this.get_name()|tojson }},
         {
-            center: {{ this.location|tojson }},
+            center: urlZoomState["centre"],
             crs: L.CRS.{{ this.crs }},
             renderer: canvasRenderer,
-            ...{{this.options|tojavascript}}
-
+            ...mapOptions
         }
     );
 

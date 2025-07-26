@@ -20,15 +20,17 @@ function setupZoomState (map) {
 }
 
 // eslint-disable-next-line
-function zoomStateFromURL (map) {
+function zoomStateFromURL (defaultZoom, defaultCentre) {  // eslint-disable-line no-unused-vars
   const url = new URL(window.location.href);
 
-  let zoomLvl = map.getZoom();
+  // let zoomLvl = map.getZoom();
+  let zoomLvl = defaultZoom;
   if (url.searchParams.has('zoom')) {
     zoomLvl = url.searchParams.get('zoom');
   }
 
-  const centre = map.getCenter();
+  // const centre = map.getCenter();
+  const centre = defaultCentre;
   if (url.searchParams.has('lat')) {
     centre.lat = url.searchParams.get('lat');
   }
@@ -36,5 +38,5 @@ function zoomStateFromURL (map) {
     centre.lng = url.searchParams.get('lng');
   }
 
-  map.setView(centre, zoomLvl);
+  return { centre: centre, zoomLvl: zoomLvl };
 }
