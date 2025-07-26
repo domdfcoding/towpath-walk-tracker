@@ -4,28 +4,6 @@
     var sidebar_add_walk_pane = sidebar._container.querySelector('#add');
 {% endmacro %}
 
-{% macro header(this, kwargs) %}
-    <style>
-        .sidebar.collapsed {
-            width: 42px !important;
-            }
-        body {
-            padding: 0;
-            margin: 0;
-        }
-
-        html, body, #map {
-            height: 100%;
-            font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
-        }
-
-        .lorem {
-            font-style: italic;
-            color: #AAA;
-        }
-    </style>
-{% endmacro %}
-
 {% macro html(this, kwargs) %}
 
     <div id="sidebar" class="sidebar collapsed">
