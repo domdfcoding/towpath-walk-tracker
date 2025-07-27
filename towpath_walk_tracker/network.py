@@ -1,16 +1,52 @@
+#!/usr/bin/env python3
+#
+#  network.py
+"""
+Model of the network of rivers and canals.
+"""
+#
+#  Copyright © 2025 Dominic Davis-Foster <dominic@davis-foster.co.uk>
+#
+#  Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+#  in the Software without restriction, including without limitation the rights
+#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#  copies of the Software, and to permit persons to whom the Software is
+#  furnished to do so, subject to the following conditions:
+#
+#  The above copyright notice and this permission notice shall be included in all
+#  copies or substantial portions of the Software.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+#  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+#  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+#  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+#  OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
 # stdlib
-from typing import Any, Dict, Tuple
+from typing import Dict, Tuple
 
 # 3rd party
 import networkx
-from scipy.spatial import KDTree
+from scipy.spatial import KDTree  # type: ignore[import]
+
+# this package
+from towpath_walk_tracker.watercourses import FeatureCollection
 
 __all__ = ["build_kdtree", "build_network", "get_node_coordinates"]
 
 
-def build_network(watercourses: Dict[str, Any]):
+def build_network(watercourses: FeatureCollection) -> "networkx.Graph[int]":
+	"""
+	Construct a network of paths through the given watercourses.
 
-	graph = networkx.Graph()
+	:param watercourses:
+	"""
+
+	graph: "networkx.Graph[int]" = networkx.Graph()
 
 	for wc in watercourses["features"]:
 		if wc["properties"]["type"] != "way":
@@ -54,6 +90,12 @@ def build_network(watercourses: Dict[str, Any]):
 
 
 def get_node_coordinates(graph: networkx.Graph) -> Dict[int, Tuple[float, float]]:
+	"""
+	Returns a mapping of nodes in the graph and their coordinates on the map.
+
+	:param graph:
+	"""
+
 	node_coordinates = {}
 
 	for node_id, node_data in graph.nodes.items():
@@ -63,6 +105,12 @@ def get_node_coordinates(graph: networkx.Graph) -> Dict[int, Tuple[float, float]
 
 
 def build_kdtree(graph: networkx.Graph) -> KDTree:
+	"""
+	Construct a KDTree for finding the closest node to certain coordinates.
+
+	:graph:
+	"""
+
 	node_coordinates = get_node_coordinates(graph)
 	tree = KDTree(list(node_coordinates.values()))
 	return tree

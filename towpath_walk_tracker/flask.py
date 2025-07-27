@@ -1,21 +1,50 @@
+#!/usr/bin/env python3
+#
+#  flask.py
+"""
+Flask routes and helper functions.
+"""
+#
+#  Copyright © 2025 Dominic Davis-Foster <dominic@davis-foster.co.uk>
+#
+#  Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+#  in the Software without restriction, including without limitation the rights
+#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#  copies of the Software, and to permit persons to whom the Software is
+#  furnished to do so, subject to the following conditions:
+#
+#  The above copyright notice and this permission notice shall be included in all
+#  copies or substantial portions of the Software.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+#  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+#  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+#  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+#  OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
 # stdlib
 import itertools
 from functools import lru_cache
-from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Callable, Iterable, List, Optional, Sequence, Tuple, Union
 
 # 3rd party
 import networkx
 from domdf_python_tools.paths import PathPlus
 from flask import Flask, Response, json, redirect, render_template, request
 from flask_caching import Cache
-from flask_compress import Compress
-from flask_wtf import FlaskForm
-from flask_wtf.csrf import CSRFProtect
+from flask_compress import Compress  # type: ignore[import]
+from flask_wtf import FlaskForm  # type: ignore[import]
+from flask_wtf.csrf import CSRFProtect  # type: ignore[import]
 from folium import Figure, JavascriptLink
 from networkx import all_shortest_paths
-from scipy.spatial import KDTree
+from scipy.spatial import KDTree  # type: ignore[import]
 from wtforms import (
 		DateTimeLocalField,
+		Field,
 		FieldList,
 		FloatField,
 		Form,
@@ -25,13 +54,12 @@ from wtforms import (
 		TextAreaField,
 		TimeField
 		)
-from wtforms.fields.core import UnboundField
 from wtforms.validators import DataRequired, InputRequired, NumberRange
 
 # this package
 from towpath_walk_tracker.map import create_map
 from towpath_walk_tracker.network import build_kdtree, build_network, get_node_coordinates
-from towpath_walk_tracker.watercourses import exclude_tags, filter_watercourses
+from towpath_walk_tracker.watercourses import FeatureCollection, exclude_tags, filter_watercourses
 
 __all__ = ["add_walk", "leaflet_map", "watercourses_geojson"]
 
@@ -81,7 +109,7 @@ def watercourses_geojson() -> Response:
 
 
 @app.route('/', methods=["GET", "POST"])
-def main_page() -> str:
+def main_page() -> Union[str, Response]:
 	"""
 	Flask route for the main page.
 	"""
@@ -91,7 +119,7 @@ def main_page() -> str:
 	# lng = float(request.args.get("lng", -2))
 	# print(zoom_level, lat, lng)
 	m = create_map("http://localhost:5000/watercourses.geojson")  # , (lat, lng), zoom_level)
-	root: Figure = m.get_root()
+	root: Figure = m.get_root()  # type: ignore[assignment]
 
 	js_libs = m.default_js
 	m.default_js = []
@@ -106,7 +134,7 @@ def main_page() -> str:
 
 	form = WalkForm()
 	if form.validate_on_submit():
-		return redirect("/success")
+		return redirect("/success")  # type: ignore[return-value]
 
 	return render_template(
 			"map.jinja2",
@@ -119,14 +147,14 @@ def main_page() -> str:
 
 
 @lru_cache
-def _get_filtered_watercourses() -> Dict[str, Any]:
+def _get_filtered_watercourses() -> FeatureCollection:
 	raw_data = PathPlus("data.geojson").load_json()
 	watercourses = filter_watercourses(raw_data, tags_to_exclude=exclude_tags)
 	return watercourses
 
 
 @lru_cache
-def _get_network_and_tree() -> Tuple[networkx.Graph, KDTree]:
+def _get_network_and_tree() -> Tuple["networkx.Graph[int]", KDTree]:
 	watercourses = _get_filtered_watercourses()
 	G = build_network(watercourses)
 	tree = build_kdtree(G)
@@ -142,7 +170,7 @@ def get_route() -> List[Tuple[float, float]]:
 	:returns: A list of coordinates of nodes along the path.
 	"""
 
-	points = list(map(tuple, request.get_json()))
+	points: List[Tuple[float, float]] = list(map(tuple, request.get_json()))  # type: ignore[arg-type]
 	print(f"Create walk with points {points}")
 
 	G, tree = _get_network_and_tree()
@@ -150,34 +178,39 @@ def get_route() -> List[Tuple[float, float]]:
 	nckl = list(get_node_coordinates(G).keys())
 
 	point_data: List[Tuple[Tuple[float, float], float, int, int]] = []
+	node_dist: float
+	node_idx: int
 	for coord in points:
 		node_dist, node_idx = tree.query(coord)
 		node = nckl[node_idx]
 		point_data.append((coord, node_dist, node_idx, node))
 
 	# solve path from 1st node to 2nd node to... nth node
-	path = []
+	path: List[int] = []
 	for orig, dest in zip(point_data[:-1], point_data[1:]):
-		path = path[:-1] + next(all_shortest_paths(G, orig[3], dest[3]))
+		path = path[:-1] + next(all_shortest_paths(G, orig[3], dest[3]))  # type: ignore[call-overload]
 
 	coords: List[Tuple[float, float]] = []
-	for node in path:
-		coords.append((G.nodes[node]["lat"], G.nodes[node]["lng"]))
+	for path_node in path:
+		coords.append((G.nodes[path_node]["lat"], G.nodes[path_node]["lng"]))
 
 	return coords
 
 
 class PointForm(FlaskForm):
 	latitude = FloatField(
-			"latitude", validators=[InputRequired(), NumberRange(min=-180, max=180, message="Invalid coordinate")]
+			"latitude",
+			validators=[InputRequired(), NumberRange(min=-180, max=180, message="Invalid coordinate")],
 			)
 	longitude = FloatField(
 			"longitude",
-			validators=[InputRequired(), NumberRange(min=-180, max=180, message="Invalid coordinate")]
+			validators=[InputRequired(), NumberRange(min=-180, max=180, message="Invalid coordinate")],
 			)
 	# id = IntegerField("id", validators=[InputRequired()])
 	enabled = IntegerField(
-			"Enabled", validators=[InputRequired(), NumberRange(min=0, max=1, message="Invalid Value")], default=0
+			"Enabled",
+			validators=[InputRequired(), NumberRange(min=0, max=1, message="Invalid Value")],
+			default=0,
 			)
 
 
@@ -185,13 +218,13 @@ class FieldListMinRequired(FieldList):
 
 	def __init__(
 			self,
-			unbound_field: UnboundField,
+			unbound_field: Field,
 			label: Optional[str] = None,
 			min_required_entries: int = 0,
 			min_entries: int = 0,
 			max_entries: Optional[int] = None,
 			separator: str = '-',
-			default: Iterable[Any] | Callable[[], Iterable[Any]] = (),
+			default: Union[Iterable[Any], Callable[[], Iterable[Any]]] = (),
 			**kwargs,
 			):
 		super().__init__(
@@ -206,7 +239,11 @@ class FieldListMinRequired(FieldList):
 				)
 		self.min_required_entries = min_required_entries
 
-	def validate(self, form: Form, extra_validators: Sequence[Callable] = ()) -> bool:
+	def validate(  # type: ignore[override]
+		self,
+		form: Form,
+		extra_validators: Sequence[Callable] = (),
+		) -> bool:
 
 		num_valid = 0
 		self.errors = []
@@ -223,8 +260,8 @@ class FieldListMinRequired(FieldList):
 					"id": [f"A minimum of {self.min_required_entries} entries are required; got {num_valid}."]
 					}]
 
-		chain = itertools.chain(self.validators, extra_validators)
-		self._run_validation_chain(form, chain)
+		chain = itertools.chain(self.validators, extra_validators)  # type: ignore[arg-type]
+		self._run_validation_chain(form, chain)  # type: ignore[attr-defined]
 
 		return len(self.errors) == 0
 

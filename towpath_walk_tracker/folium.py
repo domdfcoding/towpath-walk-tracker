@@ -32,6 +32,7 @@ from typing import Any, Optional, Union
 # 3rd party
 import folium
 from domdf_python_tools.compat import importlib_resources
+from folium import Figure
 from folium.map import Layer
 from folium.template import Template
 from folium.utilities import remove_empty
@@ -137,11 +138,12 @@ class WatercoursesGeoJson(folium.GeoJson):
 
 class GeoJsonTooltip(folium.GeoJsonTooltip):
 
-	def render(self, **kwargs) -> None:
+	def render(self, **kwargs) -> None:  # type: ignore[override]
 		if not isinstance(self._parent, (folium.GeoJson, folium.TopoJson)):
 			raise TypeError(f"You cannot add a {self._name} to anything other than a GeoJson or TopoJson object.")
 
-		self.get_root().header.add_child(
+		root: Figure = self.get_root()  # type: ignore[assignment]
+		root.header.add_child(
 				folium.Element(_load_template("geojson_tooltip_css.jinja2").render(this=self)),
 				name=self.get_name() + "tablestyle",
 				)
