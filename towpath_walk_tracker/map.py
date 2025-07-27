@@ -83,8 +83,6 @@ def create_map(
 	g = WatercoursesGeoJson(watercourses_geojson_file, embed=False, tooltip=tooltip, name="Watercourses").add_to(m)
 	g._id = "watercourses"
 
-	folium.LatLngPopup().add_to(m)
-
 	feature_group_walk_markers = folium.FeatureGroup("Walk Markers").add_to(m)
 	feature_group_walk_markers._id = "walk_markers"
 

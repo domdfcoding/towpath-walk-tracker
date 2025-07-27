@@ -170,7 +170,13 @@ def get_route() -> List[Tuple[float, float]]:
 	:returns: A list of coordinates of nodes along the path.
 	"""
 
-	points: List[Tuple[float, float]] = list(map(tuple, request.get_json()))  # type: ignore[arg-type]
+	points: List[Tuple[float, float]] = []
+	for point in request.get_json():
+		if isinstance(point, dict):
+			points.append((point["lat"], point["lng"]))
+		else:
+			points.append(tuple(point))
+
 	print(f"Create walk with points {points}")
 
 	G, tree = _get_network_and_tree()

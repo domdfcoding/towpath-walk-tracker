@@ -31,6 +31,14 @@ walkPointsRows.forEach((pointRow) => {
   };
   pointRow.getLatLng = function () { return [this.pointLatitude.value, this.pointLongitude.value]; };
   pointRow.setLatLng = function (lat, lng) {
+    // Check haven't tried to treat L.latLng as array or array as L.latLng
+    if (lat === undefined) {
+      throw ({ lat: lat });
+    }
+    if (lng === undefined) {
+      throw ({ lng: lng });
+    }
+
     this.pointLatitude.value = lat;
     this.pointLongitude.value = lng;
     return this;
@@ -169,9 +177,27 @@ document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
   });
 });
 
+function addPoint (lat, lng) { // eslint-disable-line no-unused-vars
+  const query = document.querySelector('table.walk-points tbody tr:nth-last-child(1 of :not(.d-none))');
+  let lastEnabledRow = -1;
+  if (query !== null) lastEnabledRow = query.dataset.pointIndex;
+  const pointRow = walkPointsRows[1 + (lastEnabledRow * 1)];
+  pointRow.enable().setLatLng(lat, lng);
+}
+
+function removePointWithCoord (coord) { // eslint-disable-line no-unused-vars
+  for (const pointRow of walkPointsRows) {
+    const latLng = L.latLng(pointRow.getLatLng());
+    if (latLng.lat === coord.lat && latLng.lng === coord.lng) {
+      pointRow.disable().setLatLng('', '');
+      break;
+    }
+  }
+}
+
 function replaceAllPoints (coordinates) { // eslint-disable-line no-unused-vars
   for (let i = 0; i < coordinates.length; i++) {
-    walkPointsRows[i].setLatLng(coordinates[i][0], coordinates[i][1]);
+    walkPointsRows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
     walkPointsRows[i].enable();
   };
 

@@ -2,15 +2,16 @@
 {% macro script(this, kwargs) %}
     // var {{this.get_name()}} = L.popup();
 
-    function latLngPop(e) {
+    function placeMarkerOnClick(e) {
         if (!sidebar_add_walk_pane.classList.contains("active")) {
             return;
         }
 
         let closest_latlng = snapCoordToLine(e.latlng.lat, e.latlng.lng);
-        addMarker(closest_latlng.lat, closest_latlng.lng);
+        addMarker(closest_latlng.lng, closest_latlng.lat);
+        addPoint(closest_latlng.lng, closest_latlng.lat)
 
-        refreshWalkPreview();
+        refreshWalkPreview(false);
 
     }
 
@@ -18,6 +19,6 @@
         if (sidebar_add_walk_pane.classList.contains("active")) clearMarkers();
     }); #}
 
-    {{this._parent.get_name()}}.on('click', latLngPop);
+    {{this._parent.get_name()}}.on('click', placeMarkerOnClick);
 {% endmacro %}
 {# djlint:on #}

@@ -1,4 +1,4 @@
-/* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, replaceAllPoints, walkFormGetCoordinates */
+/* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, replaceAllPoints, walkFormGetCoordinates, removePointWithCoord */
 
 let placedMarkerCount = 0;// eslint-disable-line no-unused-vars
 let placedMarkers = [];
@@ -11,11 +11,7 @@ function clearMarkers () { // eslint-disable-line no-unused-vars
 }
 
 function refreshWalkPreview (propagate = true) { // eslint-disable-line no-unused-vars
-  const placedMarkerLatLng = [];
-  for (const m of placedMarkers) {
-    const pos = m.getLatLng();
-    placedMarkerLatLng.push([pos.lat, pos.lng]);
-  }
+  const placedMarkerLatLng = walkFormGetCoordinates();
 
   if (propagate) replaceAllPoints(placedMarkerLatLng);
 
@@ -39,7 +35,15 @@ function refreshWalkPreview (propagate = true) { // eslint-disable-line no-unuse
 }
 
 function addMarker (lat, lng) { // eslint-disable-line no-unused-vars
-  const marker = L.marker([lng, lat], {});
+  // Check haven't tried to treat L.latLng as array or array as L.latLng
+  if (lat === undefined) {
+    throw ({ lat: lat });
+  }
+  if (lng === undefined) {
+    throw ({ lng: lng });
+  }
+
+  const marker = L.marker([lat, lng], {});
 
   placedMarkers.push(marker);
   placedMarkerCount += 1;
@@ -47,6 +51,7 @@ function addMarker (lat, lng) { // eslint-disable-line no-unused-vars
   marker.addTo(feature_group_walk_markers);
 
   marker.on('contextmenu', e => {
+    removePointWithCoord(e.target.getLatLng());
     removeMarker(e.target);
     refreshWalkPreview();
   });
@@ -59,9 +64,17 @@ function removeMarker (marker) {
 }
 
 function snapCoordToLine (lat, lng) { // eslint-disable-line no-unused-vars
+  // Check haven't tried to treat L.latLng as array or array as L.latLng
+  if (lat === undefined) {
+    throw ({ lat: lat });
+  }
+  if (lng === undefined) {
+    throw ({ lng: lng });
+  }
+
   const coordinatesArray = geo_json_watercourses.getLayers().map(l => l.feature.geometry.coordinates);
   const closestLatLng = L.GeometryUtil.closest(map_canal_towpath_walking, coordinatesArray, [lng, lat]);
-  return closestLatLng;
+  return closestLatLng; // TODO: lat/lng are flipped from the dict labels
 }
 
 document.querySelector('table.walk-points').addEventListener('changed',
