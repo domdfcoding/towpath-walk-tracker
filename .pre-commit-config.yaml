@@ -122,5 +122,5 @@ repos:
  - repo: https://github.com/djlint/djLint
    rev: v1.35.2
    hooks:
-      - id: djlint-reformat-jinja
-      - id: djlint-jinja
+    - id: djlint-reformat-jinja
+    - id: djlint-jinja
