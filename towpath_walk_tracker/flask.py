@@ -175,7 +175,7 @@ def get_route() -> List[Tuple[float, float]]:
 		if isinstance(point, dict):
 			points.append((point["lat"], point["lng"]))
 		else:
-			points.append(tuple(point))
+			points.append(tuple(point))  # type: ignore[arg-type]
 
 	print(f"Create walk with points {points}")
 

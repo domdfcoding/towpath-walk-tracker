@@ -1,7 +1,5 @@
 /* global L */
 
-// TODO: Drag or arrow reordering
-
 Object.assign(HTMLCollection.prototype, {
   forEach (event) {
     Array.prototype.forEach.call(this, (element) => event(element));
@@ -104,7 +102,6 @@ function walkFormGetCoordinates () {
     if (pointRow.pointEnabled.value === '1') {
       const latLng = pointRow.getLatLng();
       if (latLng[0] !== '' || latLng[1] !== '') {
-        console.log(latLng);
         coordinates.push(L.latLng(latLng));
         // coordinates.push(latLng);
       }
