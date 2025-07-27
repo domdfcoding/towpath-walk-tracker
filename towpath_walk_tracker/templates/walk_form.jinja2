@@ -33,7 +33,7 @@
     <div class="walk-points-scroll">
         <table class="walk-points">
             {% for idx, point in enumerate(form.points) %}
-                <tr id="points-{{ idx }}">
+                <tr id="points-{{ idx }}" data-point-index="{{ idx }}">
                     <th class="point-idx">
                         <div class="input-group">
                             <span class="input-group-text">{{ idx }}</span>

@@ -12,6 +12,8 @@ const walkPointsChangedEvent = new Event('changed');
 
 const pointEnabledInputs = document.getElementsByClassName('point-enabled');
 const pointDeleteButtons = document.getElementsByClassName('point-delete');
+const pointMoveUpButtons = document.getElementsByClassName('point-move-up');
+const pointMoveDownButtons = document.getElementsByClassName('point-move-down');
 const walkPointsRows = document.querySelectorAll('table.walk-points tr');
 
 walkPointsRows.forEach((pointRow) => {
@@ -39,8 +41,33 @@ pointEnabledInputs.forEach((enableCtrl) => {
 
 pointDeleteButtons.forEach((deleteBtn) => {
   deleteBtn.addEventListener('click', (event) => {
-    deleteBtn.parentElement.parentElement.parentElement.parentElement.parentElement.disable();
+    deleteBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.disable();
     reorder();
+  });
+});
+
+pointMoveUpButtons.forEach((moveBtn) => {
+  moveBtn.addEventListener('click', (event) => {
+    const root = moveBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+    if (root.dataset.pointIndex === '0') {
+      return;
+    }
+
+    console.log('Move from ' + root.dataset.pointIndex + ' to ' + (root.dataset.pointIndex - 1));
+    movePoint(root.dataset.pointIndex, root.dataset.pointIndex - 1);
+  });
+});
+
+pointMoveDownButtons.forEach((moveBtn) => {
+  moveBtn.addEventListener('click', (event) => {
+    const root = moveBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+    const lastEnabledRow = document.querySelector('table.walk-points tbody tr:nth-last-child(1 of :not(.d-none))').dataset.pointIndex;
+    if (root.dataset.pointIndex === lastEnabledRow) {
+      return;
+    }
+
+    console.log('Move from ' + root.dataset.pointIndex + ' to ' + (root.dataset.pointIndex + 1));
+    movePoint(root.dataset.pointIndex, (root.dataset.pointIndex * 1) + 1);
   });
 });
 
@@ -74,9 +101,7 @@ function walkFormGetCoordinates () {
   return coordinates;
 }
 
-function reorder () {
-  const coordinates = walkFormGetCoordinates();
-
+function populatePointsTable (coordinates) {
   for (let i = 0; i < coordinates.length; i++) {
     walkPointsRows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
     walkPointsRows[i].enable();
@@ -86,6 +111,27 @@ function reorder () {
     walkPointsRows[i].setLatLng('', '');
     walkPointsRows[i].disable();
   }
+}
+
+function movePoint (fromIdx, toIdx) {
+  const coordinates = walkFormGetCoordinates();
+  console.log(coordinates);
+
+  const oldToValue = coordinates[toIdx];
+  coordinates[toIdx] = coordinates[fromIdx];
+  coordinates[fromIdx] = oldToValue;
+
+  populatePointsTable(coordinates);
+
+  console.log('Emit event');
+  document.querySelector('table.walk-points').dispatchEvent(walkPointsChangedEvent);
+}
+
+function reorder () {
+  const coordinates = walkFormGetCoordinates();
+  console.log(coordinates);
+
+  populatePointsTable(coordinates);
 
   console.log('Emit event');
   document.querySelector('table.walk-points').dispatchEvent(walkPointsChangedEvent);

@@ -80,8 +80,8 @@ document.querySelector('table.walk-points').addEventListener('changed',
 
       if (!foundMarker) {
         removeMarker(m);
-        refreshWalkPreview(false);
       }
     }
+    refreshWalkPreview(false);
   }
 );
