@@ -20,15 +20,20 @@ walkPointsRows.forEach((pointRow) => {
   pointRow.pointLatitude = pointRow.getElementsByClassName('point-latitude')[0];
   pointRow.pointLongitude = pointRow.getElementsByClassName('point-longitude')[0];
   pointRow.pointEnabled = pointRow.getElementsByClassName('point-enabled')[0];
-  pointRow.enable = function () { setEnableValue(this.pointEnabled, 1); };
+  pointRow.enable = function () {
+    setEnableValue(this.pointEnabled, 1);
+    return this;
+  };
   pointRow.disable = function () {
     setEnableValue(this.pointEnabled, 0);
     this.setLatLng('', '');
+    return this;
   };
   pointRow.getLatLng = function () { return [this.pointLatitude.value, this.pointLongitude.value]; };
   pointRow.setLatLng = function (lat, lng) {
     this.pointLatitude.value = lat;
     this.pointLongitude.value = lng;
+    return this;
   };
 });
 
