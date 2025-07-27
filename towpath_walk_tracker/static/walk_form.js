@@ -39,13 +39,13 @@ pointEnabledInputs.forEach((enableCtrl) => {
 
 pointDeleteButtons.forEach((deleteBtn) => {
   deleteBtn.addEventListener('click', (event) => {
-    deleteBtn.parentElement.parentElement.disable();
+    deleteBtn.parentElement.parentElement.parentElement.parentElement.parentElement.disable();
     reorder();
   });
 });
 
 function togglePointDisplay (enableCtrl) {
-  const pointRow = enableCtrl.parentElement.parentElement;
+  const pointRow = enableCtrl.parentElement.parentElement.parentElement.parentElement.parentElement;
   if (enableCtrl.value === '1') {
     pointRow.pointLatitude.setAttribute('required', '');
     pointRow.pointLongitude.setAttribute('required', '');

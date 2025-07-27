@@ -1,7 +1,10 @@
 {# <span class="text-muted">(Optional)</span> #}
-<form class="needs-validation" id="walk-form" novalidate>
-    {# method="POST"
-      action="{{ url_for('main') }}" #}
+<form class="needs-validation"
+      id="walk-form"
+      novalidate
+      method="POST"
+      action="{{ url_for('main_page') }}">
+    {#  onsubmit="submitWalkForm();return false" #}
 
     {{ form.csrf_token }}
     <div class="row g-3">
@@ -24,63 +27,74 @@
             {{ form.notes.label(class_='form-label') }}
             {{ form.notes(class_='form-control') }}
         </div>
-
-        <label class="form-label">Points</label>
-        <div class="walk-points-scroll">
-            <table class="walk-points">
-                {% for idx, point in enumerate(form.points) %}
-                    <tr id="points-{{ idx }}">
-                        <th class="point-idx">
-                            <div class="input-group">
-                                <span class="input-group-text">{{ idx }}</span>
-                            </div>
-                        </th>
-                        <td>
-                            <div class="input-group has-validation">
-                                {{ point.latitude(class_='form-control point-latitude') }}
-                                <span class="input-group-text">° N</span>
-                                <div class="invalid-feedback">A value is required.</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="input-group has-validation ">
-                                {{ point.longitude(class_='form-control point-longitude') }}
-                                <span class="input-group-text">° E</span>
-                                <div class="invalid-feedback">A value is required.</div>
-                            </div>
-                        </td>
-                        <td class="d-none">{{ point.enabled(class_='form-control point-enabled') }}</td>
-                        <td class="h-100">
-                            <button class="h-100 w10 btn btn-danger btn-sm point-delete"
-                                    id="points-{{ idx }}-delete"
-                                    type="button">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
     </div>
 
-    <div class="gap-2 d-md-flex justify-content-md-center">
-        <button class="col-sm-5 btn btn-primary btn-lg" type="submit">Save Walk</button>
-        <button class="col-sm-5 btn btn-danger btn-lg" type="reset">Reset and Clear Points</button>
-    </div>
+    <label class="form-label">Points</label>
+    <div class="walk-points-scroll">
+        <table class="walk-points">
+            {% for idx, point in enumerate(form.points) %}
+                <tr id="points-{{ idx }}">
+                    <th class="point-idx">
+                        <div class="input-group">
+                            <span class="input-group-text">{{ idx }}</span>
+                        </div>
+                    </th>
+                    <td>
+                        <div class="container g-1">
+                            <div class="row g-1">
+                                <div class="col">
+                                    <div class="input-group has-validation">
+                                        {{ point.latitude(class_='form-control point-latitude') }}
+                                        <span class="input-group-text">° N</span>
+                                        <div class="invalid-feedback">A value is required.</div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group has-validation ">
+                                        {{ point.longitude(class_='form-control point-longitude') }}
+                                        <span class="input-group-text">° E</span>
+                                        <div class="invalid-feedback">A value is required.</div>
+                                    </div>
+                                </div>
 
-    {# <input type="submit" value="Go"> #}
+                                <div class="col d-none">{{ point.enabled(class_='form-control point-enabled') }}</div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+
+                                            {# <div class="d-grid gap-1 d-md-flex justify-content-md-end h-100"> #}
+                                            <button class="btn btn-danger point-delete"
+                                                    id="points-{{ idx }}-delete"
+                                                    type="button">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                            <button class="btn btn-secondary point-move-up"
+                                                    id="points-{{ idx }}-move-up"
+                                                    type="button">
+                                                <i class="fa-solid fa-caret-up"></i>
+                                            </button>
+                                            <button class="btn btn-secondary point-move-down"
+                                                    id="points-{{ idx }}-move-down"
+                                                    type="button">
+                                                <i class="fa-solid fa-caret-down"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<div class="gap-2 d-md-flex justify-content-md-center">
+    <button class="col-sm-5 btn btn-primary btn-lg" type="submit">Save Walk</button>
+    <button class="col-sm-5 btn btn-danger btn-lg" type="reset">Reset and Clear Points</button>
+</div>
+
+{# <input type="submit" value="Go"> #}
 </form>
-
-<script src="/static/walk_form.js"></script>
-<script src="/static/bootstrap_form_validator.js"></script>
-
-
-<script></script>
-
-<style>
-table.walk-points th.point-idx, table.walk-points td {vertical-align: top;}
-div.walk-points-scroll {
-    overflow-y: scroll;
-    height:400px;
-}
-</style>
