@@ -95,6 +95,23 @@ document.querySelector('table.walk-points').addEventListener('changed',
         removeMarker(m);
       }
     }
+
+    // add missing markers
+    for (const c of coordinates) {
+      let foundCoord = false;
+      for (const m of placedMarkers) {
+        const pos = m.getLatLng();
+        if (pos.lat === c.lat && pos.lng === c.lng) {
+          foundCoord = true;
+          break;
+        }
+      }
+
+      if (!foundCoord) {
+        addMarker(c.lat, c.lng);
+      }
+    }
+
     refreshWalkPreview(false);
   }
 );

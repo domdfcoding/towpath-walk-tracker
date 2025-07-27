@@ -135,7 +135,8 @@
     <script>
         flatpickr(".form-control#start", {enableTime: true, dateFormat: "Y-m-d H:i"});
         var form = document.getElementById("walk-form")
-        form.reset()  // Remove any elements from before page refreshed  // TODO: doesn't seem to work
+        // form.reset()  // Remove any elements from before page refreshed  // TODO: doesn't seem to work
+        document.querySelector('table.walk-points').dispatchEvent(walkPointsChangedEvent);
     </script>
 
 
