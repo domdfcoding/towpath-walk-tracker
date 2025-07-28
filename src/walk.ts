@@ -1,4 +1,4 @@
-/* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, replaceAllPoints, walkFormGetCoordinates, removePointWithCoord */
+/* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, walkForm */
 
 type NullOrUndefinedOr<T> = T extends void ? never : null | undefined | T;
 
@@ -29,9 +29,9 @@ class LeafletWalkPreview {
 	}
 
 	refresh (propagate = true) {
-		const placedMarkerLatLng: Array<L.LatLng> = walkFormGetCoordinates();
+		const placedMarkerLatLng: Array<L.LatLng> = walkForm.getCoordinates();
 
-		if (propagate) replaceAllPoints(placedMarkerLatLng);
+		if (propagate) walkForm.replaceAllPoints(placedMarkerLatLng);
 
 		if (placedMarkerLatLng.length >= 2) {
 			fetch('/get-route', {
@@ -69,7 +69,7 @@ class LeafletWalkPreview {
 		marker.addTo(feature_group_walk_markers);
 
 		marker.on('contextmenu', e => {
-			removePointWithCoord(e.target.getLatLng());
+			walkForm.removePointWithCoord(e.target.getLatLng());
 			this.removeMarker(e.target);
 			this.refresh();
 		});
@@ -101,7 +101,7 @@ class LeafletWalkPreview {
 	}
 
 	syncFromForm () {
-		const coordinates: Array<L.LatLng> = walkFormGetCoordinates();
+		const coordinates: Array<L.LatLng> = walkForm.getCoordinates();
 
 		for (const m of this.placedMarkers) {
 			const pos = m.getLatLng();

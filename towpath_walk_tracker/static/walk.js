@@ -1,4 +1,4 @@
-/* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, replaceAllPoints, walkFormGetCoordinates, removePointWithCoord */
+/* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, walkForm */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class LeafletWalkPreview {
 	constructor () {
@@ -14,8 +14,8 @@ class LeafletWalkPreview {
 	}
 
 	refresh (propagate = true) {
-		const placedMarkerLatLng = walkFormGetCoordinates();
-		if (propagate) { replaceAllPoints(placedMarkerLatLng); }
+		const placedMarkerLatLng = walkForm.getCoordinates();
+		if (propagate) { walkForm.replaceAllPoints(placedMarkerLatLng); }
 		if (placedMarkerLatLng.length >= 2) {
 			fetch('/get-route', {
 				method: 'POST',
@@ -48,7 +48,7 @@ class LeafletWalkPreview {
 		this.placedMarkerCount += 1;
 		marker.addTo(feature_group_walk_markers);
 		marker.on('contextmenu', e => {
-			removePointWithCoord(e.target.getLatLng());
+			walkForm.removePointWithCoord(e.target.getLatLng());
 			this.removeMarker(e.target);
 			this.refresh();
 		});
@@ -78,7 +78,7 @@ class LeafletWalkPreview {
 	}
 
 	syncFromForm () {
-		const coordinates = walkFormGetCoordinates();
+		const coordinates = walkForm.getCoordinates();
 		for (const m of this.placedMarkers) {
 			const pos = m.getLatLng();
 			let foundMarker = false;

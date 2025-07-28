@@ -9,7 +9,7 @@
 
         let closest_latlng = walkPreview.snapCoordToLine(e.latlng.lat, e.latlng.lng);
         walkPreview.addMarker(closest_latlng.lng, closest_latlng.lat);
-        addPoint(closest_latlng.lng, closest_latlng.lat)
+        walkForm.addPoint(closest_latlng.lng, closest_latlng.lat)
 
         walkPreview.refresh(false);
 

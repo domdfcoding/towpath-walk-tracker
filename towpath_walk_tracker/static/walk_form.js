@@ -8,11 +8,6 @@ Object.assign(HTMLCollection.prototype, {
 
 const walkPointsChangedEvent = new Event('changed');
 
-const pointEnabledInputs = document.getElementsByClassName('point-enabled');
-const pointDeleteButtons = document.getElementsByClassName('point-delete');
-const pointMoveUpButtons = document.getElementsByClassName('point-move-up');
-const pointMoveDownButtons = document.getElementsByClassName('point-move-down');
-
 class WalkFormPoint {
 	constructor (element) {
 		this.element = element;
@@ -29,13 +24,18 @@ class WalkFormPoint {
 		this.element.classList.remove('d-none');
 	}
 
+	setEnableValue (value) {
+		this.pointEnabled.value = value;
+		this.pointEnabled.dispatchEvent(new Event('change'));
+	}
+
 	enable () {
-		setEnableValue(this.pointEnabled, 1);
+		this.setEnableValue(1);
 		return this;
 	};
 
 	disable () {
-		setEnableValue(this.pointEnabled, 0);
+		this.setEnableValue(0);
 		this.setLatLng('', '');
 		return this;
 	};
@@ -56,123 +56,180 @@ class WalkFormPoint {
 	};
 }
 
-const walkPointsRows = Array.from(document.querySelectorAll('table.walk-points tr')).map((e) => new WalkFormPoint(e));
-
-pointEnabledInputs.forEach((enableCtrl) => {
-	togglePointDisplay(enableCtrl);
-	enableCtrl.addEventListener('change', (event) => {
-		togglePointDisplay(event.target);
-	});
-});
-
-function pointRowForButton (button) {
-	const pointRow = new WalkFormPoint(button.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement);
-	return pointRow;
-}
-
-pointDeleteButtons.forEach((deleteBtn) => {
-	deleteBtn.addEventListener('click', () => {
-		const pointRow = pointRowForButton(deleteBtn);
-		pointRow.disable();
-		reorder();
-	});
-});
-
-pointMoveUpButtons.forEach((moveBtn) => {
-	moveBtn.addEventListener('click', () => {
-		const root = pointRowForButton(moveBtn).element;
-		const pointIndex = root.dataset.pointIndex;
-		if (pointIndex === '0') {
-			return;
-		}
-
-		console.log('Move from ' + pointIndex + ' to ' + (pointIndex - 1));
-		movePoint(pointIndex, pointIndex - 1);
-	});
-});
-
-pointMoveDownButtons.forEach((moveBtn) => {
-	moveBtn.addEventListener('click', () => {
-		const root = pointRowForButton(moveBtn).element;
-		const pointIndex = root.dataset.pointIndex;
-		if (pointIndex === getLastEnabledRowIdx()) {
-			return;
-		}
-
-		console.log('Move from ' + pointIndex + ' to ' + (pointIndex + 1));
-		movePoint(pointIndex, (pointIndex * 1) + 1);
-	});
-});
-
-function togglePointDisplay (enableCtrl) {
-	const pointRow = new WalkFormPoint(enableCtrl.parentElement.parentElement.parentElement.parentElement.parentElement);
-	if (enableCtrl.value === '1') {
-		pointRow.pointLatitude.setAttribute('required', '');
-		pointRow.pointLongitude.setAttribute('required', '');
-		pointRow.show();
-	} else {
-		pointRow.pointLatitude.removeAttribute('required');
-		pointRow.pointLongitude.removeAttribute('required');
-		pointRow.hide();
+class WalkForm {
+	constructor (element) {
+		this.element = element;
+		this.rows = Array.from(element.querySelectorAll('tr')).map((e) => new WalkFormPoint(e));
+		this.#setupEnableCtrl();
 	}
-}
 
-function walkFormGetCoordinates () {
-	const coordinates = [];
+	#setupEnableCtrl () {
+		const pointEnabledInputs = this.element.getElementsByClassName('point-enabled');
 
-	walkPointsRows.forEach((pointRow) => {
-		if (pointRow.pointEnabled.value === '1') {
-			const latLng = pointRow.getLatLng();
-			if (latLng[0] !== '' || latLng[1] !== '') {
-				coordinates.push(L.latLng(latLng));
-				// coordinates.push(latLng);
+		pointEnabledInputs.forEach((enableCtrl) => {
+			togglePointDisplay(enableCtrl);
+			enableCtrl.addEventListener('change', (event) => {
+				togglePointDisplay(event.target);
+			});
+		});
+
+		function togglePointDisplay (enableCtrl) {
+			const pointRow = new WalkFormPoint(enableCtrl.parentElement.parentElement.parentElement.parentElement.parentElement);
+			if (enableCtrl.value === '1') {
+				pointRow.pointLatitude.setAttribute('required', '');
+				pointRow.pointLongitude.setAttribute('required', '');
+				pointRow.show();
+			} else {
+				pointRow.pointLatitude.removeAttribute('required');
+				pointRow.pointLongitude.removeAttribute('required');
+				pointRow.hide();
 			}
 		}
-	});
+	}
 
-	return coordinates;
-}
+	setupButtons () {
+		const theForm = this; // eslint-disable-line @typescript-eslint/no-this-alias
 
-function populatePointsTable (coordinates) {
-	for (let i = 0; i < coordinates.length; i++) {
-		walkPointsRows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
-		walkPointsRows[i].enable();
-	};
+		function pointRowForButton (button) {
+			const pointRow = new WalkFormPoint(button.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement);
+			return pointRow;
+		}
 
-	for (let i = coordinates.length; i < 50; i++) {
-		walkPointsRows[i].setLatLng('', '');
-		walkPointsRows[i].disable();
+		const pointDeleteButtons = this.element.getElementsByClassName('point-delete');
+
+		pointDeleteButtons.forEach((deleteBtn) => {
+			deleteBtn.addEventListener('click', () => {
+				const pointRow = pointRowForButton(deleteBtn);
+				pointRow.disable();
+				theForm.reorder();
+			});
+		});
+
+		const pointMoveUpButtons = this.element.getElementsByClassName('point-move-up');
+
+		pointMoveUpButtons.forEach((moveBtn) => {
+			moveBtn.addEventListener('click', () => {
+				const root = pointRowForButton(moveBtn).element;
+				const pointIndex = root.dataset.pointIndex;
+				if (pointIndex === '0') {
+					return;
+				}
+
+				console.log('Move from ' + pointIndex + ' to ' + (pointIndex - 1));
+				theForm.movePoint(pointIndex, pointIndex - 1);
+			});
+		});
+
+		const pointMoveDownButtons = this.element.getElementsByClassName('point-move-down');
+
+		pointMoveDownButtons.forEach((moveBtn) => {
+			moveBtn.addEventListener('click', () => {
+				const root = pointRowForButton(moveBtn).element;
+				const pointIndex = root.dataset.pointIndex;
+				if (pointIndex === theForm.getLastEnabledRowIdx()) {
+					return;
+				}
+
+				console.log('Move from ' + pointIndex + ' to ' + (pointIndex + 1));
+				theForm.movePoint(pointIndex, (pointIndex * 1) + 1);
+			});
+		});
+	}
+
+	getCoordinates () {
+		const coordinates = [];
+
+		this.rows.forEach((pointRow) => {
+			if (pointRow.pointEnabled.value === '1') {
+				const latLng = pointRow.getLatLng();
+				if (latLng[0] !== '' || latLng[1] !== '') {
+					coordinates.push(L.latLng(latLng));
+				// coordinates.push(latLng);
+				}
+			}
+		});
+
+		return coordinates;
+	}
+
+	populatePointsTable (coordinates) {
+		for (let i = 0; i < coordinates.length; i++) {
+			this.rows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
+			this.rows[i].enable();
+		};
+
+		for (let i = coordinates.length; i < 50; i++) {
+			this.rows[i].setLatLng('', '');
+			this.rows[i].disable();
+		}
+	}
+
+	movePoint (fromIdx, toIdx) {
+		const coordinates = this.getCoordinates();
+		console.log(coordinates);
+
+		const oldToValue = coordinates[toIdx];
+		coordinates[toIdx] = coordinates[fromIdx];
+		coordinates[fromIdx] = oldToValue;
+
+		this.populatePointsTable(coordinates);
+
+		console.log('Emit event');
+		this.element.dispatchEvent(walkPointsChangedEvent);
+	}
+
+	reorder () { // Really reindex, ensure index numbers go from 0 to <n points> with no gaps
+		const coordinates = this.getCoordinates();
+		console.log(coordinates);
+
+		this.populatePointsTable(coordinates);
+
+		console.log('Emit event');
+		this.element.dispatchEvent(walkPointsChangedEvent);
+	}
+
+	getLastEnabledRowIdx () {
+		const query = this.element.querySelector('tbody tr:nth-last-child(1 of :not(.d-none))');
+		let lastEnabledRow = -1;
+		if (query !== null) lastEnabledRow = query.dataset.pointIndex;
+		return lastEnabledRow;
+	}
+
+	addPoint (lat, lng) {
+		console.log(this.getLastEnabledRowIdx());
+		const pointRow = this.rows[1 + (this.getLastEnabledRowIdx() * 1)];
+		console.log(pointRow);
+		pointRow.enable().setLatLng(lat, lng);
+	}
+
+	removePointWithCoord (coord) {
+		for (const pointRow of this.rows) {
+			const latLng = L.latLng(pointRow.getLatLng());
+			if (latLng.lat === coord.lat && latLng.lng === coord.lng) {
+				pointRow.disable().setLatLng('', '');
+				break;
+			}
+		}
+	}
+
+	replaceAllPoints (coordinates) {
+		for (let i = 0; i < coordinates.length; i++) {
+			this.rows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
+			this.rows[i].enable();
+		};
+
+		for (let i = coordinates.length; i < 50; i++) {
+			this.rows[i].disable();
+			this.rows[i].setLatLng('', '');
+		}
+
+		this.element.dispatchEvent(walkPointsChangedEvent);
 	}
 }
 
-function movePoint (fromIdx, toIdx) {
-	const coordinates = walkFormGetCoordinates();
-	console.log(coordinates);
-
-	const oldToValue = coordinates[toIdx];
-	coordinates[toIdx] = coordinates[fromIdx];
-	coordinates[fromIdx] = oldToValue;
-
-	populatePointsTable(coordinates);
-
-	console.log('Emit event');
-	document.querySelector('table.walk-points').dispatchEvent(walkPointsChangedEvent);
-}
-
-function reorder () {
-	const coordinates = walkFormGetCoordinates();
-	console.log(coordinates);
-
-	populatePointsTable(coordinates);
-
-	console.log('Emit event');
-	document.querySelector('table.walk-points').dispatchEvent(walkPointsChangedEvent);
-}
-
-function setEnableValue (enableCtrl, value) {
-	enableCtrl.value = value;
-	enableCtrl.dispatchEvent(new Event('change'));
-}
+const walkForm = new WalkForm(document.querySelector('table.walk-points'));
+const walkPointsRows = walkForm.rows;
+walkForm.setupButtons();
 
 document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
 	form.addEventListener('submit', event => {
@@ -192,42 +249,6 @@ document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
 document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
 	form.addEventListener('reset', () => {
 		console.log('Form was reset');
-		window.setTimeout(reorder, 0);
+		window.setTimeout(walkForm.reorder, 0);
 	});
 });
-
-function getLastEnabledRowIdx () {
-	const query = document.querySelector('table.walk-points tbody tr:nth-last-child(1 of :not(.d-none))');
-	let lastEnabledRow = -1;
-	if (query !== null) lastEnabledRow = query.dataset.pointIndex;
-	return lastEnabledRow;
-}
-
-function addPoint (lat, lng) { // eslint-disable-line @typescript-eslint/no-unused-vars
-	const pointRow = walkPointsRows[1 + (getLastEnabledRowIdx() * 1)];
-	pointRow.enable().setLatLng(lat, lng);
-}
-
-function removePointWithCoord (coord) { // eslint-disable-line @typescript-eslint/no-unused-vars
-	for (const pointRow of walkPointsRows) {
-		const latLng = L.latLng(pointRow.getLatLng());
-		if (latLng.lat === coord.lat && latLng.lng === coord.lng) {
-			pointRow.disable().setLatLng('', '');
-			break;
-		}
-	}
-}
-
-function replaceAllPoints (coordinates) { // eslint-disable-line @typescript-eslint/no-unused-vars
-	for (let i = 0; i < coordinates.length; i++) {
-		walkPointsRows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
-		walkPointsRows[i].enable();
-	};
-
-	for (let i = coordinates.length; i < 50; i++) {
-		walkPointsRows[i].disable();
-		walkPointsRows[i].setLatLng('', '');
-	}
-
-	document.getElementsByClassName('walk-points')[0].dispatchEvent(walkPointsChangedEvent);
-}
