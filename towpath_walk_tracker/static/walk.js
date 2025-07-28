@@ -1,17 +1,16 @@
 /* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, replaceAllPoints, walkFormGetCoordinates, removePointWithCoord */
 
-let placedMarkerCount = 0;// eslint-disable-line no-unused-vars
-let placedMarkers = [];
-let polyLineWalk = null;// eslint-disable-line no-unused-vars
-
 class LeafletWalkPreview {
-  // constructor () {
-  // }
+  constructor () {
+    this.placedMarkerCount = 0;
+    this.placedMarkers = [];
+    this.polyLineWalk = null;
+  }
 
   clearMarkers () {
-    for (const m of placedMarkers) m.remove();
-    placedMarkers = [];
-    placedMarkerCount = 0;
+    for (const m of this.placedMarkers) m.remove();
+    this.placedMarkers = [];
+    this.placedMarkerCount = 0;
   }
 
   refresh (propagate = true) {
@@ -28,7 +27,7 @@ class LeafletWalkPreview {
         .then(res => res.json())
         .then(coords => {
           feature_group_current_walk.clearLayers();
-          polyLineWalk = L.polyline(coords, { bubblingMouseEvents: true, color: '#ff0000', dashArray: null, dashOffset: null, fill: false, fillColor: '#ff0000', fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }
+          this.polyLineWalk = L.polyline(coords, { bubblingMouseEvents: true, color: '#ff0000', dashArray: null, dashOffset: null, fill: false, fillColor: '#ff0000', fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }
           // ).addTo({{this._parent.get_name()}});
           ).addTo(feature_group_current_walk);
           console.log('Request complete! response:', coords);
@@ -49,8 +48,8 @@ class LeafletWalkPreview {
 
     const marker = L.marker([lat, lng], {});
 
-    placedMarkers.push(marker);
-    placedMarkerCount += 1;
+    this.placedMarkers.push(marker);
+    this.placedMarkerCount += 1;
 
     marker.addTo(feature_group_walk_markers);
 
@@ -62,8 +61,8 @@ class LeafletWalkPreview {
   }
 
   removeMarker (marker) {
-    placedMarkers = placedMarkers.filter(v => v !== marker);
-    placedMarkerCount -= 1;
+    this.placedMarkers = this.placedMarkers.filter(v => v !== marker);
+    this.placedMarkerCount -= 1;
     marker.remove();
   }
 
@@ -84,7 +83,7 @@ class LeafletWalkPreview {
   syncFromForm () {
     const coordinates = walkFormGetCoordinates();
 
-    for (const m of placedMarkers) {
+    for (const m of this.placedMarkers) {
       const pos = m.getLatLng();
       let foundMarker = false;
       for (const c of coordinates) {
@@ -102,7 +101,7 @@ class LeafletWalkPreview {
     // add missing markers
     for (const c of coordinates) {
       let foundCoord = false;
-      for (const m of placedMarkers) {
+      for (const m of this.placedMarkers) {
         const pos = m.getLatLng();
         if (pos.lat === c.lat && pos.lng === c.lng) {
           foundCoord = true;
