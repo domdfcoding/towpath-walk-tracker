@@ -41,7 +41,9 @@ __all__ = ["create_db", "main", "run", "test_db"]
 
 @click_group(cls=SuggestionGroup, invoke_without_command=False, context_settings=CONTEXT_SETTINGS)
 def main() -> None:
-	pass
+	"""
+	Development tools for towpath-walk-tracker.
+	"""
 
 
 command = partial(main.command, context_settings=CONTEXT_SETTINGS)
@@ -50,6 +52,10 @@ group = partial(main.group, context_settings=CONTEXT_SETTINGS, cls=SuggestionGro
 
 @command()
 def run() -> None:
+	"""
+	Run the towpath-walk-tracker development flask server in debug mode.
+	"""
+
 	app.debug = True
 	DebugToolbarExtension(app)
 	app.run(debug=True)
@@ -57,6 +63,10 @@ def run() -> None:
 
 @command()
 def create_db() -> None:
+	"""
+	Configure the towpath-walk-tracker database for the first time.
+	"""
+
 	# this package
 	from towpath_walk_tracker.models import db
 
