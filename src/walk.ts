@@ -1,10 +1,20 @@
 /* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, replaceAllPoints, walkFormGetCoordinates, removePointWithCoord */
 
+type NullOrUndefinedOr<T> = T extends void ? never : null | undefined | T;
+
+interface LatLngArray extends Array<number> {
+    length: 2;
+
+    0: number;
+    1: number;
+
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class LeafletWalkPreview {
 	placedMarkerCount: number;
 	placedMarkers: L.Marker[];
-	polyLineWalk: null;
+	polyLineWalk: NullOrUndefinedOr<L.Polyline>;
 
 	constructor () {
 		this.placedMarkerCount = 0;
@@ -19,7 +29,7 @@ class LeafletWalkPreview {
 	}
 
 	refresh (propagate = true) {
-		const placedMarkerLatLng = walkFormGetCoordinates();
+		const placedMarkerLatLng: Array<L.LatLng> = walkFormGetCoordinates();
 
 		if (propagate) replaceAllPoints(placedMarkerLatLng);
 
@@ -30,7 +40,7 @@ class LeafletWalkPreview {
 				body: JSON.stringify(placedMarkerLatLng)
 			})
 				.then(res => res.json())
-				.then(coords => {
+				.then((coords: Array<LatLngArray>) => {
 					feature_group_current_walk.clearLayers();
 					this.polyLineWalk = L.polyline(coords, { bubblingMouseEvents: true, color: '#ff0000', dashArray: null, dashOffset: null, fill: false, fillColor: '#ff0000', fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }
 						// ).addTo({{this._parent.get_name()}});
@@ -51,7 +61,7 @@ class LeafletWalkPreview {
 			throw ({ lng });
 		}
 
-		const marker = L.marker([lat, lng], {});
+		const marker: L.Marker = L.marker([lat, lng], {});
 
 		this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
@@ -80,17 +90,22 @@ class LeafletWalkPreview {
 			throw ({ lng });
 		}
 
-		const coordinatesArray = geo_json_watercourses.getLayers().map(l => l.feature.geometry.coordinates);
-		const closestLatLng = L.GeometryUtil.closest(map_canal_towpath_walking, coordinatesArray, [lng, lat]);
+		const map: L.Map = map_canal_towpath_walking;
+		const watercourses: L.GeoJSON = geo_json_watercourses;
+
+		// @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
+		// See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293
+		const coordinatesArray = watercourses.getLayers().map(l => l.feature.geometry.coordinates);
+		const closestLatLng = L.GeometryUtil.closest(map, coordinatesArray, [lng, lat]);
 		return closestLatLng; // TODO: lat/lng are flipped from the dict labels
 	}
 
 	syncFromForm () {
-		const coordinates = walkFormGetCoordinates();
+		const coordinates: Array<L.LatLng> = walkFormGetCoordinates();
 
 		for (const m of this.placedMarkers) {
 			const pos = m.getLatLng();
-			let foundMarker = false;
+			let foundMarker: boolean = false;
 			for (const c of coordinates) {
 				if (pos.lat === c.lat && pos.lng === c.lng) {
 					foundMarker = true;
@@ -105,7 +120,7 @@ class LeafletWalkPreview {
 
 		// add missing markers
 		for (const c of coordinates) {
-			let foundCoord = false;
+			let foundCoord: boolean = false;
 			for (const m of this.placedMarkers) {
 				const pos = m.getLatLng();
 				if (pos.lat === c.lat && pos.lng === c.lng) {
