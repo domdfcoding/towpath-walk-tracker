@@ -28,10 +28,13 @@ use_parentheses = true
 remove_redundant_aliases = true
 default_section = "THIRDPARTY"
 known_third_party = [
+    "consolekit",
     "domdf_python_tools",
     "flask",
     "flask_caching",
     "flask_compress",
+    "flask_debugtoolbar",
+    "flask_sqlalchemy",
     "flask_wtf",
     "folium",
     "networkx",
