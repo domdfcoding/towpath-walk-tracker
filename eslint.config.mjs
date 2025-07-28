@@ -43,4 +43,18 @@ export default defineConfig([{
 		indent: ['error', 'tab'],
 		'no-tabs': 0
 	}
-}]);
+},
+{
+	files: ['towpath_walk_tracker/static/walk_form.js'],
+
+	rules: {
+		semi: [2, 'always'],
+		'no-throw-literal': 0,
+		indent: ['error', 'tab'],
+		'no-tabs': 0,
+		camelcase: 0,
+		'no-sequences': 0,
+		'@typescript-eslint/no-unused-expressions': 0
+	}
+}
+]);
