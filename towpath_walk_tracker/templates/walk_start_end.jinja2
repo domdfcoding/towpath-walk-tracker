@@ -7,11 +7,11 @@
             return;
         }
 
-        let closest_latlng = snapCoordToLine(e.latlng.lat, e.latlng.lng);
-        addMarker(closest_latlng.lng, closest_latlng.lat);
+        let closest_latlng = walkPreview.snapCoordToLine(e.latlng.lat, e.latlng.lng);
+        walkPreview.addMarker(closest_latlng.lng, closest_latlng.lat);
         addPoint(closest_latlng.lng, closest_latlng.lat)
 
-        refreshWalkPreview(false);
+        walkPreview.refresh(false);
 
     }
 
