@@ -26,8 +26,43 @@ Command-line entry point.
 #  OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+# stdlib
+from functools import partial
+
+# 3rd party
+from consolekit import CONTEXT_SETTINGS, SuggestionGroup, click_group
+from flask_debugtoolbar import DebugToolbarExtension
+
 # this package
 from towpath_walk_tracker.flask import app
 
-if __name__ == "__main__":
+__all__ = ["create_db", "main", "run", "test_db"]
+
+
+@click_group(cls=SuggestionGroup, invoke_without_command=False, context_settings=CONTEXT_SETTINGS)
+def main() -> None:
+	pass
+
+
+command = partial(main.command, context_settings=CONTEXT_SETTINGS)
+group = partial(main.group, context_settings=CONTEXT_SETTINGS, cls=SuggestionGroup)
+
+
+@command()
+def run() -> None:
+	app.debug = True
+	DebugToolbarExtension(app)
 	app.run(debug=True)
+
+
+@command()
+def create_db() -> None:
+	# this package
+	from towpath_walk_tracker.models import db
+
+	with app.app_context():
+		db.create_all()
+
+
+if __name__ == "__main__":
+	main()

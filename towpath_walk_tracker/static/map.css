@@ -28,3 +28,7 @@ html, body, #map {
 	font-style: italic;
 	color: #aaa;
 }
+
+div#flDebugToolbarHandle {
+	top: 20% !important;
+}
