@@ -1,4 +1,4 @@
-function updateQueryStringParam (key, value) {
+function updateQueryStringParam (key, value): void {
 	const url = new URL(window.location.href);
 	url.searchParams.set(key, value); // Add or update the parameter
 	// window.history.pushState({}, null, url);
@@ -6,7 +6,7 @@ function updateQueryStringParam (key, value) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function setupZoomState (map: L.Map) {
+function setupZoomState (map: L.Map): void {
 	map.on('zoomend', function () {
 		const zoomLvl = map.getZoom();
 		updateQueryStringParam('zoom', zoomLvl);
@@ -19,8 +19,13 @@ function setupZoomState (map: L.Map) {
 	});
 }
 
+interface IZoomState {
+	centre: L.LatLng;
+	zoomLvl: number;
+ }
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function zoomStateFromURL (defaultZoom: number, defaultCentre: L.LatLng) {
+function zoomStateFromURL (defaultZoom: number, defaultCentre: L.LatLng): IZoomState {
 	const url = new URL(window.location.href);
 
 	// let zoomLvl = map.getZoom();

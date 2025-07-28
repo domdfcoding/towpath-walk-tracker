@@ -16,10 +16,41 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([{
-    files: ["**/*.ts", "**/*.js"],
+	files: ['**/*.ts'],
 	extends: compat.extends(
 		'standard',
-		"plugin:@typescript-eslint/eslint-recommended",
+		'plugin:@typescript-eslint/eslint-recommended',
+		'plugin:@typescript-eslint/recommended'
+	),
+
+	plugins: {
+		'@typescript-eslint': typescriptEslint
+	},
+
+	languageOptions: {
+		globals: {
+			...globals.browser
+		},
+
+		parser: tsParser,
+		ecmaVersion: 12,
+		sourceType: 'module'
+	},
+
+	rules: {
+		semi: [2, 'always'],
+		'no-throw-literal': 0,
+		indent: ['error', 'tab'],
+		'no-tabs': 0,
+		'@typescript-eslint/explicit-function-return-type': 'error',
+		'@typescript-eslint/explicit-module-boundary-types': 'error'
+	}
+},
+{
+	files: ['**/*.js', '**/*.mjs'],
+	extends: compat.extends(
+		'standard',
+		'plugin:@typescript-eslint/eslint-recommended',
 		'plugin:@typescript-eslint/recommended'
 	),
 

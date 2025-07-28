@@ -22,13 +22,13 @@ class LeafletWalkPreview {
 		this.polyLineWalk = null;
 	}
 
-	clearMarkers () {
+	clearMarkers (): void {
 		for (const m of this.placedMarkers) m.remove();
 		this.placedMarkers = [];
 		this.placedMarkerCount = 0;
 	}
 
-	refresh (propagate = true) {
+	refresh (propagate = true): void {
 		const placedMarkerLatLng: Array<L.LatLng> = walkForm.getCoordinates();
 
 		if (propagate) walkForm.replaceAllPoints(placedMarkerLatLng);
@@ -52,7 +52,7 @@ class LeafletWalkPreview {
 		}
 	}
 
-	addMarker (lat, lng) {
+	addMarker (lat: number, lng: number): void {
 		// Check haven't tried to treat L.latLng as array or array as L.latLng
 		if (lat === undefined) {
 			throw ({ lat });
@@ -75,13 +75,13 @@ class LeafletWalkPreview {
 		});
 	}
 
-	removeMarker (marker) {
+	removeMarker (marker): void {
 		this.placedMarkers = this.placedMarkers.filter(v => v !== marker);
 		this.placedMarkerCount -= 1;
 		marker.remove();
 	}
 
-	snapCoordToLine (lat, lng) {
+	snapCoordToLine (lat: number, lng: number): L.LatLng {
 		// Check haven't tried to treat L.latLng as array or array as L.latLng
 		if (lat === undefined) {
 			throw ({ lat });
@@ -100,7 +100,7 @@ class LeafletWalkPreview {
 		return closestLatLng; // TODO: lat/lng are flipped from the dict labels
 	}
 
-	syncFromForm () {
+	syncFromForm (): void {
 		const coordinates: Array<L.LatLng> = walkForm.getCoordinates();
 
 		for (const m of this.placedMarkers) {
