@@ -27,9 +27,8 @@ Flask routes and helper functions.
 #
 
 # stdlib
-import itertools
 from functools import lru_cache
-from typing import Any, Callable, Iterable, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union, cast
 
 # 3rd party
 import networkx
@@ -37,27 +36,15 @@ from domdf_python_tools.paths import PathPlus
 from flask import Flask, Response, json, redirect, render_template, request
 from flask_caching import Cache
 from flask_compress import Compress  # type: ignore[import]
-from flask_wtf import FlaskForm  # type: ignore[import]
 from flask_wtf.csrf import CSRFProtect  # type: ignore[import]
 from folium import Figure, JavascriptLink
 from networkx import all_shortest_paths
 from scipy.spatial import KDTree  # type: ignore[import]
-from wtforms import (
-		DateTimeLocalField,
-		Field,
-		FieldList,
-		FloatField,
-		Form,
-		FormField,
-		IntegerField,
-		StringField,
-		TextAreaField,
-		TimeField
-		)
-from wtforms.validators import DataRequired, InputRequired, NumberRange
 
 # this package
+from towpath_walk_tracker.forms import WalkForm
 from towpath_walk_tracker.map import create_map
+from towpath_walk_tracker.models import Walk, db
 from towpath_walk_tracker.network import build_kdtree, build_network, get_node_coordinates
 from towpath_walk_tracker.watercourses import FeatureCollection, exclude_tags, filter_watercourses
 
@@ -88,11 +75,14 @@ app.config["COMPRESS_MIMETYPES"] = [
 app.config["CACHE_TYPE"] = "SimpleCache"
 app.config["CACHE_DEFAULT_TIMEOUT"] = 300
 app.config["SECRET_KEY"] = "1234"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///walks.db"
 app.jinja_env.globals["enumerate"] = enumerate
 
 Compress(app)
 cache = Cache(app)
 csrf = CSRFProtect(app)
+
+db.init_app(app)
 
 
 @app.route("/watercourses.geojson")
@@ -134,7 +124,9 @@ def main_page() -> Union[str, Response]:
 
 	form = WalkForm()
 	if form.validate_on_submit():
-		return redirect("/success")  # type: ignore[return-value]
+		with app.app_context():
+			walk = Walk.from_form(form)
+			return redirect(f"/walk/{walk.id}")  # type: ignore[return-value]
 
 	return render_template(
 			"map.jinja2",
@@ -203,83 +195,6 @@ def get_route() -> List[Tuple[float, float]]:
 	return coords
 
 
-class PointForm(FlaskForm):
-	latitude = FloatField(
-			"latitude",
-			validators=[InputRequired(), NumberRange(min=-180, max=180, message="Invalid coordinate")],
-			)
-	longitude = FloatField(
-			"longitude",
-			validators=[InputRequired(), NumberRange(min=-180, max=180, message="Invalid coordinate")],
-			)
-	# id = IntegerField("id", validators=[InputRequired()])
-	enabled = IntegerField(
-			"Enabled",
-			validators=[InputRequired(), NumberRange(min=0, max=1, message="Invalid Value")],
-			default=0,
-			)
-
-
-class FieldListMinRequired(FieldList):
-
-	def __init__(
-			self,
-			unbound_field: Field,
-			label: Optional[str] = None,
-			min_required_entries: int = 0,
-			min_entries: int = 0,
-			max_entries: Optional[int] = None,
-			separator: str = '-',
-			default: Union[Iterable[Any], Callable[[], Iterable[Any]]] = (),
-			**kwargs,
-			):
-		super().__init__(
-				unbound_field=unbound_field,
-				label=label,
-				validators=[DataRequired()],
-				min_entries=min_entries,
-				max_entries=max_entries,
-				separator=separator,
-				default=default,
-				**kwargs
-				)
-		self.min_required_entries = min_required_entries
-
-	def validate(  # type: ignore[override]
-		self,
-		form: Form,
-		extra_validators: Sequence[Callable] = (),
-		) -> bool:
-
-		num_valid = 0
-		self.errors = []
-
-		# Run validators on all entries within
-		for subfield in self.entries:
-			if subfield.validate(form):
-				num_valid += 1
-
-		if num_valid >= self.min_required_entries:
-			self.errors = []
-		else:
-			self.errors = [{
-					"id": [f"A minimum of {self.min_required_entries} entries are required; got {num_valid}."]
-					}]
-
-		chain = itertools.chain(self.validators, extra_validators)  # type: ignore[arg-type]
-		self._run_validation_chain(form, chain)  # type: ignore[attr-defined]
-
-		return len(self.errors) == 0
-
-
-class WalkForm(FlaskForm):
-	points = FieldListMinRequired(FormField(PointForm), min_required_entries=2, min_entries=50)
-	title = StringField("Title")  # , validators=[DataRequired()])
-	start = DateTimeLocalField("Start")  # , validators=[DataRequired()])
-	duration = TimeField("Duration")  # , validators=[DataRequired()])
-	notes = TextAreaField("Notes")  # , validators=[DataRequired()])
-
-
 # @app.route("/walk", methods=["GET", "POST"])
 # def walk():
 # 	form = WalkForm()
@@ -287,3 +202,26 @@ class WalkForm(FlaskForm):
 # 		print(form.data)
 # 		return redirect("/success")
 # 	return render_template("walk_form.jinja2", form=form)
+
+
+@app.route("/walk/<int:walk_id>")
+def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
+	with app.app_context():
+		result = Walk.query.get(walk_id)
+		if result is None:
+			return Response("Not Found", 404)
+
+		walk: Walk = cast(Walk, result)
+
+		points = []
+		for point in walk.points:
+			points.append({"latitude": point.latitude, "longitude": point.longitude, "id": point.id})
+
+		return {
+				"title": walk.title,
+				"start": walk.start,
+				"duration": walk.duration,
+				"notes": walk.notes,
+				"id": walk.id,
+				"points": points,
+				}
