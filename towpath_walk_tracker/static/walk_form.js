@@ -12,23 +12,36 @@ const pointEnabledInputs = document.getElementsByClassName('point-enabled');
 const pointDeleteButtons = document.getElementsByClassName('point-delete');
 const pointMoveUpButtons = document.getElementsByClassName('point-move-up');
 const pointMoveDownButtons = document.getElementsByClassName('point-move-down');
-const walkPointsRows = document.querySelectorAll('table.walk-points tr');
 
-walkPointsRows.forEach((pointRow) => {
-	pointRow.pointLatitude = pointRow.getElementsByClassName('point-latitude')[0];
-	pointRow.pointLongitude = pointRow.getElementsByClassName('point-longitude')[0];
-	pointRow.pointEnabled = pointRow.getElementsByClassName('point-enabled')[0];
-	pointRow.enable = function () {
+class WalkFormPoint {
+	constructor (element) {
+		this.element = element;
+		this.pointLatitude = this.element.getElementsByClassName('point-latitude')[0];
+		this.pointLongitude = this.element.getElementsByClassName('point-longitude')[0];
+		this.pointEnabled = this.element.getElementsByClassName('point-enabled')[0];
+	}
+
+	hide () {
+		this.element.classList.add('d-none');
+	}
+
+	show () {
+		this.element.classList.remove('d-none');
+	}
+
+	enable () {
 		setEnableValue(this.pointEnabled, 1);
 		return this;
 	};
-	pointRow.disable = function () {
+
+	disable () {
 		setEnableValue(this.pointEnabled, 0);
 		this.setLatLng('', '');
 		return this;
 	};
-	pointRow.getLatLng = function () { return [this.pointLatitude.value, this.pointLongitude.value]; };
-	pointRow.setLatLng = function (lat, lng) {
+
+	getLatLng () { return [this.pointLatitude.value, this.pointLongitude.value]; };
+	setLatLng (lat, lng) {
 		// Check haven't tried to treat L.latLng as array or array as L.latLng
 		if (lat === undefined) {
 			throw ({ lat });
@@ -41,7 +54,9 @@ walkPointsRows.forEach((pointRow) => {
 		this.pointLongitude.value = lng;
 		return this;
 	};
-});
+}
+
+const walkPointsRows = Array.from(document.querySelectorAll('table.walk-points tr')).map((e) => new WalkFormPoint(e));
 
 pointEnabledInputs.forEach((enableCtrl) => {
 	togglePointDisplay(enableCtrl);
@@ -50,48 +65,55 @@ pointEnabledInputs.forEach((enableCtrl) => {
 	});
 });
 
+function pointRowForButton (button) {
+	const pointRow = new WalkFormPoint(button.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement);
+	return pointRow;
+}
+
 pointDeleteButtons.forEach((deleteBtn) => {
 	deleteBtn.addEventListener('click', () => {
-		deleteBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.disable();
+		const pointRow = pointRowForButton(deleteBtn);
+		pointRow.disable();
 		reorder();
 	});
 });
 
 pointMoveUpButtons.forEach((moveBtn) => {
 	moveBtn.addEventListener('click', () => {
-		const root = moveBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
-		if (root.dataset.pointIndex === '0') {
+		const root = pointRowForButton(moveBtn).element;
+		const pointIndex = root.dataset.pointIndex;
+		if (pointIndex === '0') {
 			return;
 		}
 
-		console.log('Move from ' + root.dataset.pointIndex + ' to ' + (root.dataset.pointIndex - 1));
-		movePoint(root.dataset.pointIndex, root.dataset.pointIndex - 1);
+		console.log('Move from ' + pointIndex + ' to ' + (pointIndex - 1));
+		movePoint(pointIndex, pointIndex - 1);
 	});
 });
 
 pointMoveDownButtons.forEach((moveBtn) => {
 	moveBtn.addEventListener('click', () => {
-		const root = moveBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
-		const lastEnabledRow = document.querySelector('table.walk-points tbody tr:nth-last-child(1 of :not(.d-none))').dataset.pointIndex;
-		if (root.dataset.pointIndex === lastEnabledRow) {
+		const root = pointRowForButton(moveBtn).element;
+		const pointIndex = root.dataset.pointIndex;
+		if (pointIndex === getLastEnabledRowIdx()) {
 			return;
 		}
 
-		console.log('Move from ' + root.dataset.pointIndex + ' to ' + (root.dataset.pointIndex + 1));
-		movePoint(root.dataset.pointIndex, (root.dataset.pointIndex * 1) + 1);
+		console.log('Move from ' + pointIndex + ' to ' + (pointIndex + 1));
+		movePoint(pointIndex, (pointIndex * 1) + 1);
 	});
 });
 
 function togglePointDisplay (enableCtrl) {
-	const pointRow = enableCtrl.parentElement.parentElement.parentElement.parentElement.parentElement;
+	const pointRow = new WalkFormPoint(enableCtrl.parentElement.parentElement.parentElement.parentElement.parentElement);
 	if (enableCtrl.value === '1') {
 		pointRow.pointLatitude.setAttribute('required', '');
 		pointRow.pointLongitude.setAttribute('required', '');
-		pointRow.classList.remove('d-none');
+		pointRow.show();
 	} else {
 		pointRow.pointLatitude.removeAttribute('required');
 		pointRow.pointLongitude.removeAttribute('required');
-		pointRow.classList.add('d-none');
+		pointRow.hide();
 	}
 }
 
@@ -174,11 +196,15 @@ document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
 	});
 });
 
-function addPoint (lat, lng) { // eslint-disable-line @typescript-eslint/no-unused-vars
+function getLastEnabledRowIdx () {
 	const query = document.querySelector('table.walk-points tbody tr:nth-last-child(1 of :not(.d-none))');
 	let lastEnabledRow = -1;
 	if (query !== null) lastEnabledRow = query.dataset.pointIndex;
-	const pointRow = walkPointsRows[1 + (lastEnabledRow * 1)];
+	return lastEnabledRow;
+}
+
+function addPoint (lat, lng) { // eslint-disable-line @typescript-eslint/no-unused-vars
+	const pointRow = walkPointsRows[1 + (getLastEnabledRowIdx() * 1)];
 	pointRow.enable().setLatLng(lat, lng);
 }
 
