@@ -109,15 +109,20 @@ repos:
    rev: v7.32.0
    hooks:
     - id: eslint
+      files: \.m?[jt]sx?$
+      types:
+       - file
       args:
        - --fix
       additional_dependencies:
-       - eslint@7.32.0
-       - eslint-config-standard@16.0.3
-       - eslint-plugin-es@3.0.1
-       - eslint-plugin-import@2.24.0
-       - eslint-plugin-node@11.1.0
-       - eslint-plugin-promise@5.1.0
+       - eslint@9.32.0
+       - eslint-config-standard@17.1.0
+       - eslint-plugin-es@4.1.0
+       - eslint-plugin-import@2.32.0
+       - eslint-plugin-n@17.21.3
+       - eslint-plugin-promise@7.2.1
+       - '@typescript-eslint/parser@8.38.0'
+       - '@typescript-eslint/eslint-plugin@8.38.0'
 
  - repo: https://github.com/djlint/djLint
    rev: v1.35.2

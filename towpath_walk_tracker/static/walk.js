@@ -1,5 +1,5 @@
 /* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, replaceAllPoints, walkFormGetCoordinates, removePointWithCoord */
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class LeafletWalkPreview {
 	constructor () {
 		this.placedMarkerCount = 0;
@@ -38,10 +38,10 @@ class LeafletWalkPreview {
 	addMarker (lat, lng) {
 		// Check haven't tried to treat L.latLng as array or array as L.latLng
 		if (lat === undefined) {
-			throw ({ lat: lat });
+			throw ({ lat });
 		}
 		if (lng === undefined) {
-			throw ({ lng: lng });
+			throw ({ lng });
 		}
 		const marker = L.marker([lat, lng], {});
 		this.placedMarkers.push(marker);
@@ -63,10 +63,10 @@ class LeafletWalkPreview {
 	snapCoordToLine (lat, lng) {
 		// Check haven't tried to treat L.latLng as array or array as L.latLng
 		if (lat === undefined) {
-			throw ({ lat: lat });
+			throw ({ lat });
 		}
 		if (lng === undefined) {
-			throw ({ lng: lng });
+			throw ({ lng });
 		}
 		const coordinatesArray = geo_json_watercourses.getLayers().map(l => l.feature.geometry.coordinates);
 		const closestLatLng = L.GeometryUtil.closest(map_canal_towpath_walking, coordinatesArray, [lng, lat]);

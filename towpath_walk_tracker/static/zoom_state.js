@@ -19,8 +19,8 @@ function setupZoomState (map) {
 	});
 }
 
-// eslint-disable-next-line
-function zoomStateFromURL (defaultZoom, defaultCentre) {  // eslint-disable-line no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function zoomStateFromURL (defaultZoom, defaultCentre) {
 	const url = new URL(window.location.href);
 
 	// let zoomLvl = map.getZoom();
@@ -38,5 +38,5 @@ function zoomStateFromURL (defaultZoom, defaultCentre) {  // eslint-disable-line
 		centre.lng = url.searchParams.get('lng');
 	}
 
-	return { centre: centre, zoomLvl: zoomLvl };
+	return { centre, zoomLvl };
 }

@@ -31,10 +31,10 @@ walkPointsRows.forEach((pointRow) => {
 	pointRow.setLatLng = function (lat, lng) {
 		// Check haven't tried to treat L.latLng as array or array as L.latLng
 		if (lat === undefined) {
-			throw ({ lat: lat });
+			throw ({ lat });
 		}
 		if (lng === undefined) {
-			throw ({ lng: lng });
+			throw ({ lng });
 		}
 
 		this.pointLatitude.value = lat;
@@ -51,14 +51,14 @@ pointEnabledInputs.forEach((enableCtrl) => {
 });
 
 pointDeleteButtons.forEach((deleteBtn) => {
-	deleteBtn.addEventListener('click', (event) => {
+	deleteBtn.addEventListener('click', () => {
 		deleteBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.disable();
 		reorder();
 	});
 });
 
 pointMoveUpButtons.forEach((moveBtn) => {
-	moveBtn.addEventListener('click', (event) => {
+	moveBtn.addEventListener('click', () => {
 		const root = moveBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
 		if (root.dataset.pointIndex === '0') {
 			return;
@@ -70,7 +70,7 @@ pointMoveUpButtons.forEach((moveBtn) => {
 });
 
 pointMoveDownButtons.forEach((moveBtn) => {
-	moveBtn.addEventListener('click', (event) => {
+	moveBtn.addEventListener('click', () => {
 		const root = moveBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
 		const lastEnabledRow = document.querySelector('table.walk-points tbody tr:nth-last-child(1 of :not(.d-none))').dataset.pointIndex;
 		if (root.dataset.pointIndex === lastEnabledRow) {
@@ -168,13 +168,13 @@ document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
 });
 
 document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
-	form.addEventListener('reset', event => {
+	form.addEventListener('reset', () => {
 		console.log('Form was reset');
 		window.setTimeout(reorder, 0);
 	});
 });
 
-function addPoint (lat, lng) { // eslint-disable-line no-unused-vars
+function addPoint (lat, lng) { // eslint-disable-line @typescript-eslint/no-unused-vars
 	const query = document.querySelector('table.walk-points tbody tr:nth-last-child(1 of :not(.d-none))');
 	let lastEnabledRow = -1;
 	if (query !== null) lastEnabledRow = query.dataset.pointIndex;
@@ -182,7 +182,7 @@ function addPoint (lat, lng) { // eslint-disable-line no-unused-vars
 	pointRow.enable().setLatLng(lat, lng);
 }
 
-function removePointWithCoord (coord) { // eslint-disable-line no-unused-vars
+function removePointWithCoord (coord) { // eslint-disable-line @typescript-eslint/no-unused-vars
 	for (const pointRow of walkPointsRows) {
 		const latLng = L.latLng(pointRow.getLatLng());
 		if (latLng.lat === coord.lat && latLng.lng === coord.lng) {
@@ -192,7 +192,7 @@ function removePointWithCoord (coord) { // eslint-disable-line no-unused-vars
 	}
 }
 
-function replaceAllPoints (coordinates) { // eslint-disable-line no-unused-vars
+function replaceAllPoints (coordinates) { // eslint-disable-line @typescript-eslint/no-unused-vars
 	for (let i = 0; i < coordinates.length; i++) {
 		walkPointsRows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
 		walkPointsRows[i].enable();
