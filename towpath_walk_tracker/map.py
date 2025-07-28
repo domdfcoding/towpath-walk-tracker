@@ -100,10 +100,6 @@ def create_map(
 	m.add_js_link("leaflet.geometryutil", "/static/leaflet.geometryutil.js")
 	m.add_js_link("leaflet-sidebar.js", "/static/leaflet-sidebar.min.js")
 	m.add_js_link("htmx.min", "/static/htmx.min.js")
-	m.add_css_link(
-			"font-awesome.min",
-			"https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css",
-			)
 	m.add_css_link("leaflet-sidebar.css", "/static/leaflet-sidebar.min.css")
 	m.add_css_link("map.css", "/static/map.css")
 
