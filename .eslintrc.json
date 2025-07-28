@@ -11,6 +11,8 @@
     },
     "rules": {
         "semi": [2, "always"],
-        "no-throw-literal": 0
+        "no-throw-literal": 0,
+        "indent": ["error", "tab"],
+        "no-tabs": 0
     }
 }
