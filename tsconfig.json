@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "./towpath_walk_tracker/static",
+    "allowJs": true,
+    "target": "es2015"
+  },
+  "include": ["./src/**/*"],
+  "noEmit": false,
+  "noEmitOnError": false
+}

@@ -133,6 +133,13 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+
+        const walkPreview = new LeafletWalkPreview();
+
+        document.querySelector('table.walk-points').addEventListener('changed',
+            (e) => { walkPreview.syncFromForm(); }
+        );
+
         flatpickr(".form-control#start", {enableTime: true, dateFormat: "Y-m-d H:i"});
         var form = document.getElementById("walk-form")
         // form.reset()  // Remove any elements from before page refreshed  // TODO: doesn't seem to work

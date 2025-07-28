@@ -1,6 +1,12 @@
 /* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, replaceAllPoints, walkFormGetCoordinates, removePointWithCoord */
+
+
 // eslint-disable-next-line no-unused-vars
 class LeafletWalkPreview {
+  placedMarkerCount: number;
+  placedMarkers: any[];
+  polyLineWalk: null;
+
 	constructor () {
 		this.placedMarkerCount = 0;
 		this.placedMarkers = [];
@@ -8,14 +14,16 @@ class LeafletWalkPreview {
 	}
 
 	clearMarkers () {
-		for (const m of this.placedMarkers) { m.remove(); }
+		for (const m of this.placedMarkers) m.remove();
 		this.placedMarkers = [];
 		this.placedMarkerCount = 0;
 	}
 
 	refresh (propagate = true) {
 		const placedMarkerLatLng = walkFormGetCoordinates();
-		if (propagate) { replaceAllPoints(placedMarkerLatLng); }
+
+		if (propagate) replaceAllPoints(placedMarkerLatLng);
+
 		if (placedMarkerLatLng.length >= 2) {
 			fetch('/get-route', {
 				method: 'POST',
@@ -43,10 +51,14 @@ class LeafletWalkPreview {
 		if (lng === undefined) {
 			throw ({ lng: lng });
 		}
+
 		const marker = L.marker([lat, lng], {});
+
 		this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
+
 		marker.addTo(feature_group_walk_markers);
+
 		marker.on('contextmenu', e => {
 			removePointWithCoord(e.target.getLatLng());
 			this.removeMarker(e.target);
@@ -68,6 +80,7 @@ class LeafletWalkPreview {
 		if (lng === undefined) {
 			throw ({ lng: lng });
 		}
+
 		const coordinatesArray = geo_json_watercourses.getLayers().map(l => l.feature.geometry.coordinates);
 		const closestLatLng = L.GeometryUtil.closest(map_canal_towpath_walking, coordinatesArray, [lng, lat]);
 		return closestLatLng; // TODO: lat/lng are flipped from the dict labels
@@ -75,6 +88,7 @@ class LeafletWalkPreview {
 
 	syncFromForm () {
 		const coordinates = walkFormGetCoordinates();
+
 		for (const m of this.placedMarkers) {
 			const pos = m.getLatLng();
 			let foundMarker = false;
@@ -84,10 +98,12 @@ class LeafletWalkPreview {
 					break;
 				}
 			}
+
 			if (!foundMarker) {
 				this.removeMarker(m);
 			}
 		}
+
 		// add missing markers
 		for (const c of coordinates) {
 			let foundCoord = false;
@@ -98,10 +114,12 @@ class LeafletWalkPreview {
 					break;
 				}
 			}
+
 			if (!foundCoord) {
 				this.addMarker(c.lat, c.lng);
 			}
 		}
+
 		this.refresh(false);
 	}
 }

@@ -20,3 +20,7 @@ bare-ignore:
 
 lint: unused-imports incomplete-defs bare-ignore
 	tox -n qa
+
+tsc:
+	- npx tsc
+	pre-commit run eslint --files towpath_walk_tracker/static/*.js
