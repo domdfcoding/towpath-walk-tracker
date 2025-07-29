@@ -129,3 +129,14 @@ repos:
    hooks:
     - id: djlint-reformat-jinja
     - id: djlint-jinja
+
+ - repo: local
+   hooks:
+    - id: compile-css
+      language: node
+      name: Compile SCSS and minify css
+      entry: ./rebuild_css.sh
+      always_run: true
+      pass_filenames: false
+      additional_dependencies:
+       - sass@1.32.0

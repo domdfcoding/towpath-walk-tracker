@@ -87,3 +87,5 @@ Pipfile.lock
 .pyre/
 node_modules
 package-lock.json
+.env
+**/.sass-cache

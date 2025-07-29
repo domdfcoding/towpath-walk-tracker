@@ -29,6 +29,8 @@ python_versions:
 additional_ignore:
  - node_modules
  - package-lock.json
+ - .env
+ - "**/.sass-cache"
 
 exclude_files:
  - justfile
