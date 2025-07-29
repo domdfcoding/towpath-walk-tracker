@@ -2,7 +2,8 @@
   "compilerOptions": {
     "outDir": "./towpath_walk_tracker/static",
     "allowJs": true,
-    "target": "es2015"
+    "target": "es2015",
+    "types": ["leaflet-geometryutil"]
   },
   "include": ["./src/**/*"],
   "noEmit": false,

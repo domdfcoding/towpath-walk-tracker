@@ -14,6 +14,8 @@ class LeafletWalkPreview {
 	}
 
 	refresh (propagate = true) {
+		// @ts-expect-error  // global varaiable
+		const currentWalkLayer = feature_group_current_walk;
 		const placedMarkerLatLng = walkForm.getCoordinates();
 		if (propagate) { walkForm.replaceAllPoints(placedMarkerLatLng); }
 		if (placedMarkerLatLng.length >= 2) {
@@ -24,14 +26,14 @@ class LeafletWalkPreview {
 			})
 				.then(res => res.json())
 				.then((coords) => {
-					feature_group_current_walk.clearLayers();
+					currentWalkLayer.clearLayers();
 					this.polyLineWalk = L.polyline(coords, { bubblingMouseEvents: true, color: '#ff0000', dashArray: null, dashOffset: null, fill: false, fillColor: '#ff0000', fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }
 						// ).addTo({{this._parent.get_name()}});
-					).addTo(feature_group_current_walk);
+					).addTo(currentWalkLayer);
 					console.log('Request complete! response:', coords);
 				});
 		} else {
-			feature_group_current_walk.clearLayers();
+			currentWalkLayer.clearLayers();
 		}
 	}
 
@@ -46,7 +48,9 @@ class LeafletWalkPreview {
 		const marker = L.marker([lat, lng], {});
 		this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
-		marker.addTo(feature_group_walk_markers);
+		// @ts-expect-error  // global varaiable
+		const walkMarkersLayer = feature_group_walk_markers;
+		marker.addTo(walkMarkersLayer);
 		marker.on('contextmenu', e => {
 			walkForm.removePointWithCoord(e.target.getLatLng());
 			this.removeMarker(e.target);
@@ -68,13 +72,15 @@ class LeafletWalkPreview {
 		if (lng === undefined) {
 			throw ({ lng });
 		}
+		// @ts-expect-error  // global varaiable
 		const map = map_canal_towpath_walking;
+		// @ts-expect-error  // global varaiable
 		const watercourses = geo_json_watercourses;
 		// @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
 		// See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293
 		const coordinatesArray = watercourses.getLayers().map(l => l.feature.geometry.coordinates);
 		const closestLatLng = L.GeometryUtil.closest(map, coordinatesArray, [lng, lat]);
-		return closestLatLng; // TODO: lat/lng are flipped from the dict labels
+		return L.latLng(closestLatLng.lng, closestLatLng.lat);
 	}
 
 	syncFromForm () {

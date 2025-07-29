@@ -8,8 +8,8 @@
         }
 
         let closest_latlng = walkPreview.snapCoordToLine(e.latlng.lat, e.latlng.lng);
-        walkPreview.addMarker(closest_latlng.lng, closest_latlng.lat);
-        walkForm.addPoint(closest_latlng.lng, closest_latlng.lat)
+        walkPreview.addMarker(closest_latlng.lat, closest_latlng.lng);
+        walkForm.addPoint(closest_latlng.lat, closest_latlng.lng)
 
         walkPreview.refresh(false);
 
