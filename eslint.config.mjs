@@ -76,7 +76,7 @@ export default defineConfig([{
 	}
 },
 {
-	files: ['towpath_walk_tracker/static/walk_form.js'],
+	files: ['towpath_walk_tracker/static/js/walk_form.js'],
 
 	rules: {
 		semi: [2, 'always'],

@@ -85,7 +85,7 @@ class ZoomStateJS(folium.MacroElement):
 		) -> "ZoomStateJS":
 		super().add_to(parent, name, index)
 		assert isinstance(parent, folium.Map)
-		parent.add_js_link("zoom-state", "/static/zoom_state.js")
+		parent.add_js_link("zoom-state", "/static/js/zoom_state.js")
 		return self
 
 
