@@ -12,13 +12,16 @@ unused-imports:
 incomplete-defs:
 	tox -e lint -- --select MAN
 
+fontawesome:
+	tox -e fontawesome
+
 vdiff:
 	git diff $(repo-helper show version -q)..HEAD
 
 bare-ignore:
 	greppy '# type:? *ignore(?!\[|\w)' -s
 
-lint: unused-imports incomplete-defs bare-ignore
+lint: unused-imports incomplete-defs bare-ignore fontawesome
 	tox -n qa
 
 tsc:
