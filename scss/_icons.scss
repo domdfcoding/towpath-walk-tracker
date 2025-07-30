@@ -94,7 +94,7 @@ readers do not read off random characters that represent icons */
 // .#{$fa-css-prefix}-band-aid:before { content: fa-content($fa-var-band-aid); }
 // .#{$fa-css-prefix}-bandcamp:before { content: fa-content($fa-var-bandcamp); }
 // .#{$fa-css-prefix}-barcode:before { content: fa-content($fa-var-barcode); }
-// .#{$fa-css-prefix}-bars:before { content: fa-content($fa-var-bars); }
+.#{$fa-css-prefix}-bars:before { content: fa-content($fa-var-bars); }
 // .#{$fa-css-prefix}-baseball-ball:before { content: fa-content($fa-var-baseball-ball); }
 // .#{$fa-css-prefix}-basketball-ball:before { content: fa-content($fa-var-basketball-ball); }
 // .#{$fa-css-prefix}-bath:before { content: fa-content($fa-var-bath); }
@@ -194,14 +194,14 @@ readers do not read off random characters that represent icons */
 // .#{$fa-css-prefix}-car-crash:before { content: fa-content($fa-var-car-crash); }
 // .#{$fa-css-prefix}-car-side:before { content: fa-content($fa-var-car-side); }
 // .#{$fa-css-prefix}-caravan:before { content: fa-content($fa-var-caravan); }
-// .#{$fa-css-prefix}-caret-down:before { content: fa-content($fa-var-caret-down); }
-// .#{$fa-css-prefix}-caret-left:before { content: fa-content($fa-var-caret-left); }
-// .#{$fa-css-prefix}-caret-right:before { content: fa-content($fa-var-caret-right); }
+.#{$fa-css-prefix}-caret-down:before { content: fa-content($fa-var-caret-down); }
+.#{$fa-css-prefix}-caret-left:before { content: fa-content($fa-var-caret-left); }
+.#{$fa-css-prefix}-caret-right:before { content: fa-content($fa-var-caret-right); }
 // .#{$fa-css-prefix}-caret-square-down:before { content: fa-content($fa-var-caret-square-down); }
 // .#{$fa-css-prefix}-caret-square-left:before { content: fa-content($fa-var-caret-square-left); }
 // .#{$fa-css-prefix}-caret-square-right:before { content: fa-content($fa-var-caret-square-right); }
 // .#{$fa-css-prefix}-caret-square-up:before { content: fa-content($fa-var-caret-square-up); }
-// .#{$fa-css-prefix}-caret-up:before { content: fa-content($fa-var-caret-up); }
+.#{$fa-css-prefix}-caret-up:before { content: fa-content($fa-var-caret-up); }
 // .#{$fa-css-prefix}-carrot:before { content: fa-content($fa-var-carrot); }
 // .#{$fa-css-prefix}-cart-arrow-down:before { content: fa-content($fa-var-cart-arrow-down); }
 // .#{$fa-css-prefix}-cart-plus:before { content: fa-content($fa-var-cart-plus); }
@@ -283,7 +283,7 @@ readers do not read off random characters that represent icons */
 // .#{$fa-css-prefix}-codepen:before { content: fa-content($fa-var-codepen); }
 // .#{$fa-css-prefix}-codiepie:before { content: fa-content($fa-var-codiepie); }
 // .#{$fa-css-prefix}-coffee:before { content: fa-content($fa-var-coffee); }
-// .#{$fa-css-prefix}-cog:before { content: fa-content($fa-var-cog); }
+.#{$fa-css-prefix}-cog:before { content: fa-content($fa-var-cog); }
 // .#{$fa-css-prefix}-cogs:before { content: fa-content($fa-var-cogs); }
 // .#{$fa-css-prefix}-coins:before { content: fa-content($fa-var-coins); }
 // .#{$fa-css-prefix}-columns:before { content: fa-content($fa-var-columns); }
@@ -418,10 +418,10 @@ readers do not read off random characters that represent icons */
 // .#{$fa-css-prefix}-ello:before { content: fa-content($fa-var-ello); }
 // .#{$fa-css-prefix}-ember:before { content: fa-content($fa-var-ember); }
 // .#{$fa-css-prefix}-empire:before { content: fa-content($fa-var-empire); }
-// .#{$fa-css-prefix}-envelope:before { content: fa-content($fa-var-envelope); }
-// .#{$fa-css-prefix}-envelope-open:before { content: fa-content($fa-var-envelope-open); }
-// .#{$fa-css-prefix}-envelope-open-text:before { content: fa-content($fa-var-envelope-open-text); }
-// .#{$fa-css-prefix}-envelope-square:before { content: fa-content($fa-var-envelope-square); }
+.#{$fa-css-prefix}-envelope:before { content: fa-content($fa-var-envelope); }
+.#{$fa-css-prefix}-envelope-open:before { content: fa-content($fa-var-envelope-open); }
+.#{$fa-css-prefix}-envelope-open-text:before { content: fa-content($fa-var-envelope-open-text); }
+.#{$fa-css-prefix}-envelope-square:before { content: fa-content($fa-var-envelope-square); }
 // .#{$fa-css-prefix}-envira:before { content: fa-content($fa-var-envira); }
 // .#{$fa-css-prefix}-equals:before { content: fa-content($fa-var-equals); }
 // .#{$fa-css-prefix}-eraser:before { content: fa-content($fa-var-eraser); }
@@ -968,9 +968,9 @@ readers do not read off random characters that represent icons */
 // .#{$fa-css-prefix}-play-circle:before { content: fa-content($fa-var-play-circle); }
 // .#{$fa-css-prefix}-playstation:before { content: fa-content($fa-var-playstation); }
 // .#{$fa-css-prefix}-plug:before { content: fa-content($fa-var-plug); }
-// .#{$fa-css-prefix}-plus:before { content: fa-content($fa-var-plus); }
-// .#{$fa-css-prefix}-plus-circle:before { content: fa-content($fa-var-plus-circle); }
-// .#{$fa-css-prefix}-plus-square:before { content: fa-content($fa-var-plus-square); }
+.#{$fa-css-prefix}-plus:before { content: fa-content($fa-var-plus); }
+.#{$fa-css-prefix}-plus-circle:before { content: fa-content($fa-var-plus-circle); }
+.#{$fa-css-prefix}-plus-square:before { content: fa-content($fa-var-plus-square); }
 // .#{$fa-css-prefix}-podcast:before { content: fa-content($fa-var-podcast); }
 // .#{$fa-css-prefix}-poll:before { content: fa-content($fa-var-poll); }
 // .#{$fa-css-prefix}-poll-h:before { content: fa-content($fa-var-poll-h); }
@@ -1295,7 +1295,7 @@ readers do not read off random characters that represent icons */
 // .#{$fa-css-prefix}-tram:before { content: fa-content($fa-var-tram); }
 // .#{$fa-css-prefix}-transgender:before { content: fa-content($fa-var-transgender); }
 // .#{$fa-css-prefix}-transgender-alt:before { content: fa-content($fa-var-transgender-alt); }
-// .#{$fa-css-prefix}-trash:before { content: fa-content($fa-var-trash); }
+.#{$fa-css-prefix}-trash:before { content: fa-content($fa-var-trash); }
 // .#{$fa-css-prefix}-trash-alt:before { content: fa-content($fa-var-trash-alt); }
 // .#{$fa-css-prefix}-trash-restore:before { content: fa-content($fa-var-trash-restore); }
 // .#{$fa-css-prefix}-trash-restore-alt:before { content: fa-content($fa-var-trash-restore-alt); }
@@ -1338,7 +1338,7 @@ readers do not read off random characters that represent icons */
 // .#{$fa-css-prefix}-upload:before { content: fa-content($fa-var-upload); }
 // .#{$fa-css-prefix}-ups:before { content: fa-content($fa-var-ups); }
 // .#{$fa-css-prefix}-usb:before { content: fa-content($fa-var-usb); }
-// .#{$fa-css-prefix}-user:before { content: fa-content($fa-var-user); }
+.#{$fa-css-prefix}-user:before { content: fa-content($fa-var-user); }
 // .#{$fa-css-prefix}-user-alt:before { content: fa-content($fa-var-user-alt); }
 // .#{$fa-css-prefix}-user-alt-slash:before { content: fa-content($fa-var-user-alt-slash); }
 // .#{$fa-css-prefix}-user-astronaut:before { content: fa-content($fa-var-user-astronaut); }
