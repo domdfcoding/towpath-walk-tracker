@@ -31,12 +31,11 @@ from functools import partial
 
 # 3rd party
 from consolekit import CONTEXT_SETTINGS, SuggestionGroup, click_group
-from flask_debugtoolbar import DebugToolbarExtension
 
 # this package
 from towpath_walk_tracker.flask import app
 
-__all__ = ["create_db", "main", "run", "test_db"]
+__all__ = ["create_db", "get_data", "main", "run"]
 
 
 @click_group(cls=SuggestionGroup, invoke_without_command=False, context_settings=CONTEXT_SETTINGS)
@@ -56,6 +55,9 @@ def run() -> None:
 	Run the towpath-walk-tracker development flask server in debug mode.
 	"""
 
+	# 3rd party
+	from flask_debugtoolbar import DebugToolbarExtension
+
 	app.debug = True
 	DebugToolbarExtension(app)
 	app.run(debug=True)
@@ -72,6 +74,39 @@ def create_db() -> None:
 
 	with app.app_context():
 		db.create_all()
+
+
+overpass_query = """
+[out:json][timeout:200];
+area(id:3600062149)->.searchArea;
+(
+nwr["waterway"="canal"](area.searchArea);
+nwr["waterway"="river"]["boat"="yes"](area.searchArea);
+nwr["tunnel"="canal"]["towpath"="yes"](area.searchArea);
+nwr["leisure"="marina"](area.searchArea);
+nwr["water"="basin"](area.searchArea);
+nwr["water"="reservoir"](area.searchArea);
+);
+out geom;
+"""
+
+
+@command()
+def get_data() -> None:
+	"""
+	Query overpass for watercourses data.
+	"""
+
+	# stdlib
+	import json
+
+	# this package
+	from towpath_walk_tracker.watercourses import query_overpass
+
+	data = query_overpass(overpass_query)
+
+	with open("data.geojson", 'w', encoding="UTF-8") as fp:
+		json.dump(data, fp, indent=2)
 
 
 if __name__ == "__main__":
