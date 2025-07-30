@@ -8,10 +8,14 @@
         }
 
         let closest_latlng = walkPreview.snapCoordToLine(e.latlng.lat, e.latlng.lng);
-        walkPreview.addMarker(closest_latlng.lat, closest_latlng.lng);
-        walkForm.addPoint(closest_latlng.lat, closest_latlng.lng)
+        const distance = L.GeometryUtil.distance(map_canal_towpath_walking, e.latlng, closest_latlng);
+		console.log('Distance from click to point is', distance);
+		if (distance <= 20) {
+            walkPreview.addMarker(closest_latlng.lat, closest_latlng.lng);
+            walkForm.addPoint(closest_latlng.lat, closest_latlng.lng)
 
-        walkPreview.refresh(false);
+            walkPreview.refresh(false);
+		}
 
     }
 
