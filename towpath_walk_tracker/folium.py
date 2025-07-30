@@ -48,9 +48,9 @@ class Map(folium.Map):  # noqa: D101
 	_template = _load_template("folium_map.jinja2")
 
 	# Remove folium's entry to pull from CDN
-	default_css = dict(folium.Map.default_css)
-	del default_css["awesome_markers_font_css"]
-	default_css = list(default_css.items())
+	default_css_dict = dict(folium.Map.default_css)
+	del default_css_dict["awesome_markers_font_css"]
+	default_css = list(default_css_dict.items())
 
 
 class WalkStartEnd(folium.MacroElement):
