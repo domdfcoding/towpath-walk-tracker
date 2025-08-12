@@ -29,7 +29,7 @@ Functions for finding a route through two or more points.
 # stdlib
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import Dict, List, Tuple
+from typing import TYPE_CHECKING, Dict, List, Tuple
 
 # 3rd party
 import networkx
@@ -39,6 +39,10 @@ from scipy.spatial import KDTree  # type: ignore[import]
 # this package
 from towpath_walk_tracker.network import build_kdtree, build_network, get_node_coordinates
 from towpath_walk_tracker.util import _get_filtered_watercourses
+
+if TYPE_CHECKING:
+	# this package
+	from towpath_walk_tracker.models import Node
 
 __all__ = ["Route"]
 
@@ -63,6 +67,16 @@ class Route:
 			coords.append(self.node_coordinates[path_node])
 
 		return coords
+
+	@classmethod
+	def from_db(cls, nodes: List["Node"]) -> "Route":
+		node_coordinates = {}
+		node_ids = []
+		for node in nodes:
+			node_ids.append(node.id)
+			node_coordinates[node.id] = (node.latitude, node.longitude)
+
+		return cls(node_ids, node_coordinates)
 
 	@classmethod
 	def from_points(cls, points: List[Tuple[float, float]]) -> "Route":

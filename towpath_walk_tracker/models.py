@@ -28,7 +28,7 @@ Database models.
 
 # stdlib
 import datetime
-from typing import TYPE_CHECKING, List, Type
+from typing import TYPE_CHECKING, List, Tuple, Type
 
 # 3rd party
 from flask_sqlalchemy import SQLAlchemy
@@ -77,12 +77,23 @@ class Walk(Model):
 	def __repr__(self) -> str:
 		return f"<Walk({self.title})>"
 
-	# def get_point_coords(self) -> List[Tuple[float, float]]:
-	# 	coords = []
-	# 	for point in self.points:
-	# 		coords.append((point.latitude, point.longitude))
+	def get_route_coords(self) -> List[Tuple[float, float]]:
+		"""
+		Returns the route as a list of lat/lng coordinates.
+		"""
 
-	# 	return coords
+		coords = []
+		for node in self.route:
+			coords.append((node.latitude, node.longitude))
+
+		return coords
+
+	def get_route(self) -> Route:
+		"""
+		Returns the route.
+		"""
+
+		return Route.from_db(self.route)
 
 	@classmethod
 	def from_form(cls: Type["Walk"], form: WalkForm) -> "Walk":
