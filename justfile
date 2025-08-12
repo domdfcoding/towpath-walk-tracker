@@ -26,4 +26,16 @@ lint: unused-imports incomplete-defs bare-ignore fontawesome
 
 tsc:
 	- npx tsc
-	pre-commit run eslint --files towpath_walk_tracker/static/*.js
+	- pre-commit run eslint --files towpath_walk_tracker/static/**/*.js
+
+webpack-dev:
+	npm run dev
+
+webpack:
+	npm run dev
+
+scss:
+	pre-commit run compile-css --all-files
+
+run: scss tsc webpack-dev
+	python3 -m towpath_walk_tracker run

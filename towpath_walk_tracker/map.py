@@ -97,8 +97,6 @@ def create_map(
 	WalkStartEnd().add_to(m)
 
 	m.add_js_link("walk", "/static/js/walk.js")
-	m.add_js_link("leaflet.geometryutil", "/static/js/leaflet.geometryutil.js")
-	m.add_js_link("leaflet-sidebar.js", "/static/js/leaflet-sidebar.min.js")
 	m.add_js_link("htmx.min", "/static/js/htmx.min.js")
 	m.add_css_link("leaflet-sidebar.css", "/static/css/leaflet-sidebar.min.css")
 	m.add_css_link("map.css", "/static/css/map.css")

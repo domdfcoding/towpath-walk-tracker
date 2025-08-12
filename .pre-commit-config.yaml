@@ -1,7 +1,7 @@
 # This file is managed by 'repo_helper'. Don't edit it directly.
 ---
 
-exclude: (\.min.(css|js)|leaflet.geometryutil.js|leaflet.polylineDecorator.js)$
+exclude: (\.min.(css|js)|leaflet.geometryutil.js|leaflet.polylineDecorator.js|js/leaflet_bundle.js)$
 
 ci:
   autoupdate_schedule: quarterly

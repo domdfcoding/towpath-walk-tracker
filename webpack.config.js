@@ -1,0 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const path = require('path');
+
+module.exports = {
+	entry: './src/leaflet_bundle.js',
+	output: {
+		filename: 'leaflet_bundle.js',
+		path: path.resolve(__dirname, 'towpath_walk_tracker', 'static', 'js'),
+		clean: false
+	},
+	devtool: 'source-map',
+};
