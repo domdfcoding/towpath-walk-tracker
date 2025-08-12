@@ -15919,8 +15919,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var leaflet_polylinedecorator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(leaflet_polylinedecorator__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! leaflet-geometryutil */ "./node_modules/leaflet-geometryutil/src/leaflet.geometryutil.js");
 /* harmony import */ var leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3__);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 
+// Doesn't work. The npm package is in separate files
+// and doesn't function the same as the dist version
 // import "leaflet-sidebar";
+
 
 
 

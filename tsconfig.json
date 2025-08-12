@@ -5,7 +5,7 @@
     "target": "es2015",
     "types": ["leaflet-geometryutil"]
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*.ts"],
   "noEmit": false,
   "noEmitOnError": false
 }
