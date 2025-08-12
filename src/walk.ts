@@ -29,7 +29,7 @@ class LeafletWalkPreview {
 	}
 
 	refresh (propagate = true): void {
-		// @ts-expect-error  // global varaiable
+		// @ts-expect-error  // global variable
 		const currentWalkLayer: L.FeatureGroup = feature_group_current_walk;
 
 		const placedMarkerLatLng: Array<L.LatLng> = walkForm.getCoordinates();
@@ -83,7 +83,7 @@ class LeafletWalkPreview {
 		this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
 
-		// @ts-expect-error  // global varaiable
+		// @ts-expect-error  // global variable
 		const walkMarkersLayer: L.FeatureGroup = feature_group_walk_markers;
 
 		marker.addTo(walkMarkersLayer);
@@ -110,10 +110,10 @@ class LeafletWalkPreview {
 			throw ({ lng });
 		}
 
-		// @ts-expect-error  // global varaiable
+		// @ts-expect-error  // global variable
 		const map: L.Map = map_canal_towpath_walking;
 
-		// @ts-expect-error  // global varaiable
+		// @ts-expect-error  // global variable
 		const watercourses: L.GeoJSON = geo_json_watercourses;
 
 		// @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON

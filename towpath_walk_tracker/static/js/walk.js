@@ -14,7 +14,7 @@ class LeafletWalkPreview {
 	}
 
 	refresh (propagate = true) {
-		// @ts-expect-error  // global varaiable
+		// @ts-expect-error  // global variable
 		const currentWalkLayer = feature_group_current_walk;
 		const placedMarkerLatLng = walkForm.getCoordinates();
 		if (propagate) { walkForm.replaceAllPoints(placedMarkerLatLng); }
@@ -59,7 +59,7 @@ class LeafletWalkPreview {
 		const marker = L.marker([lat, lng], {});
 		this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
-		// @ts-expect-error  // global varaiable
+		// @ts-expect-error  // global variable
 		const walkMarkersLayer = feature_group_walk_markers;
 		marker.addTo(walkMarkersLayer);
 		marker.on('contextmenu', e => {
@@ -83,9 +83,9 @@ class LeafletWalkPreview {
 		if (lng === undefined) {
 			throw ({ lng });
 		}
-		// @ts-expect-error  // global varaiable
+		// @ts-expect-error  // global variable
 		const map = map_canal_towpath_walking;
-		// @ts-expect-error  // global varaiable
+		// @ts-expect-error  // global variable
 		const watercourses = geo_json_watercourses;
 		// @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
 		// See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293
