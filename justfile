@@ -30,9 +30,11 @@ tsc:
 
 webpack-dev:
 	npm run dev
+	- pre-commit run end-of-file-fixer --files towpath_walk_tracker/static/js/*
 
 webpack:
-	npm run dev
+	npm run prod
+	- pre-commit run end-of-file-fixer --files towpath_walk_tracker/static/js/*
 
 scss:
 	pre-commit run compile-css --all-files
