@@ -36,6 +36,7 @@ from sqlalchemy.orm import Mapped  # nodep
 
 # this package
 from towpath_walk_tracker.forms import PointForm, WalkForm
+from towpath_walk_tracker.route import Route
 
 db = SQLAlchemy()
 
@@ -45,7 +46,15 @@ if TYPE_CHECKING:
 else:
 	Model = db.Model
 
-__all__ = ["Point", "Walk"]
+__all__ = ["Node", "Point", "Walk"]
+
+# Table associating route nodes with a walk.
+association_table = db.Table(
+		"association_table",
+		db.metadata,
+		db.Column("walk_id", db.ForeignKey("walks.id")),
+		db.Column("node_id", db.ForeignKey("nodes.id")),
+		)
 
 
 class Walk(Model):
@@ -55,12 +64,13 @@ class Walk(Model):
 
 	__tablename__ = "walks"
 
-	id = db.Column(db.Integer, primary_key=True)
+	id: Mapped[int] = db.mapped_column(primary_key=True)
 	title = db.Column(db.String(200), nullable=False)
 	start = db.Column(db.DateTime, nullable=True)
 	duration = db.Column(db.Integer, nullable=False, default=0)
 	notes = db.Column(db.Text, nullable=False)
 	points: Mapped[List["Point"]] = db.relationship(back_populates="walk")  # type: ignore[assignment]
+	route: Mapped[List["Node"]] = db.relationship(secondary=association_table)  # type: ignore[assignment]
 
 	# user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -96,8 +106,22 @@ class Walk(Model):
 				point = Point(latitude=latitude, longitude=longitude, walk=walk)  # type: ignore[call-arg]
 				points.append(point)
 
+		route = Route.from_points([(point.latitude, point.longitude) for point in points])
+
+		existing_nodes = Node.query.where(Node.id.in_(route.nodes))
+		# TODO
+		nodes = []
+
+		for node_id in route.nodes:
+			node_lat, node_lng = route.node_coordinates[node_id]
+			node = Node(id=node_id, latitude=node_lat, longitude=node_lng)
+			nodes.append(node)
+
+		walk.route = nodes
+
 		db.session.add_all([walk])
 		db.session.add_all(points)
+		db.session.add_all(nodes)
 
 		db.session.commit()
 
@@ -119,3 +143,18 @@ class Point(Model):
 
 	def __repr__(self) -> str:
 		return f"<Point({self.latitude}, {self.longitude})>"
+
+
+class Node(Model):
+	"""
+	Model for an OpenStreetMap node.
+	"""
+
+	__tablename__ = "nodes"
+
+	id: Mapped[int] = db.mapped_column(primary_key=True)
+	latitude = db.Column(db.Float, nullable=False)
+	longitude = db.Column(db.Float, nullable=False)
+
+	def __repr__(self) -> str:
+		return f"<Node({self.id}, {self.latitude}, {self.longitude})>"

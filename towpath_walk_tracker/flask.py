@@ -27,26 +27,21 @@ Flask routes and helper functions.
 #
 
 # stdlib
-from functools import lru_cache
 from typing import Any, Dict, List, Tuple, Union, cast
 
 # 3rd party
-import networkx
-from domdf_python_tools.paths import PathPlus
 from flask import Flask, Response, json, redirect, render_template, request
 from flask_caching import Cache
 from flask_compress import Compress  # type: ignore[import]
 from flask_wtf.csrf import CSRFProtect  # type: ignore[import]
 from folium import Figure, JavascriptLink
-from networkx import all_shortest_paths
-from scipy.spatial import KDTree  # type: ignore[import]
 
 # this package
 from towpath_walk_tracker.forms import WalkForm
 from towpath_walk_tracker.map import create_map
 from towpath_walk_tracker.models import Walk, db
-from towpath_walk_tracker.network import build_kdtree, build_network, get_node_coordinates
-from towpath_walk_tracker.watercourses import FeatureCollection, exclude_tags, filter_watercourses
+from towpath_walk_tracker.route import Route
+from towpath_walk_tracker.util import _get_filtered_watercourses
 
 __all__ = ["add_walk", "leaflet_map", "watercourses_geojson"]
 
@@ -138,21 +133,6 @@ def main_page() -> Union[str, Response]:
 			)
 
 
-@lru_cache
-def _get_filtered_watercourses() -> FeatureCollection:
-	raw_data = PathPlus("data.geojson").load_json()
-	watercourses = filter_watercourses(raw_data, tags_to_exclude=exclude_tags)
-	return watercourses
-
-
-@lru_cache
-def _get_network_and_tree() -> Tuple["networkx.Graph[int]", KDTree]:
-	watercourses = _get_filtered_watercourses()
-	G = build_network(watercourses)
-	tree = build_kdtree(G)
-	return G, tree
-
-
 @app.route("/get-route", methods=["POST"])
 @csrf.exempt
 def get_route() -> List[Tuple[float, float]]:
@@ -171,28 +151,7 @@ def get_route() -> List[Tuple[float, float]]:
 
 	print(f"Create walk with points {points}")
 
-	G, tree = _get_network_and_tree()
-
-	nckl = list(get_node_coordinates(G).keys())
-
-	point_data: List[Tuple[Tuple[float, float], float, int, int]] = []
-	node_dist: float
-	node_idx: int
-	for coord in points:
-		node_dist, node_idx = tree.query(coord)
-		node = nckl[node_idx]
-		point_data.append((coord, node_dist, node_idx, node))
-
-	# solve path from 1st node to 2nd node to... nth node
-	path: List[int] = []
-	for orig, dest in zip(point_data[:-1], point_data[1:]):
-		path = path[:-1] + next(all_shortest_paths(G, orig[3], dest[3]))  # type: ignore[call-overload]
-
-	coords: List[Tuple[float, float]] = []
-	for path_node in path:
-		coords.append((G.nodes[path_node]["lat"], G.nodes[path_node]["lng"]))
-
-	return coords
+	return Route.from_points(points).coordinates
 
 
 # @app.route("/walk", methods=["GET", "POST"])
@@ -217,6 +176,10 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 		for point in walk.points:
 			points.append({"latitude": point.latitude, "longitude": point.longitude, "id": point.id})
 
+		route = []
+		for node in walk.route:
+			route.append({"latitude": node.latitude, "longitude": node.longitude, "id": node.id})
+
 		return {
 				"title": walk.title,
 				"start": walk.start,
@@ -224,4 +187,5 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 				"notes": walk.notes,
 				"id": walk.id,
 				"points": points,
+				"route": route,
 				}
