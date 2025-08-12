@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "leaflet": "^1.9.4",
-    "leaflet-geometryutil": "^0.10.3"
+    "leaflet-geometryutil": "^0.10.3",
+    "leaflet-polylinedecorator": "^1.6.0"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.20",

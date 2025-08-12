@@ -44,10 +44,24 @@ class LeafletWalkPreview {
 			})
 				.then(res => res.json())
 				.then((coords: Array<LatLngArray>) => {
+					const lineColour: string = '#ff0000';
+
 					currentWalkLayer.clearLayers();
-					this.polyLineWalk = L.polyline(coords, { bubblingMouseEvents: true, color: '#ff0000', dashArray: null, dashOffset: null, fill: false, fillColor: '#ff0000', fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }
+					this.polyLineWalk = L.polyline(coords, { interactive: false, bubblingMouseEvents: true, color: lineColour, dashArray: null, dashOffset: null, fill: false, fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }
 						// ).addTo({{this._parent.get_name()}});
 					).addTo(currentWalkLayer);
+
+					// Arrows along route
+					L.polylineDecorator(this.polyLineWalk, {
+						patterns: [
+							{ offset: '8%', repeat: '10%', symbol: L.Symbol.arrowHead({ pixelSize: 12, pathOptions: { stroke: true, fillOpacity: 1, color: lineColour, fill: true, fillColor: lineColour } }) }
+						]
+					}).addTo(currentWalkLayer);
+
+					// Hammerhead at either end
+					const hammerHead = L.Symbol.arrowHead({ pixelSize: 20, headAngle: 180, polygon: false, pathOptions: { stroke: true, color: lineColour } });
+					L.polylineDecorator(this.polyLineWalk, { patterns: [{ symbol: hammerHead }] }).addTo(currentWalkLayer);
+					L.polylineDecorator(this.polyLineWalk, { patterns: [{ offset: '100%', symbol: hammerHead }] }).addTo(currentWalkLayer);
 					console.log('Request complete! response:', coords);
 				});
 		} else {

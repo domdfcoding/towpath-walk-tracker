@@ -43,7 +43,7 @@
                 "sourceType": "module",
                 "project": ["./tsconfig.json"]
             }
-			
+
 		}
 	]
 }
