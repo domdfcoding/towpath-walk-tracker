@@ -100,6 +100,7 @@ class ZoomStateJS(folium.MacroElement):
 
 
 class WatercoursesGeoJson(folium.GeoJson):
+	_template = _load_template("watercourses_geojson.jinja2")
 
 	def __init__(
 			self,
@@ -113,8 +114,8 @@ class WatercoursesGeoJson(folium.GeoJson):
 			tooltip: Union[str, folium.Tooltip, "folium.GeoJsonTooltip", None] = None,
 			popup: Optional["folium.GeoJsonPopup"] = None,
 			zoom_on_click: bool = False,
-			on_each_feature: Optional[folium.JsCode] = None,
-			marker: Union[folium.Circle, folium.CircleMarker, folium.Marker, None] = None,
+			# on_each_feature: Optional[folium.JsCode] = None,
+			# marker: Union[folium.Circle, folium.CircleMarker, folium.Marker, None] = None,
 			**kwargs: Any,
 			):
 		Layer.__init__(self, name=name, overlay=overlay, control=control, show=show)
@@ -127,15 +128,17 @@ class WatercoursesGeoJson(folium.GeoJson):
 		self.style = False
 		self.highlight = False
 		self.zoom_on_click = zoom_on_click
-		if marker and not isinstance(marker, (folium.Circle, folium.CircleMarker, folium.Marker)):
-			raise TypeError("Only Marker, Circle, and CircleMarker are supported as GeoJson marker types.")
+		# if marker and not isinstance(marker, (folium.Circle, folium.CircleMarker, folium.Marker)):
+		# 	raise TypeError("Only Marker, Circle, and CircleMarker are supported as GeoJson marker types.")
 
 		if popup_keep_highlighted and popup is None:
 			raise ValueError("A popup is needed to use the popup_keep_highlighted feature")
 		self.popup_keep_highlighted = popup_keep_highlighted
 
-		self.marker = marker
-		self.on_each_feature = on_each_feature
+		# self.marker = marker
+		# self.on_each_feature = on_each_feature
+		self.marker = None
+		self.on_each_feature = None
 		self.options = remove_empty(**kwargs)
 
 		if isinstance(tooltip, (folium.GeoJsonTooltip, folium.Tooltip)):

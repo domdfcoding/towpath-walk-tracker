@@ -1,0 +1,44 @@
+{# Adapted from https://github.com/python-visualization/folium
+MIT Licenced
+#}
+{# djlint:off #}
+{% macro script(this, kwargs) %}
+
+	function geo_json_watercourses_onEachFeature(feature, layer) {
+	    layer.on({
+				click: function(e) {
+					if (typeof e.target.getBounds === 'function') {
+						map_canal_towpath_walking.fitBounds(e.target.getBounds());
+					}
+					else if (typeof e.target.getLatLng === 'function'){
+						let zoom = map_canal_towpath_walking.getZoom();
+						zoom = zoom > 12 ? zoom : zoom + 1;
+						map_canal_towpath_walking.flyTo(e.target.getLatLng(), zoom);
+					}
+				}
+    	});
+    };
+
+    var geo_json_watercourses = L.geoJson(null, {
+		{%- if this.smooth_factor is not none %}smoothFactor: {{ this.smooth_factor|tojson }},{%- endif %}
+        {%- if this.zoom_on_click %}onEachFeature: geo_json_watercourses_onEachFeature,{%- endif %}
+        {%- if this.marker %}pointToLayer: geo_json_watercourses_pointToLayer,{%- endif %}
+		...{{ this.options | tojavascript }}
+	});
+
+	function geo_json_watercourses_add (data) {
+		map_canal_towpath_walking.removeLayer(geo_json_watercourses);
+		geo_json_watercourses.addData(data);
+		map_canal_towpath_walking.addLayer(geo_json_watercourses);
+		bsLoadingModal.hide();
+		sidebarAddButton.classList.remove("disabled");
+	}
+
+	$.ajax({{ this.embed_link|tojson }}, {dataType: 'json', async: true}).done(geo_json_watercourses_add);
+
+	{%- if not this.style %}
+		geo_json_watercourses.setStyle(function(feature) {return feature.properties.style;});
+	{%- endif %}
+
+{% endmacro %}
+{# djlint:on #}

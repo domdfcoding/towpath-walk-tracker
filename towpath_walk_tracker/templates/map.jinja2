@@ -46,7 +46,7 @@
                 <li class="disabled">
                     <a href="#messages" role="tab"><i class="fa fa-envelope"></i></a>
                 </li>
-                <li>
+                <li class="disabled" id="sidebarAddButton">
                     <a href="#add" role="tab"><i class="fas fa-plus"></i></a>
                 </li>
                 <li>
@@ -122,6 +122,20 @@
 
     {{ body|safe }}
 
+    <div class="modal fade"
+         id="loadingModal"
+         data-bs-backdrop="static"
+         data-bs-keyboard="false"
+         tabindex="-1"
+         role="dialog">
+        <div class="modal-dialog modal-dialog-centered d-flex justify-content-center"
+             role="document">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
 {% endblock content %}
 
 {% block scripts %}
@@ -148,6 +162,9 @@
         var form = document.getElementById("walk-form")
         // form.reset()  // Remove any elements from before page refreshed  // TODO: doesn't seem to work
         document.querySelector('table.walk-points').dispatchEvent(walkPointsChangedEvent);
+
+        const bsLoadingModal = new bootstrap.Modal('#loadingModal');
+        bsLoadingModal.show();
     </script>
 
 
