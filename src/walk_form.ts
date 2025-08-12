@@ -280,6 +280,6 @@ document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
 document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
 	form.addEventListener('reset', () => {
 		console.log('Form was reset');
-		window.setTimeout(walkForm.reorder, 0);
+		window.setTimeout(() => { walkForm.reorder(); }, 0);
 	});
 });
