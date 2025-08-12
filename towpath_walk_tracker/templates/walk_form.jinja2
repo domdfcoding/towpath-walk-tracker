@@ -50,7 +50,7 @@
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <div class="input-group has-validation ">
+                                    <div class="input-group has-validation">
                                         {{ point.longitude(class_='form-control point-longitude') }}
                                         <span class="input-group-text">° E</span>
                                         <div class="invalid-feedback">A value is required.</div>
@@ -62,7 +62,7 @@
                                     <div class="input-group">
                                         <div class="input-group-append">
 
-                                            {# <div class="d-grid gap-1 d-md-flex justify-content-md-end h-100"> #}
+                                            {# <div class="d-grid gap-1 d-md-flex justify-content-md-end h-100"></div> #}
                                             <button class="btn btn-danger point-delete"
                                                     id="points-{{ idx }}-delete"
                                                     type="button">
@@ -89,12 +89,11 @@
             {% endfor %}
         </table>
     </div>
-</div>
 
-<div class="gap-2 d-md-flex justify-content-md-center">
-    <button class="col-sm-5 btn btn-primary btn-lg" type="submit">Save Walk</button>
-    <button class="col-sm-5 btn btn-danger btn-lg" type="reset">Reset and Clear Points</button>
-</div>
+    <div class="gap-2 d-md-flex justify-content-md-center">
+        <button class="col-sm-5 btn btn-primary btn-lg" type="submit">Save Walk</button>
+        <button class="col-sm-5 btn btn-danger btn-lg" type="reset">Reset and Clear Points</button>
+    </div>
 
-{# <input type="submit" value="Go"> #}
+    {# <input type="submit" value="Go"> #}
 </form>
