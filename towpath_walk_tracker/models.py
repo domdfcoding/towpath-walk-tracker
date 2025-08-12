@@ -77,6 +77,13 @@ class Walk(Model):
 	def __repr__(self) -> str:
 		return f"<Walk({self.title})>"
 
+	# def get_point_coords(self) -> List[Tuple[float, float]]:
+	# 	coords = []
+	# 	for point in self.points:
+	# 		coords.append((point.latitude, point.longitude))
+
+	# 	return coords
+
 	@classmethod
 	def from_form(cls: Type["Walk"], form: WalkForm) -> "Walk":
 		"""
@@ -108,20 +115,26 @@ class Walk(Model):
 
 		route = Route.from_points([(point.latitude, point.longitude) for point in points])
 
-		existing_nodes = Node.query.where(Node.id.in_(route.nodes))
-		# TODO
-		nodes = []
+		existing_nodes = {node.id: node for node in Node.query.where(Node.id.in_(route.nodes))}
+
+		nodes = []  # Nodes in the walk, in order
+		new_nodes_for_walk = []  # Nodes in the walk we have to create
 
 		for node_id in route.nodes:
-			node_lat, node_lng = route.node_coordinates[node_id]
-			node = Node(id=node_id, latitude=node_lat, longitude=node_lng)
+			if node_id in existing_nodes:
+				node = existing_nodes[node_id]
+			else:
+				node_lat, node_lng = route.node_coordinates[node_id]
+				node = Node(id=node_id, latitude=node_lat, longitude=node_lng)
+				new_nodes_for_walk.append(node)
+
 			nodes.append(node)
 
 		walk.route = nodes
 
 		db.session.add_all([walk])
 		db.session.add_all(points)
-		db.session.add_all(nodes)
+		db.session.add_all(new_nodes_for_walk)
 
 		db.session.commit()
 
