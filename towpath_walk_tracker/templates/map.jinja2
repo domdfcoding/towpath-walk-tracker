@@ -152,7 +152,7 @@
 
     <script>
 
-        const walkPreview = new LeafletWalkPreview();
+        const walkPreview = new LeafletWalkPreview(walkForm);
 
         document.querySelector('table.walk-points').addEventListener('changed',
             (e) => { walkPreview.syncFromForm(); }

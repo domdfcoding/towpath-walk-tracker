@@ -15,11 +15,13 @@ class LeafletWalkPreview {
 	placedMarkerCount: number;
 	placedMarkers: L.Marker[];
 	polyLineWalk: NullOrUndefinedOr<L.Polyline>;
+	walkForm: NullOrUndefinedOr<WalkForm>;
 
-	constructor () {
+	constructor (walkForm: NullOrUndefinedOr<WalkForm>) {
 		this.placedMarkerCount = 0;
 		this.placedMarkers = [];
 		this.polyLineWalk = null;
+		this.walkForm = walkForm;
 	}
 
 	clearMarkers (): void {
@@ -32,9 +34,9 @@ class LeafletWalkPreview {
 		// @ts-expect-error  // global variable
 		const currentWalkLayer: L.FeatureGroup = feature_group_current_walk;
 
-		const placedMarkerLatLng: Array<L.LatLng> = walkForm.getCoordinates();
+		const placedMarkerLatLng: Array<L.LatLng> = this.walkForm.getCoordinates();
 
-		if (propagate) walkForm.replaceAllPoints(placedMarkerLatLng);
+		if (propagate) this.walkForm.replaceAllPoints(placedMarkerLatLng);
 
 		if (placedMarkerLatLng.length >= 2) {
 			fetch('/get-route', {
