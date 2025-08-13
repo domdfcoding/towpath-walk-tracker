@@ -16195,7 +16195,6 @@ function setupWalkFormValidation(formsToValidate, walkForm) {
         form.addEventListener('submit', event => {
             let enabledCount = 0;
             walkForm.rows.forEach((pointRow) => {
-                form;
                 enabledCount += pointRow.isEnabled();
             });
             if (enabledCount < 2) {

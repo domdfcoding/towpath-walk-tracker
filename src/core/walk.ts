@@ -31,9 +31,9 @@ export class LeafletWalkPreview {
 	refresh (propagate = true): void {
 		const currentWalkLayer: L.FeatureGroup = feature_group_current_walk; // eslint-disable-line camelcase
 
-		const placedMarkerLatLng: Array<L.LatLng> = this.walkForm.getCoordinates();
+		const placedMarkerLatLng: Array<L.LatLng> = this.walkForm!.getCoordinates();
 
-		if (propagate) this.walkForm.replaceAllPoints(placedMarkerLatLng);
+		if (propagate) this.walkForm!.replaceAllPoints(placedMarkerLatLng);
 
 		if (placedMarkerLatLng.length >= 2) {
 			fetch('/get-route', {
@@ -87,7 +87,7 @@ export class LeafletWalkPreview {
 		marker.addTo(walkMarkersLayer);
 
 		marker.on('contextmenu', e => {
-			this.walkForm.removePointWithCoord(e.target.getLatLng());
+			this.walkForm!.removePointWithCoord(e.target.getLatLng());
 			this.removeMarker(e.target);
 			this.refresh();
 		});
@@ -115,12 +115,12 @@ export class LeafletWalkPreview {
 		// @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
 		// See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293
 		const coordinatesArray = watercourses.getLayers().map(l => l.feature.geometry.coordinates);
-		const closestLatLng = L.GeometryUtil.closest(map, coordinatesArray, [lng, lat]);
+		const closestLatLng = L.GeometryUtil.closest(map, coordinatesArray, [lng, lat])!;
 		return L.latLng(closestLatLng.lng, closestLatLng.lat);
 	}
 
 	syncFromForm (): void {
-		const coordinates: Array<L.LatLng> = this.walkForm.getCoordinates();
+		const coordinates: Array<L.LatLng> = this.walkForm!.getCoordinates();
 
 		for (const m of this.placedMarkers) {
 			const pos = m.getLatLng();

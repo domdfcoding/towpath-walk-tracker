@@ -29,16 +29,16 @@ export function zoomStateFromURL (defaultZoom: number, defaultCentre: L.LatLng):
 	// let zoomLvl = map.getZoom();
 	let zoomLvl = defaultZoom;
 	if (url.searchParams.has('zoom')) {
-		zoomLvl = parseInt(url.searchParams.get('zoom'));
+		zoomLvl = parseInt(url.searchParams.get('zoom')!);
 	}
 
 	// const centre = map.getCenter();
 	const centre = defaultCentre;
 	if (url.searchParams.has('lat')) {
-		centre.lat = parseFloat(url.searchParams.get('lat'));
+		centre.lat = parseFloat(url.searchParams.get('lat')!);
 	}
 	if (url.searchParams.has('lng')) {
-		centre.lng = parseFloat(url.searchParams.get('lng'));
+		centre.lng = parseFloat(url.searchParams.get('lng')!);
 	}
 
 	return { centre, zoomLvl };
