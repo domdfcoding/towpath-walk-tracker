@@ -6,7 +6,8 @@
     "types": ["leaflet-geometryutil", "leaflet-polylinedecorator"],
     "moduleResolution": "node"
   },
-  "include": ["./src/**/*.ts"],
+  // "include": ["./src/**/*.ts"],
+  "include": ["./src/zoom_state.ts"],
   "noEmit": false,
   "noEmitOnError": false
 }

@@ -7,9 +7,9 @@ import './leaflet-sidebar.min.js';
 import 'leaflet-polylinedecorator';
 import 'leaflet-geometryutil';
 
-import { LeafletWalkPreview } from './walk';
-import { WalkForm, walkPointsChangedEvent } from './walk_form';
-import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './watercourses_geojson_utils';
+import { LeafletWalkPreview } from './core/walk';
+import { WalkForm, walkPointsChangedEvent } from './core/walk_form';
+import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './core/watercourses_geojson_utils';
 import { setupZoomState, zoomStateFromURL } from './zoom_state';
 
 // @ts-expect-error  // Exporting to "window" global namespace

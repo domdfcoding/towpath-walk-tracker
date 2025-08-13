@@ -90,6 +90,3 @@ package-lock.json
 .env
 **/.sass-cache
 *.db
-towpath_walk_tracker/static/js/leaflet-sidebar.min.js
-towpath_walk_tracker/static/js/watercourses_geojson_utils.js
-towpath_walk_tracker/static/js/types.js

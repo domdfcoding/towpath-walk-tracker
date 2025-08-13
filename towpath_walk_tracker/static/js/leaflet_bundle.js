@@ -15821,42 +15821,10 @@ L$1.polylineDecorator = function (paths, options) {
 
 /***/ }),
 
-/***/ "./src/leaflet-sidebar.min.js":
-/*!************************************!*\
-  !*** ./src/leaflet-sidebar.min.js ***!
-  \************************************/
-/***/ (() => {
-
-/* From https://github.com/Turbo87/sidebar-v2/tree/master
-MIT Licence
-*/
-L.Control.Sidebar = L.Control.extend({ includes: L.Evented.prototype || L.Mixin.Events, options: { position: "left" }, initialize: function (t, s) { var i, e; for (L.setOptions(this, s), this._sidebar = L.DomUtil.get(t), L.DomUtil.addClass(this._sidebar, "sidebar-" + this.options.position), L.Browser.touch && L.DomUtil.addClass(this._sidebar, "leaflet-touch"), i = this._sidebar.children.length - 1; i >= 0; i--)
-        "DIV" == (e = this._sidebar.children[i]).tagName && L.DomUtil.hasClass(e, "sidebar-content") && (this._container = e); for (this._tabitems = this._sidebar.querySelectorAll("ul.sidebar-tabs > li, .sidebar-tabs > ul > li"), i = this._tabitems.length - 1; i >= 0; i--)
-        this._tabitems[i]._sidebar = this; for (this._panes = [], this._closeButtons = [], i = this._container.children.length - 1; i >= 0; i--)
-        if ("DIV" == (e = this._container.children[i]).tagName && L.DomUtil.hasClass(e, "sidebar-pane")) {
-            this._panes.push(e);
-            for (var o = e.querySelectorAll(".sidebar-close"), a = 0, l = o.length; a < l; a++)
-                this._closeButtons.push(o[a]);
-        } }, addTo: function (t) { var s, i; for (this._map = t, s = this._tabitems.length - 1; s >= 0; s--) {
-        var e = (i = this._tabitems[s]).querySelector("a");
-        e.hasAttribute("href") && "#" == e.getAttribute("href").slice(0, 1) && L.DomEvent.on(e, "click", L.DomEvent.preventDefault).on(e, "click", this._onClick, i);
-    } for (s = this._closeButtons.length - 1; s >= 0; s--)
-        i = this._closeButtons[s], L.DomEvent.on(i, "click", this._onCloseClick, this); return this; }, removeFrom: function (t) { console.log("removeFrom() has been deprecated, please use remove() instead as support for this function will be ending soon."), this.remove(t); }, remove: function (t) { var s, i; for (this._map = null, s = this._tabitems.length - 1; s >= 0; s--)
-        i = this._tabitems[s], L.DomEvent.off(i.querySelector("a"), "click", this._onClick); for (s = this._closeButtons.length - 1; s >= 0; s--)
-        i = this._closeButtons[s], L.DomEvent.off(i, "click", this._onCloseClick, this); return this; }, open: function (t) { var s, i; for (s = this._panes.length - 1; s >= 0; s--)
-        (i = this._panes[s]).id == t ? L.DomUtil.addClass(i, "active") : L.DomUtil.hasClass(i, "active") && L.DomUtil.removeClass(i, "active"); for (s = this._tabitems.length - 1; s >= 0; s--)
-        (i = this._tabitems[s]).querySelector("a").hash == "#" + t ? L.DomUtil.addClass(i, "active") : L.DomUtil.hasClass(i, "active") && L.DomUtil.removeClass(i, "active"); return this.fire("content", { id: t }), L.DomUtil.hasClass(this._sidebar, "collapsed") && (this.fire("opening"), L.DomUtil.removeClass(this._sidebar, "collapsed")), this; }, close: function () { for (var t = this._tabitems.length - 1; t >= 0; t--) {
-        var s = this._tabitems[t];
-        L.DomUtil.hasClass(s, "active") && L.DomUtil.removeClass(s, "active");
-    } return L.DomUtil.hasClass(this._sidebar, "collapsed") || (this.fire("closing"), L.DomUtil.addClass(this._sidebar, "collapsed")), this; }, _onClick: function () { L.DomUtil.hasClass(this, "active") ? this._sidebar.close() : L.DomUtil.hasClass(this, "disabled") || this._sidebar.open(this.querySelector("a").hash.slice(1)); }, _onCloseClick: function () { this.close(); } }), L.control.sidebar = function (t, s) { return new L.Control.Sidebar(t, s); };
-
-
-/***/ }),
-
-/***/ "./src/walk.ts":
-/*!*********************!*\
-  !*** ./src/walk.ts ***!
-  \*********************/
+/***/ "./src/core/walk.ts":
+/*!**************************!*\
+  !*** ./src/core/walk.ts ***!
+  \**************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15990,10 +15958,10 @@ class LeafletWalkPreview {
 
 /***/ }),
 
-/***/ "./src/walk_form.ts":
-/*!**************************!*\
-  !*** ./src/walk_form.ts ***!
-  \**************************/
+/***/ "./src/core/walk_form.ts":
+/*!*******************************!*\
+  !*** ./src/core/walk_form.ts ***!
+  \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -16223,10 +16191,10 @@ _WalkForm_instances = new WeakSet(), _WalkForm_setupEnableCtrl = function _WalkF
 
 /***/ }),
 
-/***/ "./src/watercourses_geojson_utils.ts":
-/*!*******************************************!*\
-  !*** ./src/watercourses_geojson_utils.ts ***!
-  \*******************************************/
+/***/ "./src/core/watercourses_geojson_utils.ts":
+/*!************************************************!*\
+  !*** ./src/core/watercourses_geojson_utils.ts ***!
+  \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -16256,6 +16224,38 @@ function addWatercoursesGeoJson(data) {
     bsLoadingModal.hide();
     sidebarAddButton.classList.remove('disabled');
 }
+
+
+/***/ }),
+
+/***/ "./src/leaflet-sidebar.min.js":
+/*!************************************!*\
+  !*** ./src/leaflet-sidebar.min.js ***!
+  \************************************/
+/***/ (() => {
+
+/* From https://github.com/Turbo87/sidebar-v2/tree/master
+MIT Licence
+*/
+L.Control.Sidebar = L.Control.extend({ includes: L.Evented.prototype || L.Mixin.Events, options: { position: "left" }, initialize: function (t, s) { var i, e; for (L.setOptions(this, s), this._sidebar = L.DomUtil.get(t), L.DomUtil.addClass(this._sidebar, "sidebar-" + this.options.position), L.Browser.touch && L.DomUtil.addClass(this._sidebar, "leaflet-touch"), i = this._sidebar.children.length - 1; i >= 0; i--)
+        "DIV" == (e = this._sidebar.children[i]).tagName && L.DomUtil.hasClass(e, "sidebar-content") && (this._container = e); for (this._tabitems = this._sidebar.querySelectorAll("ul.sidebar-tabs > li, .sidebar-tabs > ul > li"), i = this._tabitems.length - 1; i >= 0; i--)
+        this._tabitems[i]._sidebar = this; for (this._panes = [], this._closeButtons = [], i = this._container.children.length - 1; i >= 0; i--)
+        if ("DIV" == (e = this._container.children[i]).tagName && L.DomUtil.hasClass(e, "sidebar-pane")) {
+            this._panes.push(e);
+            for (var o = e.querySelectorAll(".sidebar-close"), a = 0, l = o.length; a < l; a++)
+                this._closeButtons.push(o[a]);
+        } }, addTo: function (t) { var s, i; for (this._map = t, s = this._tabitems.length - 1; s >= 0; s--) {
+        var e = (i = this._tabitems[s]).querySelector("a");
+        e.hasAttribute("href") && "#" == e.getAttribute("href").slice(0, 1) && L.DomEvent.on(e, "click", L.DomEvent.preventDefault).on(e, "click", this._onClick, i);
+    } for (s = this._closeButtons.length - 1; s >= 0; s--)
+        i = this._closeButtons[s], L.DomEvent.on(i, "click", this._onCloseClick, this); return this; }, removeFrom: function (t) { console.log("removeFrom() has been deprecated, please use remove() instead as support for this function will be ending soon."), this.remove(t); }, remove: function (t) { var s, i; for (this._map = null, s = this._tabitems.length - 1; s >= 0; s--)
+        i = this._tabitems[s], L.DomEvent.off(i.querySelector("a"), "click", this._onClick); for (s = this._closeButtons.length - 1; s >= 0; s--)
+        i = this._closeButtons[s], L.DomEvent.off(i, "click", this._onCloseClick, this); return this; }, open: function (t) { var s, i; for (s = this._panes.length - 1; s >= 0; s--)
+        (i = this._panes[s]).id == t ? L.DomUtil.addClass(i, "active") : L.DomUtil.hasClass(i, "active") && L.DomUtil.removeClass(i, "active"); for (s = this._tabitems.length - 1; s >= 0; s--)
+        (i = this._tabitems[s]).querySelector("a").hash == "#" + t ? L.DomUtil.addClass(i, "active") : L.DomUtil.hasClass(i, "active") && L.DomUtil.removeClass(i, "active"); return this.fire("content", { id: t }), L.DomUtil.hasClass(this._sidebar, "collapsed") && (this.fire("opening"), L.DomUtil.removeClass(this._sidebar, "collapsed")), this; }, close: function () { for (var t = this._tabitems.length - 1; t >= 0; t--) {
+        var s = this._tabitems[t];
+        L.DomUtil.hasClass(s, "active") && L.DomUtil.removeClass(s, "active");
+    } return L.DomUtil.hasClass(this._sidebar, "collapsed") || (this.fire("closing"), L.DomUtil.addClass(this._sidebar, "collapsed")), this; }, _onClick: function () { L.DomUtil.hasClass(this, "active") ? this._sidebar.close() : L.DomUtil.hasClass(this, "disabled") || this._sidebar.open(this.querySelector("a").hash.slice(1)); }, _onCloseClick: function () { this.close(); } }), L.control.sidebar = function (t, s) { return new L.Control.Sidebar(t, s); };
 
 
 /***/ }),
@@ -16397,9 +16397,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var leaflet_polylinedecorator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(leaflet_polylinedecorator__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! leaflet-geometryutil */ "./node_modules/leaflet-geometryutil/src/leaflet.geometryutil.js");
 /* harmony import */ var leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _walk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./walk */ "./src/walk.ts");
-/* harmony import */ var _walk_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./walk_form */ "./src/walk_form.ts");
-/* harmony import */ var _watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./watercourses_geojson_utils */ "./src/watercourses_geojson_utils.ts");
+/* harmony import */ var _core_walk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./core/walk */ "./src/core/walk.ts");
+/* harmony import */ var _core_walk_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./core/walk_form */ "./src/core/walk_form.ts");
+/* harmony import */ var _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./core/watercourses_geojson_utils */ "./src/core/watercourses_geojson_utils.ts");
 /* harmony import */ var _zoom_state__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./zoom_state */ "./src/zoom_state.ts");
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
@@ -16414,15 +16414,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // @ts-expect-error  // Exporting to "window" global namespace
-window.watercoursesZoomOnClick = _watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__.watercoursesZoomOnClick;
+window.watercoursesZoomOnClick = _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__.watercoursesZoomOnClick;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.addWatercoursesGeoJson = _watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__.addWatercoursesGeoJson;
+window.addWatercoursesGeoJson = _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__.addWatercoursesGeoJson;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.LeafletWalkPreview = _walk__WEBPACK_IMPORTED_MODULE_4__.LeafletWalkPreview;
+window.LeafletWalkPreview = _core_walk__WEBPACK_IMPORTED_MODULE_4__.LeafletWalkPreview;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.WalkForm = _walk_form__WEBPACK_IMPORTED_MODULE_5__.WalkForm;
+window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_5__.WalkForm;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.walkPointsChangedEvent = _walk_form__WEBPACK_IMPORTED_MODULE_5__.walkPointsChangedEvent;
+window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_5__.walkPointsChangedEvent;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupZoomState = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.setupZoomState;
 // @ts-expect-error  // Exporting to "window" global namespace
