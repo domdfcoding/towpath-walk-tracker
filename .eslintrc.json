@@ -36,6 +36,16 @@
             }
 		},
         {
+			"files": ["src/leaflet_bundle.ts"],
+			"rules": {
+                "semi": [2, "always"],
+                "no-throw-literal": 0,
+                "indent": ["error", "tab"],
+                "no-tabs": 0,
+                "import/first": 0
+            }
+		},
+        {
 			"files": ["**/*.ts"],
             "parser": "@typescript-eslint/parser",
             "parserOptions": {

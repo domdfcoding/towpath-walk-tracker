@@ -29,11 +29,11 @@ tsc:
 	- pre-commit run eslint --files towpath_walk_tracker/static/**/*.js
 
 webpack-dev:
-	npm run dev
+	- npm run dev
 	- pre-commit run end-of-file-fixer --files towpath_walk_tracker/static/js/*
 
 webpack:
-	npm run prod
+	- npm run prod
 	- pre-commit run end-of-file-fixer --files towpath_walk_tracker/static/js/*
 
 scss:

@@ -15830,7 +15830,63 @@ L$1.polylineDecorator = function (paths, options) {
 /* From https://github.com/Turbo87/sidebar-v2/tree/master
 MIT Licence
 */
-L.Control.Sidebar=L.Control.extend({includes:L.Evented.prototype||L.Mixin.Events,options:{position:"left"},initialize:function(t,s){var i,e;for(L.setOptions(this,s),this._sidebar=L.DomUtil.get(t),L.DomUtil.addClass(this._sidebar,"sidebar-"+this.options.position),L.Browser.touch&&L.DomUtil.addClass(this._sidebar,"leaflet-touch"),i=this._sidebar.children.length-1;i>=0;i--)"DIV"==(e=this._sidebar.children[i]).tagName&&L.DomUtil.hasClass(e,"sidebar-content")&&(this._container=e);for(this._tabitems=this._sidebar.querySelectorAll("ul.sidebar-tabs > li, .sidebar-tabs > ul > li"),i=this._tabitems.length-1;i>=0;i--)this._tabitems[i]._sidebar=this;for(this._panes=[],this._closeButtons=[],i=this._container.children.length-1;i>=0;i--)if("DIV"==(e=this._container.children[i]).tagName&&L.DomUtil.hasClass(e,"sidebar-pane")){this._panes.push(e);for(var o=e.querySelectorAll(".sidebar-close"),a=0,l=o.length;a<l;a++)this._closeButtons.push(o[a])}},addTo:function(t){var s,i;for(this._map=t,s=this._tabitems.length-1;s>=0;s--){var e=(i=this._tabitems[s]).querySelector("a");e.hasAttribute("href")&&"#"==e.getAttribute("href").slice(0,1)&&L.DomEvent.on(e,"click",L.DomEvent.preventDefault).on(e,"click",this._onClick,i)}for(s=this._closeButtons.length-1;s>=0;s--)i=this._closeButtons[s],L.DomEvent.on(i,"click",this._onCloseClick,this);return this},removeFrom:function(t){console.log("removeFrom() has been deprecated, please use remove() instead as support for this function will be ending soon."),this.remove(t)},remove:function(t){var s,i;for(this._map=null,s=this._tabitems.length-1;s>=0;s--)i=this._tabitems[s],L.DomEvent.off(i.querySelector("a"),"click",this._onClick);for(s=this._closeButtons.length-1;s>=0;s--)i=this._closeButtons[s],L.DomEvent.off(i,"click",this._onCloseClick,this);return this},open:function(t){var s,i;for(s=this._panes.length-1;s>=0;s--)(i=this._panes[s]).id==t?L.DomUtil.addClass(i,"active"):L.DomUtil.hasClass(i,"active")&&L.DomUtil.removeClass(i,"active");for(s=this._tabitems.length-1;s>=0;s--)(i=this._tabitems[s]).querySelector("a").hash=="#"+t?L.DomUtil.addClass(i,"active"):L.DomUtil.hasClass(i,"active")&&L.DomUtil.removeClass(i,"active");return this.fire("content",{id:t}),L.DomUtil.hasClass(this._sidebar,"collapsed")&&(this.fire("opening"),L.DomUtil.removeClass(this._sidebar,"collapsed")),this},close:function(){for(var t=this._tabitems.length-1;t>=0;t--){var s=this._tabitems[t];L.DomUtil.hasClass(s,"active")&&L.DomUtil.removeClass(s,"active")}return L.DomUtil.hasClass(this._sidebar,"collapsed")||(this.fire("closing"),L.DomUtil.addClass(this._sidebar,"collapsed")),this},_onClick:function(){L.DomUtil.hasClass(this,"active")?this._sidebar.close():L.DomUtil.hasClass(this,"disabled")||this._sidebar.open(this.querySelector("a").hash.slice(1))},_onCloseClick:function(){this.close()}}),L.control.sidebar=function(t,s){return new L.Control.Sidebar(t,s)};
+L.Control.Sidebar = L.Control.extend({ includes: L.Evented.prototype || L.Mixin.Events, options: { position: "left" }, initialize: function (t, s) { var i, e; for (L.setOptions(this, s), this._sidebar = L.DomUtil.get(t), L.DomUtil.addClass(this._sidebar, "sidebar-" + this.options.position), L.Browser.touch && L.DomUtil.addClass(this._sidebar, "leaflet-touch"), i = this._sidebar.children.length - 1; i >= 0; i--)
+        "DIV" == (e = this._sidebar.children[i]).tagName && L.DomUtil.hasClass(e, "sidebar-content") && (this._container = e); for (this._tabitems = this._sidebar.querySelectorAll("ul.sidebar-tabs > li, .sidebar-tabs > ul > li"), i = this._tabitems.length - 1; i >= 0; i--)
+        this._tabitems[i]._sidebar = this; for (this._panes = [], this._closeButtons = [], i = this._container.children.length - 1; i >= 0; i--)
+        if ("DIV" == (e = this._container.children[i]).tagName && L.DomUtil.hasClass(e, "sidebar-pane")) {
+            this._panes.push(e);
+            for (var o = e.querySelectorAll(".sidebar-close"), a = 0, l = o.length; a < l; a++)
+                this._closeButtons.push(o[a]);
+        } }, addTo: function (t) { var s, i; for (this._map = t, s = this._tabitems.length - 1; s >= 0; s--) {
+        var e = (i = this._tabitems[s]).querySelector("a");
+        e.hasAttribute("href") && "#" == e.getAttribute("href").slice(0, 1) && L.DomEvent.on(e, "click", L.DomEvent.preventDefault).on(e, "click", this._onClick, i);
+    } for (s = this._closeButtons.length - 1; s >= 0; s--)
+        i = this._closeButtons[s], L.DomEvent.on(i, "click", this._onCloseClick, this); return this; }, removeFrom: function (t) { console.log("removeFrom() has been deprecated, please use remove() instead as support for this function will be ending soon."), this.remove(t); }, remove: function (t) { var s, i; for (this._map = null, s = this._tabitems.length - 1; s >= 0; s--)
+        i = this._tabitems[s], L.DomEvent.off(i.querySelector("a"), "click", this._onClick); for (s = this._closeButtons.length - 1; s >= 0; s--)
+        i = this._closeButtons[s], L.DomEvent.off(i, "click", this._onCloseClick, this); return this; }, open: function (t) { var s, i; for (s = this._panes.length - 1; s >= 0; s--)
+        (i = this._panes[s]).id == t ? L.DomUtil.addClass(i, "active") : L.DomUtil.hasClass(i, "active") && L.DomUtil.removeClass(i, "active"); for (s = this._tabitems.length - 1; s >= 0; s--)
+        (i = this._tabitems[s]).querySelector("a").hash == "#" + t ? L.DomUtil.addClass(i, "active") : L.DomUtil.hasClass(i, "active") && L.DomUtil.removeClass(i, "active"); return this.fire("content", { id: t }), L.DomUtil.hasClass(this._sidebar, "collapsed") && (this.fire("opening"), L.DomUtil.removeClass(this._sidebar, "collapsed")), this; }, close: function () { for (var t = this._tabitems.length - 1; t >= 0; t--) {
+        var s = this._tabitems[t];
+        L.DomUtil.hasClass(s, "active") && L.DomUtil.removeClass(s, "active");
+    } return L.DomUtil.hasClass(this._sidebar, "collapsed") || (this.fire("closing"), L.DomUtil.addClass(this._sidebar, "collapsed")), this; }, _onClick: function () { L.DomUtil.hasClass(this, "active") ? this._sidebar.close() : L.DomUtil.hasClass(this, "disabled") || this._sidebar.open(this.querySelector("a").hash.slice(1)); }, _onCloseClick: function () { this.close(); } }), L.control.sidebar = function (t, s) { return new L.Control.Sidebar(t, s); };
+
+
+/***/ }),
+
+/***/ "./src/watercourses_geojson_utils.ts":
+/*!*******************************************!*\
+  !*** ./src/watercourses_geojson_utils.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function watercoursesZoomOnClick(feature, layer) {
+    layer.on({
+        click: function (e) {
+            if (typeof e.target.getBounds === 'function') {
+                map_canal_towpath_walking.fitBounds(e.target.getBounds()); // eslint-disable-line camelcase
+            }
+            else if (typeof e.target.getLatLng === 'function') {
+                let zoom = map_canal_towpath_walking.getZoom(); // eslint-disable-line camelcase
+                zoom = zoom > 12 ? zoom : zoom + 1;
+                map_canal_towpath_walking.flyTo(e.target.getLatLng(), zoom); // eslint-disable-line camelcase
+            }
+        }
+    });
+}
+function addWatercoursesGeoJson(data) {
+    map_canal_towpath_walking.removeLayer(geo_json_watercourses); // eslint-disable-line camelcase
+    geo_json_watercourses.addData(data); // eslint-disable-line camelcase
+    map_canal_towpath_walking.addLayer(geo_json_watercourses); // eslint-disable-line camelcase
+    bsLoadingModal.hide();
+    sidebarAddButton.classList.remove('disabled');
+}
+// @ts-expect-error  // Exporting to "window" global namespace
+window.watercoursesZoomOnClick = watercoursesZoomOnClick;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.addWatercoursesGeoJson = addWatercoursesGeoJson;
+
 
 
 /***/ })
@@ -15908,19 +15964,21 @@ var __webpack_exports__ = {};
 (() => {
 "use strict";
 /*!*******************************!*\
-  !*** ./src/leaflet_bundle.js ***!
+  !*** ./src/leaflet_bundle.ts ***!
   \*******************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};
+/* harmony reexport (unknown) */ for(const __WEBPACK_IMPORT_KEY__ in leaflet__WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== "default") __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = () => leaflet__WEBPACK_IMPORTED_MODULE_0__[__WEBPACK_IMPORT_KEY__]
+/* harmony reexport (unknown) */ __webpack_require__.d(__webpack_exports__, __WEBPACK_REEXPORT_OBJECT__);
 /* harmony import */ var _leaflet_sidebar_min_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./leaflet-sidebar.min.js */ "./src/leaflet-sidebar.min.js");
 /* harmony import */ var _leaflet_sidebar_min_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_leaflet_sidebar_min_js__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var leaflet_polylinedecorator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! leaflet-polylinedecorator */ "./node_modules/leaflet-polylinedecorator/dist/leaflet.polylineDecorator.js");
 /* harmony import */ var leaflet_polylinedecorator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(leaflet_polylinedecorator__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! leaflet-geometryutil */ "./node_modules/leaflet-geometryutil/src/leaflet.geometryutil.js");
 /* harmony import */ var leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3__);
-/* global map_canal_towpath_walking, geo_json_watercourses, bsLoadingModal, sidebarAddButton */
-
+/* harmony import */ var _watercourses_geojson_utils_ts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./watercourses_geojson_utils.ts */ "./src/watercourses_geojson_utils.ts");
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 // Doesn't work. The npm package is in separate files
@@ -15930,30 +15988,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function watercoursesZoomOnClick (feature, layer) {
-	layer.on({
-		click: function (e) {
-			if (typeof e.target.getBounds === 'function') {
-				map_canal_towpath_walking.fitBounds(e.target.getBounds());
-			} else if (typeof e.target.getLatLng === 'function') {
-				let zoom = map_canal_towpath_walking.getZoom();
-				zoom = zoom > 12 ? zoom : zoom + 1;
-				map_canal_towpath_walking.flyTo(e.target.getLatLng(), zoom);
-			}
-		}
-	});
-}
-
-function addWatercoursesGeoJson (data) {
-	map_canal_towpath_walking.removeLayer(geo_json_watercourses);
-	geo_json_watercourses.addData(data);
-	map_canal_towpath_walking.addLayer(geo_json_watercourses);
-	bsLoadingModal.hide();
-	sidebarAddButton.classList.remove('disabled');
-}
-
-window.watercoursesZoomOnClick = watercoursesZoomOnClick;
-window.addWatercoursesGeoJson = addWatercoursesGeoJson;
 
 })();
 

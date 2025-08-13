@@ -3,7 +3,8 @@
     "outDir": "./towpath_walk_tracker/static/js",
     "allowJs": true,
     "target": "es2015",
-    "types": ["leaflet-geometryutil"]
+    "types": ["leaflet-geometryutil"],
+    "moduleResolution": "node"
   },
   "include": ["./src/**/*.ts"],
   "noEmit": false,
