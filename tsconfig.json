@@ -6,7 +6,15 @@
     "types": ["leaflet-geometryutil", "leaflet-polylinedecorator"],
     "moduleResolution": "node",
     "noImplicitReturns": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "useUnknownInCatchVariables": true,
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false
   },
   "include": ["./src/zoom_state.ts"],
   "exclude": ["./src/core/*"],
