@@ -10,6 +10,7 @@ import 'leaflet-geometryutil';
 import { LeafletWalkPreview } from './walk';
 import { WalkForm, walkPointsChangedEvent } from './walk_form';
 import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './watercourses_geojson_utils';
+import { setupZoomState, zoomStateFromURL } from './zoom_state';
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.watercoursesZoomOnClick = watercoursesZoomOnClick;
@@ -25,3 +26,9 @@ window.WalkForm = WalkForm;
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.walkPointsChangedEvent = walkPointsChangedEvent;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupZoomState = setupZoomState;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.zoomStateFromURL = zoomStateFromURL;

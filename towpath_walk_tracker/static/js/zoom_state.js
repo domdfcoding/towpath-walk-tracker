@@ -4,8 +4,7 @@ function updateQueryStringParam (key, value) {
 	// window.history.pushState({}, null, url);
 	window.history.replaceState({}, '', url);
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function setupZoomState (map) {
+export function setupZoomState (map) {
 	map.on('zoomend', function () {
 		const zoomLvl = map.getZoom();
 		updateQueryStringParam('zoom', zoomLvl);
@@ -16,8 +15,7 @@ function setupZoomState (map) {
 		updateQueryStringParam('lng', centre.lng);
 	});
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function zoomStateFromURL (defaultZoom, defaultCentre) {
+export function zoomStateFromURL (defaultZoom, defaultCentre) {
 	const url = new URL(window.location.href);
 	// let zoomLvl = map.getZoom();
 	let zoomLvl = defaultZoom;

@@ -87,16 +87,16 @@ class ZoomStateJS(folium.MacroElement):
 		super().__init__()
 		self._name = "ZoomStateJS"
 
-	def add_to(  # noqa: D102
-		self,
-		parent: folium.Element,
-		name: Optional[str] = None,
-		index: Optional[int] = None,
-		) -> "ZoomStateJS":
-		super().add_to(parent, name, index)
-		assert isinstance(parent, folium.Map)
-		parent.add_js_link("zoom-state", "/static/js/zoom_state.js")
-		return self
+	# def add_to(  # noqa: D102
+	# 	self,
+	# 	parent: folium.Element,
+	# 	name: Optional[str] = None,
+	# 	index: Optional[int] = None,
+	# 	) -> "ZoomStateJS":
+	# 	super().add_to(parent, name, index)
+	# 	assert isinstance(parent, folium.Map)
+	# 	parent.add_js_link("zoom-state", "/static/js/zoom_state.js")
+	# 	return self
 
 
 class WatercoursesGeoJson(folium.GeoJson):

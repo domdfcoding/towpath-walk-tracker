@@ -5,8 +5,7 @@ function updateQueryStringParam (key, value): void {
 	window.history.replaceState({}, '', url);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function setupZoomState (map: L.Map): void {
+export function setupZoomState (map: L.Map): void {
 	map.on('zoomend', function () {
 		const zoomLvl = map.getZoom();
 		updateQueryStringParam('zoom', zoomLvl);
@@ -24,8 +23,7 @@ interface IZoomState {
 	zoomLvl: number;
  }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function zoomStateFromURL (defaultZoom: number, defaultCentre: L.LatLng): IZoomState {
+export function zoomStateFromURL (defaultZoom: number, defaultCentre: L.LatLng): IZoomState {
 	const url = new URL(window.location.href);
 
 	// let zoomLvl = map.getZoom();

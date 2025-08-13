@@ -16258,6 +16258,56 @@ function addWatercoursesGeoJson(data) {
 }
 
 
+/***/ }),
+
+/***/ "./src/zoom_state.ts":
+/*!***************************!*\
+  !*** ./src/zoom_state.ts ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   setupZoomState: () => (/* binding */ setupZoomState),
+/* harmony export */   zoomStateFromURL: () => (/* binding */ zoomStateFromURL)
+/* harmony export */ });
+function updateQueryStringParam(key, value) {
+    const url = new URL(window.location.href);
+    url.searchParams.set(key, value); // Add or update the parameter
+    // window.history.pushState({}, null, url);
+    window.history.replaceState({}, '', url);
+}
+function setupZoomState(map) {
+    map.on('zoomend', function () {
+        const zoomLvl = map.getZoom();
+        updateQueryStringParam('zoom', zoomLvl);
+    });
+    map.on('moveend', function () {
+        const centre = map.getCenter();
+        updateQueryStringParam('lat', centre.lat);
+        updateQueryStringParam('lng', centre.lng);
+    });
+}
+function zoomStateFromURL(defaultZoom, defaultCentre) {
+    const url = new URL(window.location.href);
+    // let zoomLvl = map.getZoom();
+    let zoomLvl = defaultZoom;
+    if (url.searchParams.has('zoom')) {
+        zoomLvl = parseInt(url.searchParams.get('zoom'));
+    }
+    // const centre = map.getCenter();
+    const centre = defaultCentre;
+    if (url.searchParams.has('lat')) {
+        centre.lat = parseFloat(url.searchParams.get('lat'));
+    }
+    if (url.searchParams.has('lng')) {
+        centre.lng = parseFloat(url.searchParams.get('lng'));
+    }
+    return { centre, zoomLvl };
+}
+
+
 /***/ })
 
 /******/ 	});
@@ -16350,11 +16400,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _walk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./walk */ "./src/walk.ts");
 /* harmony import */ var _walk_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./walk_form */ "./src/walk_form.ts");
 /* harmony import */ var _watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./watercourses_geojson_utils */ "./src/watercourses_geojson_utils.ts");
+/* harmony import */ var _zoom_state__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./zoom_state */ "./src/zoom_state.ts");
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 // Doesn't work. The npm package is in separate files
 // and doesn't function the same as the dist version
 // import "leaflet-sidebar";
+
 
 
 
@@ -16371,6 +16423,10 @@ window.LeafletWalkPreview = _walk__WEBPACK_IMPORTED_MODULE_4__.LeafletWalkPrevie
 window.WalkForm = _walk_form__WEBPACK_IMPORTED_MODULE_5__.WalkForm;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.walkPointsChangedEvent = _walk_form__WEBPACK_IMPORTED_MODULE_5__.walkPointsChangedEvent;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupZoomState = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.setupZoomState;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.zoomStateFromURL = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.zoomStateFromURL;
 
 })();
 
