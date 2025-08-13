@@ -49,8 +49,8 @@ def build_network(watercourses: FeatureCollection) -> "networkx.Graph[int]":
 	graph: "networkx.Graph[int]" = networkx.Graph()
 
 	for wc in watercourses["features"]:
-		if wc["properties"]["type"] != "way":
-			continue
+		# if wc["properties"]["type"] != "way":
+		# 	continue
 
 		nodes = wc["properties"]["nodes"]
 		coordinates = wc["geometry"]["coordinates"]

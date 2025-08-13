@@ -363,7 +363,8 @@ class FeatureCollection(TypedDict):
 def filter_watercourses(
 		data: Dict[str, Any],
 		*,
-		tags_to_exclude: Collection[str],
+		tags_to_exclude: Collection[str] = (),
+		ids_to_exclude: Collection[str] = (),
 		) -> FeatureCollection:
 	"""
 	Filter watercourses in the given GeoJSON data for map display.
@@ -377,6 +378,15 @@ def filter_watercourses(
 	for feature in data["features"]:
 		if feature["geometry"]["type"] == "Point":
 			continue
+
+		if "nodes" not in feature["properties"]:
+			continue
+
+		if feature["properties"]["id"] in ids_to_exclude:
+			continue
+
+		feature = dict(feature)
+		feature["properties"] = dict(feature["properties"])
 
 		for tag_name, tag_value in feature["properties"].get("tags", {}).items():
 			feature["properties"][tag_name] = tag_value

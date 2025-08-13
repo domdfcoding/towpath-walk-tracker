@@ -35,9 +35,23 @@ from domdf_python_tools.paths import PathPlus
 # this package
 from towpath_walk_tracker.watercourses import FeatureCollection, exclude_tags, filter_watercourses
 
+ids_to_exclude = {
+		28500157,
+		4675033,
+		1087548847,
+		101433748,
+		138647179,
+		588173692,
+		25791346,
+		25744981,
+		82470121,
+		25787029,
+		27803787
+		}
+
 
 @lru_cache
 def _get_filtered_watercourses() -> FeatureCollection:
-	raw_data = PathPlus("data.geojson").load_json()
-	watercourses = filter_watercourses(raw_data, tags_to_exclude=exclude_tags)
+	raw_data = PathPlus("data.filtered.geojson").load_json()
+	watercourses = filter_watercourses(raw_data, tags_to_exclude=exclude_tags, ids_to_exclude=ids_to_exclude)
 	return watercourses

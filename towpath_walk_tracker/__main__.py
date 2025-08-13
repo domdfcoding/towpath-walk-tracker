@@ -31,6 +31,7 @@ from functools import partial
 
 # 3rd party
 from consolekit import CONTEXT_SETTINGS, SuggestionGroup, click_group
+from consolekit.options import flag_option
 
 # this package
 from towpath_walk_tracker.flask import app
@@ -55,12 +56,17 @@ def run() -> None:
 	Run the towpath-walk-tracker development flask server in debug mode.
 	"""
 
+	# stdlib
+	from pathlib import Path
+
 	# 3rd party
 	from flask_debugtoolbar import DebugToolbarExtension
 
+	app.jinja_env.auto_reload = True
+	app.config["TEMPLATES_AUTO_RELOAD"] = True
 	app.debug = True
-	DebugToolbarExtension(app)
-	app.run(debug=True)
+	# DebugToolbarExtension(app)
+	app.run(debug=True, extra_files=list(Path("towpath_walk_tracker/templates").glob("*.jinja2")))
 
 
 @command()
@@ -91,8 +97,9 @@ out geom;
 """
 
 
+@flag_option("-d/-D", "--download/--no-download", default=True)
 @command()
-def get_data() -> None:
+def get_data(download: bool = True) -> None:
 	"""
 	Query overpass for watercourses data.
 	"""
@@ -100,13 +107,48 @@ def get_data() -> None:
 	# stdlib
 	import json
 
+	# 3rd party
+	from networkx import connected_components
+
 	# this package
-	from towpath_walk_tracker.watercourses import query_overpass
+	from towpath_walk_tracker.network import build_network
+	from towpath_walk_tracker.watercourses import FeatureCollection, filter_watercourses, query_overpass
 
-	data = query_overpass(overpass_query)
+	if download:
+		data = query_overpass(overpass_query)
 
-	with open("data.geojson", 'w', encoding="UTF-8") as fp:
-		json.dump(data, fp, indent=2)
+		with open("data.geojson", 'w', encoding="UTF-8") as fp:
+			json.dump(data, fp, indent=2)
+
+	else:
+		with open("data.geojson", encoding="UTF-8") as fp:
+			data = json.load(fp)
+
+	watercourses = filter_watercourses(data)
+	network = build_network(watercourses)
+
+	nodes_to_exclude = set()
+	for nodes in connected_components(network):
+		if len(nodes) < 22:
+			nodes_to_exclude.update(nodes)
+
+	filtered_data: FeatureCollection = {"type": "FeatureCollection", "features": []}
+
+	for feature in data["features"]:
+		if feature["geometry"]["type"] == "Point":
+			filtered_data["features"].append(feature)
+			continue
+
+		if "nodes" not in feature["properties"]:
+			filtered_data["features"].append(feature)
+			continue
+
+		if not nodes_to_exclude.intersection(feature["properties"]["nodes"]):
+			filtered_data["features"].append(feature)
+			continue
+
+	with open("data.filtered.geojson", 'w', encoding="UTF-8") as fp:
+		json.dump(filtered_data, fp, indent=2)
 
 
 if __name__ == "__main__":
