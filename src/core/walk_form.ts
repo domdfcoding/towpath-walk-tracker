@@ -2,20 +2,20 @@ import * as L from 'leaflet';
 import { NullOrUndefinedOr, LatLngArray } from './types';
 
 Object.assign(HTMLCollection.prototype, {
-	forEach (event) {
-		Array.prototype.forEach.call(this, (element) => event(element));
+	forEach (func: Function) { // eslint-disable-line @typescript-eslint/no-unsafe-function-type
+		Array.prototype.forEach.call(this, (element: HTMLElement) => func(element));
 	}
 });
 
 export const walkPointsChangedEvent = new Event('changed');
 
 export class WalkFormPoint {
-	element: HTMLTableElement;
+	element: HTMLTableRowElement;
 	pointLatitude: HTMLInputElement;
 	pointLongitude: HTMLInputElement;
 	pointEnabled: HTMLInputElement;
 
-	constructor (element) {
+	constructor (element: HTMLTableRowElement) {
 		this.element = element;
 		this.pointLatitude = this.element.getElementsByClassName('point-latitude')[0] as HTMLInputElement;
 		this.pointLongitude = this.element.getElementsByClassName('point-longitude')[0] as HTMLInputElement;
@@ -87,7 +87,7 @@ export class WalkForm {
 	element: HTMLTableRowElement;
 	rows: WalkFormPoint[];
 
-	constructor (element) {
+	constructor (element: HTMLTableRowElement) {
 		this.element = element;
 		this.rows = Array.from(element.querySelectorAll('tr')).map((e) => new WalkFormPoint(e));
 		this.#setupEnableCtrl();
@@ -99,13 +99,13 @@ export class WalkForm {
 		// @ts-expect-error  // forEach  // TODO
 		pointEnabledInputs.forEach((enableCtrl) => {
 			togglePointDisplay(enableCtrl);
-			enableCtrl.addEventListener('change', (event) => {
-				togglePointDisplay(event.target);
+			enableCtrl.addEventListener('change', (event: Event) => {
+				togglePointDisplay(event.target! as HTMLInputElement);
 			});
 		});
 
-		function togglePointDisplay (enableCtrl): void {
-			const pointRow = new WalkFormPoint(enableCtrl.parentElement.parentElement.parentElement.parentElement.parentElement);
+		function togglePointDisplay (enableCtrl: HTMLInputElement): void {
+			const pointRow = new WalkFormPoint(enableCtrl.parentElement!.parentElement!.parentElement!.parentElement!.parentElement as HTMLTableRowElement);
 			if (enableCtrl.value === '1') {
 				pointRow.pointLatitude.setAttribute('required', '');
 				pointRow.pointLongitude.setAttribute('required', '');
@@ -121,8 +121,8 @@ export class WalkForm {
 	setupButtons (): void {
 		const theForm = this; // eslint-disable-line @typescript-eslint/no-this-alias
 
-		function pointRowForButton (button): WalkFormPoint {
-			const pointRow = new WalkFormPoint(button.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement);
+		function pointRowForButton (button: HTMLButtonElement): WalkFormPoint {
+			const pointRow = new WalkFormPoint(button.parentElement!.parentElement!.parentElement!.parentElement!.parentElement!.parentElement!.parentElement as HTMLTableRowElement);
 			return pointRow;
 		}
 
@@ -143,7 +143,7 @@ export class WalkForm {
 		pointMoveUpButtons.forEach((moveBtn) => {
 			moveBtn.addEventListener('click', () => {
 				const root = pointRowForButton(moveBtn).element;
-				const pointIndex: number = parseInt(root.dataset.pointIndex);
+				const pointIndex: number = parseInt(root.dataset.pointIndex as string);
 				if (pointIndex === 0) {
 					return;
 				}
@@ -159,7 +159,7 @@ export class WalkForm {
 		pointMoveDownButtons.forEach((moveBtn) => {
 			moveBtn.addEventListener('click', () => {
 				const root = pointRowForButton(moveBtn).element;
-				const pointIndex: number = parseInt(root.dataset.pointIndex);
+				const pointIndex: number = parseInt(root.dataset.pointIndex as string);
 				if (pointIndex === theForm.getLastEnabledRowIdx()) {
 					return;
 				}
@@ -171,7 +171,7 @@ export class WalkForm {
 	}
 
 	getCoordinates (): L.LatLng[] {
-		const coordinates = [];
+		const coordinates: L.LatLng[] = [];
 
 		this.rows.forEach((pointRow) => {
 			if (pointRow.isEnabled() === 1) {
@@ -222,9 +222,9 @@ export class WalkForm {
 	}
 
 	getLastEnabledRowIdx (): number {
-		const query: HTMLElement = this.element.querySelector('tbody tr:nth-last-child(1 of :not(.d-none))');
+		const query: HTMLElement = this.element.querySelector('tbody tr:nth-last-child(1 of :not(.d-none))')!;
 		let lastEnabledRow: number = -1;
-		if (query !== null) lastEnabledRow = parseInt(query.dataset.pointIndex);
+		if (query !== null) lastEnabledRow = parseInt(query.dataset.pointIndex as string);
 		return lastEnabledRow;
 	}
 
@@ -267,7 +267,6 @@ export function setupWalkFormValidation (
 		form.addEventListener('submit', event => {
 			let enabledCount = 0;
 			walkForm.rows.forEach((pointRow) => {
-				form;
 				enabledCount += pointRow.isEnabled();
 			});
 			if (enabledCount < 2) {

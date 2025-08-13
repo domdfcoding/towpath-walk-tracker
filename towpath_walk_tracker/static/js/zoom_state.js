@@ -1,6 +1,6 @@
 function updateQueryStringParam (key, value) {
 	const url = new URL(window.location.href);
-	url.searchParams.set(key, value); // Add or update the parameter
+	url.searchParams.set(key, value.toString()); // Add or update the parameter
 	// window.history.pushState({}, null, url);
 	window.history.replaceState({}, '', url);
 }

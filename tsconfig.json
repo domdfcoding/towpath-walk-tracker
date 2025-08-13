@@ -4,7 +4,9 @@
     "allowJs": true,
     "target": "es2015",
     "types": ["leaflet-geometryutil", "leaflet-polylinedecorator"],
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "noImplicitAny": true
   },
   "include": ["./src/zoom_state.ts"],
   "exclude": ["./src/core/*"],

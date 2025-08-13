@@ -93,7 +93,7 @@ export class LeafletWalkPreview {
 		});
 	}
 
-	removeMarker (marker): void {
+	removeMarker (marker: L.Marker): void {
 		this.placedMarkers = this.placedMarkers.filter(v => v !== marker);
 		this.placedMarkerCount -= 1;
 		marker.remove();

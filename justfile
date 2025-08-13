@@ -28,6 +28,9 @@ tsc:
 	- npx tsc
 	- pre-commit run eslint --files towpath_walk_tracker/static/**/*.js
 
+myts:
+	npx tsc --noEmit -p tsconfig_all.json
+
 webpack-dev:
 	- npm run dev
 	- pre-commit run end-of-file-fixer --files towpath_walk_tracker/static/js/*

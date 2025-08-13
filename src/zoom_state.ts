@@ -1,13 +1,13 @@
-function updateQueryStringParam (key, value): void {
+function updateQueryStringParam (key: string, value: number): void {
 	const url = new URL(window.location.href);
-	url.searchParams.set(key, value); // Add or update the parameter
+	url.searchParams.set(key, value.toString()); // Add or update the parameter
 	// window.history.pushState({}, null, url);
 	window.history.replaceState({}, '', url);
 }
 
 export function setupZoomState (map: L.Map): void {
 	map.on('zoomend', function () {
-		const zoomLvl = map.getZoom();
+		const zoomLvl: number = map.getZoom();
 		updateQueryStringParam('zoom', zoomLvl);
 	});
 

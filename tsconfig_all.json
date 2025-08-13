@@ -1,13 +1,4 @@
 {
-  "compilerOptions": {
-    "outDir": "./towpath_walk_tracker/static/js",
-    "allowJs": true,
-    "target": "es2015",
-    "types": ["leaflet-geometryutil", "leaflet-polylinedecorator"],
-    "moduleResolution": "node"
-  },
-  "include": ["./src/**/*.ts"],
-  "noEmit": false,
-  "noEmitOnError": false,
-  "noImplicitAny": true
+  "extends": "./tsconfig.json",
+  "include": ["./src/**/*.ts"]
 }

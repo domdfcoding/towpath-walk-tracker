@@ -15982,8 +15982,8 @@ var __classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) || 
 var _WalkForm_instances, _WalkForm_setupEnableCtrl;
 
 Object.assign(HTMLCollection.prototype, {
-    forEach(event) {
-        Array.prototype.forEach.call(this, (element) => event(element));
+    forEach(func) {
+        Array.prototype.forEach.call(this, (element) => func(element));
     }
 });
 const walkPointsChangedEvent = new Event('changed');
@@ -16234,10 +16234,12 @@ function watercoursesZoomOnClick(feature, layer) {
         click: function (e) {
             if (typeof e.target.getBounds === 'function') {
                 map_canal_towpath_walking.fitBounds(e.target.getBounds()); // eslint-disable-line camelcase
+                // @ts-expect-error  // Undefined
             }
             else if (typeof e.target.getLatLng === 'function') {
                 let zoom = map_canal_towpath_walking.getZoom(); // eslint-disable-line camelcase
                 zoom = zoom > 12 ? zoom : zoom + 1;
+                // @ts-expect-error  // Undefined
                 map_canal_towpath_walking.flyTo(e.target.getLatLng(), zoom); // eslint-disable-line camelcase
             }
         }
@@ -16300,7 +16302,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function updateQueryStringParam(key, value) {
     const url = new URL(window.location.href);
-    url.searchParams.set(key, value); // Add or update the parameter
+    url.searchParams.set(key, value.toString()); // Add or update the parameter
     // window.history.pushState({}, null, url);
     window.history.replaceState({}, '', url);
 }
