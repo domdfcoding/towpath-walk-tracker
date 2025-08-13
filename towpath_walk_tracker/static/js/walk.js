@@ -1,6 +1,6 @@
 /* global L */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class LeafletWalkPreview {
+export class LeafletWalkPreview {
 	constructor (walkForm) {
 		this.placedMarkerCount = 0;
 		this.placedMarkers = [];
@@ -39,8 +39,8 @@ class LeafletWalkPreview {
 					}).addTo(currentWalkLayer);
 					// Hammerhead at either end
 					const hammerHead = L.Symbol.arrowHead({ pixelSize: 20, headAngle: 180, polygon: false, pathOptions: { stroke: true, color: lineColour } });
-					L.polylineDecorator(this.polyLineWalk, { patterns: [{ symbol: hammerHead }] }).addTo(currentWalkLayer);
-					L.polylineDecorator(this.polyLineWalk, { patterns: [{ offset: '100%', symbol: hammerHead }] }).addTo(currentWalkLayer);
+					L.polylineDecorator(this.polyLineWalk, { patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(currentWalkLayer);
+					L.polylineDecorator(this.polyLineWalk, { patterns: [{ repeat: 0, offset: '100%', symbol: hammerHead }] }).addTo(currentWalkLayer);
 					console.log('Request complete! response:', coords);
 				});
 		} else {
@@ -62,7 +62,7 @@ class LeafletWalkPreview {
 		const walkMarkersLayer = feature_group_walk_markers; // eslint-disable-line camelcase
 		marker.addTo(walkMarkersLayer);
 		marker.on('contextmenu', e => {
-			walkForm.removePointWithCoord(e.target.getLatLng());
+			this.walkForm.removePointWithCoord(e.target.getLatLng());
 			this.removeMarker(e.target);
 			this.refresh();
 		});
@@ -92,7 +92,7 @@ class LeafletWalkPreview {
 	}
 
 	syncFromForm () {
-		const coordinates = walkForm.getCoordinates();
+		const coordinates = this.walkForm.getCoordinates();
 		for (const m of this.placedMarkers) {
 			const pos = m.getLatLng();
 			let foundMarker = false;

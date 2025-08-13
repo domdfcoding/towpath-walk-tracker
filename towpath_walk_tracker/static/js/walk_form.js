@@ -10,8 +10,8 @@ Object.assign(HTMLCollection.prototype, {
 		Array.prototype.forEach.call(this, (element) => event(element));
 	}
 });
-const walkPointsChangedEvent = new Event('changed');
-class WalkFormPoint {
+export const walkPointsChangedEvent = new Event('changed');
+export class WalkFormPoint {
 	constructor (element) {
 		this.element = element;
 		this.pointLatitude = this.element.getElementsByClassName('point-latitude')[0];
@@ -76,7 +76,7 @@ class WalkFormPoint {
 		return this;
 	}
 }
-class WalkForm {
+export class WalkForm {
 	constructor (element) {
 		_WalkForm_instances.add(this);
 		this.element = element;
@@ -227,26 +227,3 @@ _WalkForm_instances = new WeakSet(), _WalkForm_setupEnableCtrl = function _WalkF
 		}
 	}
 };
-const walkForm = new WalkForm(document.querySelector('table.walk-points'));
-const walkPointsRows = walkForm.rows;
-walkForm.setupButtons();
-document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
-	form.addEventListener('submit', event => {
-		let enabledCount = 0;
-		walkPointsRows.forEach((pointRow) => {
-			enabledCount += pointRow.isEnabled();
-		});
-		if (enabledCount < 2) {
-			// TODO: show message
-			console.log('Too few points!');
-			event.preventDefault();
-			event.stopPropagation();
-		}
-	});
-});
-document.querySelectorAll('.needs-validation#walk-form').forEach(form => {
-	form.addEventListener('reset', () => {
-		console.log('Form was reset');
-		window.setTimeout(() => { walkForm.reorder(); }, 0);
-	});
-});

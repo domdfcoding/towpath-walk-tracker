@@ -5,7 +5,7 @@ declare let geo_json_watercourses: L.GeoJSON; // eslint-disable-line camelcase
 declare let bsLoadingModal: bootstrap.Modal;
 declare let sidebarAddButton: HTMLUListElement;
 
-function watercoursesZoomOnClick (feature, layer) {
+export function watercoursesZoomOnClick (feature, layer) {
 	layer.on({
 		click: function (e) {
 			if (typeof e.target.getBounds === 'function') {
@@ -19,16 +19,10 @@ function watercoursesZoomOnClick (feature, layer) {
 	});
 }
 
-function addWatercoursesGeoJson (data) {
+export function addWatercoursesGeoJson (data) {
 	map_canal_towpath_walking.removeLayer(geo_json_watercourses); // eslint-disable-line camelcase
 	geo_json_watercourses.addData(data); // eslint-disable-line camelcase
 	map_canal_towpath_walking.addLayer(geo_json_watercourses); // eslint-disable-line camelcase
 	bsLoadingModal.hide();
 	sidebarAddButton.classList.remove('disabled');
 }
-
-// @ts-expect-error  // Exporting to "window" global namespace
-window.watercoursesZoomOnClick = watercoursesZoomOnClick;
-
-// @ts-expect-error  // Exporting to "window" global namespace
-window.addWatercoursesGeoJson = addWatercoursesGeoJson;

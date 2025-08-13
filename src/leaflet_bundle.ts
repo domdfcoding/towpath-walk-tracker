@@ -7,4 +7,21 @@ import './leaflet-sidebar.min.js';
 import 'leaflet-polylinedecorator';
 import 'leaflet-geometryutil';
 
-import './watercourses_geojson_utils.ts';
+import { LeafletWalkPreview } from './walk';
+import { WalkForm, walkPointsChangedEvent } from './walk_form';
+import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './watercourses_geojson_utils';
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.watercoursesZoomOnClick = watercoursesZoomOnClick;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.addWatercoursesGeoJson = addWatercoursesGeoJson;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.LeafletWalkPreview = LeafletWalkPreview;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.WalkForm = WalkForm;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.walkPointsChangedEvent = walkPointsChangedEvent;

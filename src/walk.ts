@@ -1,22 +1,15 @@
 /* global L */
 
+import { NullOrUndefinedOr, LatLngArray } from './types';
+import { WalkForm } from './walk_form';
+
 declare let map_canal_towpath_walking: L.Map; // eslint-disable-line camelcase
 declare let geo_json_watercourses: L.GeoJSON; // eslint-disable-line camelcase
 declare let feature_group_current_walk: L.FeatureGroup; // eslint-disable-line camelcase
 declare let feature_group_walk_markers: L.FeatureGroup; // eslint-disable-line camelcase
 
-type NullOrUndefinedOr<T> = T extends void ? never : null | undefined | T;
-
-interface LatLngArray extends Array<number> {
-    length: 2;
-
-    0: number;
-    1: number;
-
-}
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class LeafletWalkPreview {
+export class LeafletWalkPreview {
 	placedMarkerCount: number;
 	placedMarkers: L.Marker[];
 	polyLineWalk: NullOrUndefinedOr<L.Polyline>;
@@ -66,8 +59,8 @@ class LeafletWalkPreview {
 
 					// Hammerhead at either end
 					const hammerHead = L.Symbol.arrowHead({ pixelSize: 20, headAngle: 180, polygon: false, pathOptions: { stroke: true, color: lineColour } });
-					L.polylineDecorator(this.polyLineWalk, { patterns: [{ symbol: hammerHead }] }).addTo(currentWalkLayer);
-					L.polylineDecorator(this.polyLineWalk, { patterns: [{ offset: '100%', symbol: hammerHead }] }).addTo(currentWalkLayer);
+					L.polylineDecorator(this.polyLineWalk, { patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(currentWalkLayer);
+					L.polylineDecorator(this.polyLineWalk, { patterns: [{ repeat: 0, offset: '100%', symbol: hammerHead }] }).addTo(currentWalkLayer);
 					console.log('Request complete! response:', coords);
 				});
 		} else {
@@ -94,7 +87,7 @@ class LeafletWalkPreview {
 		marker.addTo(walkMarkersLayer);
 
 		marker.on('contextmenu', e => {
-			walkForm.removePointWithCoord(e.target.getLatLng());
+			this.walkForm.removePointWithCoord(e.target.getLatLng());
 			this.removeMarker(e.target);
 			this.refresh();
 		});
@@ -127,7 +120,7 @@ class LeafletWalkPreview {
 	}
 
 	syncFromForm (): void {
-		const coordinates: Array<L.LatLng> = walkForm.getCoordinates();
+		const coordinates: Array<L.LatLng> = this.walkForm.getCoordinates();
 
 		for (const m of this.placedMarkers) {
 			const pos = m.getLatLng();
