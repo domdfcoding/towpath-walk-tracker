@@ -213,7 +213,7 @@ export function drawPreviousWalks () {
 				const walkPolyLine = drawWalk(coords, feature_group_walks, walk.colour);
 
 				walkPolyLine.bindTooltip(
-					function (_: any) { return makePreviousWalkTooltip(walk); }, {
+					makePreviousWalkTooltip(walk), {
 					// @ts-expect-error // Doesn't like maxWidth
 						maxWidth: 800,
 						sticky: true,
