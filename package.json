@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "bootstrap": "^5.2.3",
+    "flatpickr": "^4.6.13",
     "leaflet": "^1.9.4",
     "leaflet-geometryutil": "^0.10.3",
     "leaflet-polylinedecorator": "^1.6.0",

@@ -58,7 +58,7 @@ class Map(folium.Map):  # noqa: D101
 	del default_js_dict["jquery"]
 
 	# Replace the folium entry with the webpack bundle
-	default_js_dict["leaflet"] = "/static/js/leaflet_bundle.js"
+	default_js_dict["leaflet"] = "/static/js/main.js"
 
 	default_js = list(default_js_dict.items())
 

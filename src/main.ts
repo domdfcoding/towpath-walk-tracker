@@ -1,16 +1,24 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export * from 'leaflet';
+import 'leaflet';
+
+// === Sidebar ===
 // Doesn't work. The npm package is in separate files
 // and doesn't function the same as the dist version
 // import "leaflet-sidebar";
 import './leaflet-sidebar.min.js';
+
+// === Walks & Watercourses ===
 import 'leaflet-polylinedecorator';
 import 'leaflet-geometryutil';
-
 import { LeafletWalkPreview, drawWalk, drawPreviousWalks } from './core/walk';
-import { WalkForm, walkPointsChangedEvent, setupWalkFormValidation } from './core/walk_form';
 import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './core/watercourses_geojson_utils';
+
+// === Map ===
 import { setupZoomState, zoomStateFromURL } from './zoom_state';
+
+// === Walk Form ===
+import 'flatpickr';
+import { WalkForm, walkPointsChangedEvent, setupWalkFormValidation } from './core/walk_form';
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.watercoursesZoomOnClick = watercoursesZoomOnClick;

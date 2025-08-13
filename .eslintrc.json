@@ -40,7 +40,7 @@
             }
 		},
         {
-			"files": ["src/leaflet_bundle.ts"],
+			"files": ["src/main.ts"],
 			"rules": {
                 "semi": [2, "always"],
                 "no-throw-literal": 0,

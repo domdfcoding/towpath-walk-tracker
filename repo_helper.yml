@@ -12,7 +12,7 @@ short_desc: 'Track walks along canal towpaths.'
 enable_conda: false
 enable_tests: false
 enable_docs: false
-pre_commit_exclude: "(\\.min.(css|js)|leaflet.geometryutil.js|leaflet.polylineDecorator.js|js/leaflet_bundle.js|js/watercourses_geojson_utils.js)$"
+pre_commit_exclude: "(\\.min.(css|js)|leaflet.geometryutil.js|leaflet.polylineDecorator.js|js/main.js|js/watercourses_geojson_utils.js)$"
 on_pypi: false
 use_whey: true
 
