@@ -1,4 +1,4 @@
-/* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, walkForm */
+/* global L */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class LeafletWalkPreview {
 	constructor (walkForm) {
@@ -15,8 +15,7 @@ class LeafletWalkPreview {
 	}
 
 	refresh (propagate = true) {
-		// @ts-expect-error  // global variable
-		const currentWalkLayer = feature_group_current_walk;
+		const currentWalkLayer = feature_group_current_walk; // eslint-disable-line camelcase
 		const placedMarkerLatLng = this.walkForm.getCoordinates();
 		if (propagate) { this.walkForm.replaceAllPoints(placedMarkerLatLng); }
 		if (placedMarkerLatLng.length >= 2) {
@@ -60,8 +59,7 @@ class LeafletWalkPreview {
 		const marker = L.marker([lat, lng], {});
 		this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
-		// @ts-expect-error  // global variable
-		const walkMarkersLayer = feature_group_walk_markers;
+		const walkMarkersLayer = feature_group_walk_markers; // eslint-disable-line camelcase
 		marker.addTo(walkMarkersLayer);
 		marker.on('contextmenu', e => {
 			walkForm.removePointWithCoord(e.target.getLatLng());
@@ -84,10 +82,8 @@ class LeafletWalkPreview {
 		if (lng === undefined) {
 			throw ({ lng });
 		}
-		// @ts-expect-error  // global variable
-		const map = map_canal_towpath_walking;
-		// @ts-expect-error  // global variable
-		const watercourses = geo_json_watercourses;
+		const map = map_canal_towpath_walking; // eslint-disable-line camelcase
+		const watercourses = geo_json_watercourses; // eslint-disable-line camelcase
 		// @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
 		// See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293
 		const coordinatesArray = watercourses.getLayers().map(l => l.feature.geometry.coordinates);

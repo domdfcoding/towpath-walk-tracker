@@ -1,4 +1,9 @@
-/* global L, feature_group_current_walk, feature_group_walk_markers, geo_json_watercourses, map_canal_towpath_walking, walkForm */
+/* global L */
+
+declare let map_canal_towpath_walking: L.Map; // eslint-disable-line camelcase
+declare let geo_json_watercourses: L.GeoJSON; // eslint-disable-line camelcase
+declare let feature_group_current_walk: L.FeatureGroup; // eslint-disable-line camelcase
+declare let feature_group_walk_markers: L.FeatureGroup; // eslint-disable-line camelcase
 
 type NullOrUndefinedOr<T> = T extends void ? never : null | undefined | T;
 
@@ -31,8 +36,7 @@ class LeafletWalkPreview {
 	}
 
 	refresh (propagate = true): void {
-		// @ts-expect-error  // global variable
-		const currentWalkLayer: L.FeatureGroup = feature_group_current_walk;
+		const currentWalkLayer: L.FeatureGroup = feature_group_current_walk; // eslint-disable-line camelcase
 
 		const placedMarkerLatLng: Array<L.LatLng> = this.walkForm.getCoordinates();
 
@@ -85,8 +89,7 @@ class LeafletWalkPreview {
 		this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
 
-		// @ts-expect-error  // global variable
-		const walkMarkersLayer: L.FeatureGroup = feature_group_walk_markers;
+		const walkMarkersLayer: L.FeatureGroup = feature_group_walk_markers; // eslint-disable-line camelcase
 
 		marker.addTo(walkMarkersLayer);
 
@@ -112,11 +115,9 @@ class LeafletWalkPreview {
 			throw ({ lng });
 		}
 
-		// @ts-expect-error  // global variable
-		const map: L.Map = map_canal_towpath_walking;
+		const map: L.Map = map_canal_towpath_walking; // eslint-disable-line camelcase
 
-		// @ts-expect-error  // global variable
-		const watercourses: L.GeoJSON = geo_json_watercourses;
+		const watercourses: L.GeoJSON = geo_json_watercourses; // eslint-disable-line camelcase
 
 		// @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
 		// See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293

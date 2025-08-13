@@ -46,6 +46,16 @@
             }
 		},
         {
+			"files": ["towpath_walk_tracker/static/js/walk.js"],
+			"rules": {
+                "semi": [2, "always"],
+                "no-throw-literal": 0,
+                "indent": ["error", "tab"],
+                "no-tabs": 0,
+                "no-undef": 0
+            }
+		},
+        {
 			"files": ["**/*.ts"],
             "parser": "@typescript-eslint/parser",
             "parserOptions": {
