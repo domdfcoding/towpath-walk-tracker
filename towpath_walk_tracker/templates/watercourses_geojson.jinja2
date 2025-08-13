@@ -11,7 +11,7 @@ MIT Licenced
 		...{{ this.options | tojavascript }}
 	});
 
-	$.ajax({{ this.embed_link|tojson }}, {dataType: 'json', async: true}).done(addWatercoursesGeoJson);
+	fetch({{ this.embed_link|tojson }}, { headers: { 'Content-Type': 'application/json' } }).then(res => res.json()).then(addWatercoursesGeoJson);
 
 	{%- if not this.style %}
 		geo_json_watercourses.setStyle(function(feature) {return feature.properties.style;});

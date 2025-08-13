@@ -52,9 +52,14 @@ class Map(folium.Map):  # noqa: D101
 	del default_css_dict["awesome_markers_font_css"]
 	default_css = list(default_css_dict.items())
 
-	# Replace the folium entry with the webpack bundle
 	default_js_dict = dict(folium.Map.default_js)
+
+	# Remove folium's entry to pull from CDN
+	del default_js_dict["jquery"]
+
+	# Replace the folium entry with the webpack bundle
 	default_js_dict["leaflet"] = "/static/js/leaflet_bundle.js"
+
 	default_js = list(default_js_dict.items())
 
 

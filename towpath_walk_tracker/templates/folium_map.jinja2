@@ -66,7 +66,7 @@ MIT Licenced
         {%- endfor %}
         };
         {{ this.get_name() }}.on("overlayadd", objects_in_front);
-        $(document).ready(objects_in_front);
+        document.addEventListener("DOMContentLoaded", objects_in_front, false);
     {%- endif %}
 
 {% endmacro %}
