@@ -19,7 +19,11 @@
         "semi": [2, "always"],
         "no-throw-literal": 0,
         "indent": ["error", "tab"],
-        "no-tabs": 0
+        "no-tabs": 0,
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+        ]
     },
 
     "overrides": [

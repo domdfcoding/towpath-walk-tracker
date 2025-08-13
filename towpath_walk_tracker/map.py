@@ -89,10 +89,10 @@ def create_map(
 	feature_group_walks = folium.FeatureGroup("Walks").add_to(m)
 	feature_group_walks._id = "walks"
 
-	feature_group_walks = folium.FeatureGroup("Current Walk").add_to(m)
-	feature_group_walks._id = "current_walk"
+	feature_group_current_walk = folium.FeatureGroup("Current Walk").add_to(m)
+	feature_group_current_walk._id = "current_walk"
 
-	m.keep_in_front(g, feature_group_walks, feature_group_walks)
+	m.keep_in_front(g, feature_group_walks, feature_group_current_walk)
 
 	folium.LayerControl().add_to(m)._id = "layer_control"
 	Sidebar().add_to(m)

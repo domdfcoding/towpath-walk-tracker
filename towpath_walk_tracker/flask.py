@@ -93,6 +93,21 @@ def watercourses_geojson() -> Response:
 	return resp
 
 
+@app.route("/all-walks")
+def all_walks() -> Response:
+	"""
+	Flask route for the walks JSON data.
+	"""
+
+	data = []
+	with app.app_context():
+		walk: Walk
+		for walk in Walk.query.all():
+			data.append(walk.to_json())
+
+	return data
+
+
 @app.route('/', methods=["GET", "POST"])
 def main_page() -> Union[str, Response]:
 	"""
@@ -170,22 +185,4 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 		if result is None:
 			return Response("Not Found", 404)
 
-		walk: Walk = cast(Walk, result)
-
-		points = []
-		for point in walk.points:
-			points.append({"latitude": point.latitude, "longitude": point.longitude, "id": point.id})
-
-		route = []
-		for node in walk.route:
-			route.append({"latitude": node.latitude, "longitude": node.longitude, "id": node.id})
-
-		return {
-				"title": walk.title,
-				"start": walk.start,
-				"duration": walk.duration,
-				"notes": walk.notes,
-				"id": walk.id,
-				"points": points,
-				"route": route,
-				}
+		return cast(Walk, result).to_json()

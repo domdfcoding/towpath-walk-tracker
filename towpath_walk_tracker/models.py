@@ -28,7 +28,7 @@ Database models.
 
 # stdlib
 import datetime
-from typing import TYPE_CHECKING, List, Tuple, Type
+from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Type
 
 # 3rd party
 from flask_sqlalchemy import SQLAlchemy
@@ -69,6 +69,7 @@ class Walk(Model):
 	start = db.Column(db.DateTime, nullable=True)
 	duration = db.Column(db.Integer, nullable=False, default=0)
 	notes = db.Column(db.Text, nullable=False)
+	# colour = db.Column(db.String(6), nullable=False)  # hex colour
 	points: Mapped[List["Point"]] = db.relationship(back_populates="walk")  # type: ignore[assignment]
 	route: Mapped[List["Node"]] = db.relationship(secondary=association_table)  # type: ignore[assignment]
 
@@ -150,6 +151,34 @@ class Walk(Model):
 		db.session.commit()
 
 		return walk
+
+	def to_json(self) -> Dict[str, Any]:
+
+		points = []
+		for point in self.points:
+			points.append({
+					"latitude": point.latitude,
+					"longitude": point.longitude,  # "id": point.id,
+					})
+
+		route = []
+		for node in self.route:
+			route.append({
+					"latitude": node.latitude,
+					"longitude": node.longitude,
+					"id": node.id,
+					})
+
+		return {
+				"title": self.title,
+				"start": self.start,
+				"duration": self.duration,
+				"notes": self.notes,
+				"id": self.id,
+				"points": points,
+				"route": route,  # "colour": "#" + "ffa600",  # walk.colour,
+				"colour": '#' + "139c25",  # walk.colour,
+				}
 
 
 class Point(Model):

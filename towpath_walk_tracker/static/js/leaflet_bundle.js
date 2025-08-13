@@ -15830,9 +15830,13 @@ L$1.polylineDecorator = function (paths, options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   LeafletWalkPreview: () => (/* binding */ LeafletWalkPreview)
+/* harmony export */   LeafletWalkPreview: () => (/* binding */ LeafletWalkPreview),
+/* harmony export */   drawPreviousWalks: () => (/* binding */ drawPreviousWalks),
+/* harmony export */   drawWalk: () => (/* binding */ drawWalk)
 /* harmony export */ });
-/* global L */
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_0__);
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class LeafletWalkPreview {
     constructor(walkForm) {
@@ -15860,21 +15864,8 @@ class LeafletWalkPreview {
             })
                 .then(res => res.json())
                 .then((coords) => {
-                const lineColour = '#ff0000';
                 currentWalkLayer.clearLayers();
-                this.polyLineWalk = L.polyline(coords, { interactive: false, bubblingMouseEvents: true, color: lineColour, dashArray: null, dashOffset: null, fill: false, fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }
-                // ).addTo({{this._parent.get_name()}});
-                ).addTo(currentWalkLayer);
-                // Arrows along route
-                L.polylineDecorator(this.polyLineWalk, {
-                    patterns: [
-                        { offset: '8%', repeat: '10%', symbol: L.Symbol.arrowHead({ pixelSize: 12, pathOptions: { stroke: true, fillOpacity: 1, color: lineColour, fill: true, fillColor: lineColour } }) }
-                    ]
-                }).addTo(currentWalkLayer);
-                // Hammerhead at either end
-                const hammerHead = L.Symbol.arrowHead({ pixelSize: 20, headAngle: 180, polygon: false, pathOptions: { stroke: true, color: lineColour } });
-                L.polylineDecorator(this.polyLineWalk, { patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(currentWalkLayer);
-                L.polylineDecorator(this.polyLineWalk, { patterns: [{ repeat: 0, offset: '100%', symbol: hammerHead }] }).addTo(currentWalkLayer);
+                this.polyLineWalk = drawWalk(coords, currentWalkLayer, '#ff0000', false);
                 console.log('Request complete! response:', coords);
             });
         }
@@ -15890,12 +15881,12 @@ class LeafletWalkPreview {
         if (lng === undefined) {
             throw ({ lng });
         }
-        const marker = L.marker([lat, lng], {});
+        const marker = leaflet__WEBPACK_IMPORTED_MODULE_0__.marker([lat, lng], {});
         this.placedMarkers.push(marker);
         this.placedMarkerCount += 1;
         const walkMarkersLayer = feature_group_walk_markers; // eslint-disable-line camelcase
         marker.addTo(walkMarkersLayer);
-        marker.on('contextmenu', e => {
+        marker.on('contextmenu', (e) => {
             this.walkForm.removePointWithCoord(e.target.getLatLng());
             this.removeMarker(e.target);
             this.refresh();
@@ -15919,8 +15910,8 @@ class LeafletWalkPreview {
         // @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
         // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293
         const coordinatesArray = watercourses.getLayers().map(l => l.feature.geometry.coordinates);
-        const closestLatLng = L.GeometryUtil.closest(map, coordinatesArray, [lng, lat]);
-        return L.latLng(closestLatLng.lng, closestLatLng.lat);
+        const closestLatLng = leaflet__WEBPACK_IMPORTED_MODULE_0__.GeometryUtil.closest(map, coordinatesArray, [lng, lat]);
+        return leaflet__WEBPACK_IMPORTED_MODULE_0__.latLng(closestLatLng.lng, closestLatLng.lat);
     }
     syncFromForm() {
         const coordinates = this.walkForm.getCoordinates();
@@ -15953,6 +15944,56 @@ class LeafletWalkPreview {
         }
         this.refresh(false);
     }
+}
+function drawWalk(coords, layerGroup, lineColour, interactive = true) {
+    // Line itself
+    const walkPolyLine = leaflet__WEBPACK_IMPORTED_MODULE_0__.polyline(coords, { interactive, bubblingMouseEvents: true, color: lineColour, fill: false, fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }).addTo(layerGroup);
+    // Arrows along route
+    // TODO: hide arrows below zoom=8
+    leaflet__WEBPACK_IMPORTED_MODULE_0__.polylineDecorator(walkPolyLine, {
+        patterns: [
+            // { offset: '10%', repeat: '20%',
+            { offset: '10%', repeat: '100px', symbol: leaflet__WEBPACK_IMPORTED_MODULE_0__.Symbol.arrowHead({ pixelSize: 12, pathOptions: { stroke: true, fillOpacity: 1, color: lineColour, fill: true, fillColor: lineColour } }) }
+        ]
+    }).addTo(layerGroup);
+    // Hammerhead at either end
+    const hammerHead = leaflet__WEBPACK_IMPORTED_MODULE_0__.Symbol.arrowHead({ pixelSize: 15, headAngle: 180, polygon: false, pathOptions: { stroke: true, color: lineColour } });
+    leaflet__WEBPACK_IMPORTED_MODULE_0__.polylineDecorator(walkPolyLine, { patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(layerGroup);
+    leaflet__WEBPACK_IMPORTED_MODULE_0__.polylineDecorator(walkPolyLine, { patterns: [{ repeat: 0, offset: '100%', symbol: hammerHead }] }).addTo(layerGroup);
+    return walkPolyLine;
+}
+function makePreviousWalkTooltip(walk) {
+    const walkTooltip = leaflet__WEBPACK_IMPORTED_MODULE_0__.DomUtil.create('div');
+    const walkDurationHour = Math.floor(walk.duration / 60); // .toString().padStart(2, '0');
+    const walkDurationMins = (walk.duration % 60); // .toString().padStart(2, '0');
+    const table = `<table>
+	<tr><th>${walk.title}</th><tr>
+	<tr><td>${walk.notes}</td></tr>
+	<tr><td>${walk.start}</td></tr>
+	<tr><td>${walkDurationHour}h ${walkDurationMins}m</td></tr>
+	</table>`;
+    walkTooltip.innerHTML = table;
+    return walkTooltip;
+}
+function drawPreviousWalks() {
+    fetch('/all-walks', { method: 'get' }).then(res => res.json())
+        .then((walks) => {
+        for (const walk of walks) {
+            console.log(walk.title);
+            const coords = [];
+            for (const node of walk.route) {
+                coords.push(leaflet__WEBPACK_IMPORTED_MODULE_0__.latLng(node.latitude, node.longitude));
+            }
+            console.log(coords);
+            const walkPolyLine = drawWalk(coords, feature_group_walks, walk.colour);
+            walkPolyLine.bindTooltip(function (_) { return makePreviousWalkTooltip(walk); }, {
+                // @ts-expect-error // Doesn't like maxWidth
+                maxWidth: 800,
+                sticky: true,
+                className: 'foliumtooltip'
+            });
+        }
+    });
 }
 
 
@@ -16261,6 +16302,8 @@ function addWatercoursesGeoJson(data) {
   \************************************/
 /***/ (() => {
 
+"use strict";
+
 /* From https://github.com/Turbo87/sidebar-v2/tree/master
 MIT Licence
 */
@@ -16446,6 +16489,10 @@ window.watercoursesZoomOnClick = _core_watercourses_geojson_utils__WEBPACK_IMPOR
 window.addWatercoursesGeoJson = _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__.addWatercoursesGeoJson;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.LeafletWalkPreview = _core_walk__WEBPACK_IMPORTED_MODULE_4__.LeafletWalkPreview;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.drawWalk = _core_walk__WEBPACK_IMPORTED_MODULE_4__.drawWalk;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.drawPreviousWalks = _core_walk__WEBPACK_IMPORTED_MODULE_4__.drawPreviousWalks;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_5__.WalkForm;
 // @ts-expect-error  // Exporting to "window" global namespace

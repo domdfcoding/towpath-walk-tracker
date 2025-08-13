@@ -1,5 +1,5 @@
-/* global L */
-
+import * as L from 'leaflet';
+import { LeafletEvent } from 'leaflet';
 import { NullOrUndefinedOr, LatLngArray } from './types';
 import { WalkForm } from './walk_form';
 
@@ -7,6 +7,7 @@ declare let map_canal_towpath_walking: L.Map; // eslint-disable-line camelcase
 declare let geo_json_watercourses: L.GeoJSON; // eslint-disable-line camelcase
 declare let feature_group_current_walk: L.FeatureGroup; // eslint-disable-line camelcase
 declare let feature_group_walk_markers: L.FeatureGroup; // eslint-disable-line camelcase
+declare let feature_group_walks: L.FeatureGroup; // eslint-disable-line camelcase
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class LeafletWalkPreview {
@@ -43,24 +44,8 @@ export class LeafletWalkPreview {
 			})
 				.then(res => res.json())
 				.then((coords: Array<LatLngArray>) => {
-					const lineColour: string = '#ff0000';
-
 					currentWalkLayer.clearLayers();
-					this.polyLineWalk = L.polyline(coords, { interactive: false, bubblingMouseEvents: true, color: lineColour, dashArray: null, dashOffset: null, fill: false, fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }
-						// ).addTo({{this._parent.get_name()}});
-					).addTo(currentWalkLayer);
-
-					// Arrows along route
-					L.polylineDecorator(this.polyLineWalk, {
-						patterns: [
-							{ offset: '8%', repeat: '10%', symbol: L.Symbol.arrowHead({ pixelSize: 12, pathOptions: { stroke: true, fillOpacity: 1, color: lineColour, fill: true, fillColor: lineColour } }) }
-						]
-					}).addTo(currentWalkLayer);
-
-					// Hammerhead at either end
-					const hammerHead = L.Symbol.arrowHead({ pixelSize: 20, headAngle: 180, polygon: false, pathOptions: { stroke: true, color: lineColour } });
-					L.polylineDecorator(this.polyLineWalk, { patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(currentWalkLayer);
-					L.polylineDecorator(this.polyLineWalk, { patterns: [{ repeat: 0, offset: '100%', symbol: hammerHead }] }).addTo(currentWalkLayer);
+					this.polyLineWalk = drawWalk(coords, currentWalkLayer, '#ff0000', false);
 					console.log('Request complete! response:', coords);
 				});
 		} else {
@@ -86,7 +71,7 @@ export class LeafletWalkPreview {
 
 		marker.addTo(walkMarkersLayer);
 
-		marker.on('contextmenu', e => {
+		marker.on('contextmenu', (e: LeafletEvent) => {
 			this.walkForm!.removePointWithCoord(e.target.getLatLng());
 			this.removeMarker(e.target);
 			this.refresh();
@@ -155,4 +140,86 @@ export class LeafletWalkPreview {
 
 		this.refresh(false);
 	}
+}
+
+export function drawWalk (
+	coords: L.LatLngExpression[],
+	layerGroup: L.LayerGroup,
+	lineColour: string,
+	interactive: boolean = true
+): L.Polyline {
+	// Line itself
+	const walkPolyLine = L.polyline(
+		coords,
+		{ interactive, bubblingMouseEvents: true, color: lineColour, fill: false, fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }
+	).addTo(layerGroup);
+
+	// Arrows along route
+	// TODO: hide arrows below zoom=8
+	L.polylineDecorator(walkPolyLine, {
+		patterns: [
+			// { offset: '10%', repeat: '20%',
+			{ offset: '10%', repeat: '100px', symbol: L.Symbol.arrowHead({ pixelSize: 12, pathOptions: { stroke: true, fillOpacity: 1, color: lineColour, fill: true, fillColor: lineColour } }) }
+		]
+	}).addTo(layerGroup);
+
+	// Hammerhead at either end
+	const hammerHead = L.Symbol.arrowHead({ pixelSize: 15, headAngle: 180, polygon: false, pathOptions: { stroke: true, color: lineColour } });
+	L.polylineDecorator(walkPolyLine, { patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(layerGroup);
+	L.polylineDecorator(walkPolyLine, { patterns: [{ repeat: 0, offset: '100%', symbol: hammerHead }] }).addTo(layerGroup);
+
+	return walkPolyLine;
+}
+
+interface WalkDictionary {
+	id: number;
+	title: string;
+	notes: string;
+	start: string;
+	duration: number;
+}
+
+function makePreviousWalkTooltip (walk: WalkDictionary) {
+	const walkTooltip: HTMLDivElement = L.DomUtil.create('div');
+
+	const walkDurationHour = Math.floor(walk.duration / 60); // .toString().padStart(2, '0');
+	const walkDurationMins = (walk.duration % 60); // .toString().padStart(2, '0');
+
+	const table = `<table>
+	<tr><th>${walk.title}</th><tr>
+	<tr><td>${walk.notes}</td></tr>
+	<tr><td>${walk.start}</td></tr>
+	<tr><td>${walkDurationHour}h ${walkDurationMins}m</td></tr>
+	</table>`;
+
+	walkTooltip.innerHTML = table;
+
+	return walkTooltip;
+}
+
+export function drawPreviousWalks () {
+	fetch('/all-walks', { method: 'get' }).then(res => res.json())
+		.then((walks) => {
+			for (const walk of walks) {
+				console.log(walk.title);
+				const coords: L.LatLng[] = [];
+
+				for (const node of walk.route) {
+					coords.push(L.latLng(node.latitude!, node.longitude!));
+				}
+
+				console.log(coords);
+
+				const walkPolyLine = drawWalk(coords, feature_group_walks, walk.colour);
+
+				walkPolyLine.bindTooltip(
+					function (_: any) { return makePreviousWalkTooltip(walk); }, {
+					// @ts-expect-error // Doesn't like maxWidth
+						maxWidth: 800,
+						sticky: true,
+						className: 'foliumtooltip'
+					}
+				);
+			}
+		});
 }
