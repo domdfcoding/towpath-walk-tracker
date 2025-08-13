@@ -8,7 +8,7 @@ import 'leaflet-polylinedecorator';
 import 'leaflet-geometryutil';
 
 import { LeafletWalkPreview } from './core/walk';
-import { WalkForm, walkPointsChangedEvent } from './core/walk_form';
+import { WalkForm, walkPointsChangedEvent, setupWalkFormValidation } from './core/walk_form';
 import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './core/watercourses_geojson_utils';
 import { setupZoomState, zoomStateFromURL } from './zoom_state';
 
@@ -26,6 +26,9 @@ window.WalkForm = WalkForm;
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.walkPointsChangedEvent = walkPointsChangedEvent;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupWalkFormValidation = setupWalkFormValidation;
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupZoomState = setupZoomState;

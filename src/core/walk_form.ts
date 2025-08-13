@@ -1,5 +1,4 @@
-/* global L */
-
+import * as L from 'leaflet';
 import { NullOrUndefinedOr, LatLngArray } from './types';
 
 Object.assign(HTMLCollection.prototype, {
@@ -258,4 +257,32 @@ export class WalkForm {
 
 		this.element.dispatchEvent(walkPointsChangedEvent);
 	}
+}
+
+export function setupWalkFormValidation (
+	formsToValidate: NodeListOf<HTMLFormElement>,
+	walkForm: WalkForm
+) {
+	formsToValidate.forEach(form => {
+		form.addEventListener('submit', event => {
+			let enabledCount = 0;
+			walkForm.rows.forEach((pointRow) => {
+				form;
+				enabledCount += pointRow.isEnabled();
+			});
+			if (enabledCount < 2) {
+				// TODO: show message
+				console.log('Too few points!');
+				event.preventDefault();
+				event.stopPropagation();
+			}
+		});
+	});
+
+	formsToValidate.forEach(form => {
+		form.addEventListener('reset', () => {
+			console.log('Form was reset');
+			window.setTimeout(() => { walkForm.reorder(); }, 0);
+		});
+	});
 }

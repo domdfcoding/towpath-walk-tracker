@@ -15969,15 +15969,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WalkForm: () => (/* binding */ WalkForm),
 /* harmony export */   WalkFormPoint: () => (/* binding */ WalkFormPoint),
+/* harmony export */   setupWalkFormValidation: () => (/* binding */ setupWalkFormValidation),
 /* harmony export */   walkPointsChangedEvent: () => (/* binding */ walkPointsChangedEvent)
 /* harmony export */ });
-/* global L */
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_0__);
 var __classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _WalkForm_instances, _WalkForm_setupEnableCtrl;
+
 Object.assign(HTMLCollection.prototype, {
     forEach(event) {
         Array.prototype.forEach.call(this, (element) => event(element));
@@ -16098,7 +16101,7 @@ class WalkForm {
             if (pointRow.isEnabled() === 1) {
                 const latLng = pointRow.getLatLng();
                 if (!isNaN(latLng[0]) || !isNaN(latLng[1])) {
-                    coordinates.push(L.latLng(latLng));
+                    coordinates.push(leaflet__WEBPACK_IMPORTED_MODULE_0__.latLng(latLng));
                     // coordinates.push(latLng);
                 }
             }
@@ -16146,7 +16149,7 @@ class WalkForm {
     }
     removePointWithCoord(coord) {
         for (const pointRow of this.rows) {
-            const latLng = L.latLng(pointRow.getLatLng());
+            const latLng = leaflet__WEBPACK_IMPORTED_MODULE_0__.latLng(pointRow.getLatLng());
             if (latLng.lat === coord.lat && latLng.lng === coord.lng) {
                 pointRow.disable();
                 break;
@@ -16187,6 +16190,29 @@ _WalkForm_instances = new WeakSet(), _WalkForm_setupEnableCtrl = function _WalkF
         }
     }
 };
+function setupWalkFormValidation(formsToValidate, walkForm) {
+    formsToValidate.forEach(form => {
+        form.addEventListener('submit', event => {
+            let enabledCount = 0;
+            walkForm.rows.forEach((pointRow) => {
+                form;
+                enabledCount += pointRow.isEnabled();
+            });
+            if (enabledCount < 2) {
+                // TODO: show message
+                console.log('Too few points!');
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        });
+    });
+    formsToValidate.forEach(form => {
+        form.addEventListener('reset', () => {
+            console.log('Form was reset');
+            window.setTimeout(() => { walkForm.reorder(); }, 0);
+        });
+    });
+}
 
 
 /***/ }),
@@ -16423,6 +16449,8 @@ window.LeafletWalkPreview = _core_walk__WEBPACK_IMPORTED_MODULE_4__.LeafletWalkP
 window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_5__.WalkForm;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_5__.walkPointsChangedEvent;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_5__.setupWalkFormValidation;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupZoomState = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.setupZoomState;
 // @ts-expect-error  // Exporting to "window" global namespace
