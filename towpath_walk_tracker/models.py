@@ -28,32 +28,32 @@ Database models.
 
 # stdlib
 import datetime
-from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Type
+from typing import Any, Dict, List, Tuple, Type, cast
 
 # 3rd party
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import Mapped  # nodep
+from flask_sqlalchemy_lite import SQLAlchemy
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Table, Text
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 # this package
 from towpath_walk_tracker.forms import PointForm, WalkForm
 from towpath_walk_tracker.route import Route
 
-db = SQLAlchemy()
+__all__ = ["Model", "Node", "Point", "Walk"]
 
-if TYPE_CHECKING:
-	# 3rd party
-	from flask_sqlalchemy.model import Model
-else:
-	Model = db.Model
 
-__all__ = ["Node", "Point", "Walk"]
+class Model(DeclarativeBase):
+	"""
+	Base class for all models.
+	"""
+
 
 # Table associating route nodes with a walk.
-association_table = db.Table(
+association_table = Table(
 		"association_table",
-		db.metadata,
-		db.Column("walk_id", db.ForeignKey("walks.id")),
-		db.Column("node_id", db.ForeignKey("nodes.id")),
+		Model.metadata,
+		Column("walk_id", ForeignKey("walks.id")),
+		Column("node_id", ForeignKey("nodes.id")),
 		)
 
 
@@ -64,16 +64,16 @@ class Walk(Model):
 
 	__tablename__ = "walks"
 
-	id: Mapped[int] = db.mapped_column(primary_key=True)
-	title = db.Column(db.String(200), nullable=False)
-	start = db.Column(db.DateTime, nullable=True)
-	duration = db.Column(db.Integer, nullable=False, default=0)
-	notes = db.Column(db.Text, nullable=False)
-	# colour = db.Column(db.String(6), nullable=False)  # hex colour
-	points: Mapped[List["Point"]] = db.relationship(back_populates="walk")  # type: ignore[assignment]
-	route: Mapped[List["Node"]] = db.relationship(secondary=association_table)  # type: ignore[assignment]
+	id: Mapped[int] = mapped_column(primary_key=True)
+	title = Column(String(200), nullable=False)
+	start = Column(DateTime, nullable=True)
+	duration = Column(Integer, nullable=False, default=0)
+	notes = Column(Text, nullable=False)
+	# colour = Column(String(6), nullable=False)  # hex colour
+	points: Mapped[List["Point"]] = relationship(back_populates="walk")
+	route: Mapped[List["Node"]] = relationship(secondary=association_table)
 
-	# user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	# user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
 	def __repr__(self) -> str:
 		return f"<Walk({self.title})>"
@@ -83,9 +83,9 @@ class Walk(Model):
 		Returns the route as a list of lat/lng coordinates.
 		"""
 
-		coords = []
+		coords: List[Tuple[float, float]] = []
 		for node in self.route:
-			coords.append((node.latitude, node.longitude))
+			coords.append((cast(float, node.latitude), cast(float, node.longitude)))
 
 		return coords
 
@@ -97,37 +97,39 @@ class Walk(Model):
 		return Route.from_db(self.route)
 
 	@classmethod
-	def from_form(cls: Type["Walk"], form: WalkForm) -> "Walk":
+	def from_form(cls: Type["Walk"], db: SQLAlchemy, form: WalkForm) -> "Walk":
 		"""
 		Construct a walk model from a walk form.
 
 		:param form:
 		"""
 
-		title: str = form.title.data  # type: ignore[attr-defined]
-		start: datetime.datetime = form.start.data  # type: ignore[attr-defined]
-		duration_hours, duration_mins = map(int, form.duration.data.split(':'))  # type: ignore[attr-defined]
+		assert form.title.data is not None
+		title: str = cast(str, form.title.data)
+		start: datetime.datetime = cast(datetime.datetime, form.start.data)
+		duration_hours, duration_mins = map(int, cast(str, form.duration.data).split(':'))
 		duration: int = duration_hours * 60 + duration_mins
-		notes: str = form.notes.data  # type: ignore[attr-defined]
+		notes: str = cast(str, form.notes.data)
 
-		walk = cls(title=title, start=start, duration=duration, notes=notes)  # type: ignore[call-arg]
+		walk = cls(title=title, start=start, duration=duration, notes=notes)
 
 		points = []
 		point_form: PointForm
-		for point_form in form.points.entries:  # type: ignore[attr-defined]
-			if point_form.enabled.data:  # type: ignore[attr-defined]
-				latitude = point_form.latitude.data  # type: ignore[attr-defined]
-				longitude = point_form.longitude.data  # type: ignore[attr-defined]
+		for point_form in form.points.entries:
+			if point_form.enabled.data:
+				latitude = point_form.latitude.data
+				longitude = point_form.longitude.data
 
 				assert latitude is not None
 				assert longitude is not None
 
-				point = Point(latitude=latitude, longitude=longitude, walk=walk)  # type: ignore[call-arg]
+				point = Point(latitude=latitude, longitude=longitude, walk=walk)
 				points.append(point)
 
-		route = Route.from_points([(point.latitude, point.longitude) for point in points])
+		coords = [(cast(float, point.latitude), cast(float, point.longitude)) for point in points]
+		route = Route.from_points(coords)
 
-		existing_nodes = {node.id: node for node in Node.query.where(Node.id.in_(route.nodes))}
+		existing_nodes = {node.id: node for node in db.session.query(Node).where(Node.id.in_(route.nodes))}
 
 		nodes = []  # Nodes in the walk, in order
 		new_nodes_for_walk = []  # Nodes in the walk we have to create
@@ -153,12 +155,16 @@ class Walk(Model):
 		return walk
 
 	def to_json(self) -> Dict[str, Any]:
+		"""
+		Return a JSON representation of the walk.
+		"""
 
 		points = []
 		for point in self.points:
 			points.append({
 					"latitude": point.latitude,
-					"longitude": point.longitude,  # "id": point.id,
+					"longitude": point.longitude,
+					"id": point.id,
 					})
 
 		route = []
@@ -188,11 +194,11 @@ class Point(Model):
 
 	__tablename__ = "points"
 
-	id = db.Column(db.Integer, primary_key=True)
-	walk_id: Mapped[int] = db.mapped_column(db.ForeignKey("walks.id"))
-	walk: Mapped[Walk] = db.relationship(back_populates="points")  # type: ignore[assignment]
-	latitude = db.Column(db.Float, nullable=False)
-	longitude = db.Column(db.Float, nullable=False)
+	id = Column(Integer, primary_key=True)
+	walk_id: Mapped[int] = mapped_column(ForeignKey("walks.id"))
+	walk: Mapped[Walk] = relationship(back_populates="points")
+	latitude = Column(Float, nullable=False)
+	longitude = Column(Float, nullable=False)
 
 	def __repr__(self) -> str:
 		return f"<Point({self.latitude}, {self.longitude})>"
@@ -205,9 +211,9 @@ class Node(Model):
 
 	__tablename__ = "nodes"
 
-	id: Mapped[int] = db.mapped_column(primary_key=True)
-	latitude = db.Column(db.Float, nullable=False)
-	longitude = db.Column(db.Float, nullable=False)
+	id: Mapped[int] = mapped_column(primary_key=True)
+	latitude = Column(Float, nullable=False)
+	longitude = Column(Float, nullable=False)
 
 	def __repr__(self) -> str:
 		return f"<Node({self.id}, {self.latitude}, {self.longitude})>"

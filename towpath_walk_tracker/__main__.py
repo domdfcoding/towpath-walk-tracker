@@ -76,10 +76,11 @@ def create_db() -> None:
 	"""
 
 	# this package
-	from towpath_walk_tracker.models import db
+	from towpath_walk_tracker.flask import db
+	from towpath_walk_tracker.models import Model
 
 	with app.app_context():
-		db.create_all()
+		Model.metadata.create_all(db.engine)
 
 
 overpass_query = """

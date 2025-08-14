@@ -30,7 +30,7 @@ Data about watercourses.
 from typing import Any, Collection, Dict, List, Literal, TypedDict
 
 # 3rd party
-import osm2geojson  # type: ignore[import]
+import osm2geojson  # type: ignore[import-untyped]
 import requests
 
 __all__ = ["FeatureCollection", "filter_watercourses", "query_overpass"]
@@ -364,7 +364,7 @@ def filter_watercourses(
 		data: Dict[str, Any],
 		*,
 		tags_to_exclude: Collection[str] = (),
-		ids_to_exclude: Collection[str] = (),
+		ids_to_exclude: Collection[int] = (),
 		) -> FeatureCollection:
 	"""
 	Filter watercourses in the given GeoJSON data for map display.

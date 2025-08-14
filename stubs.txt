@@ -2,3 +2,4 @@ types-requests
 types-wtforms
 types-flask
 types-networkx
+scipy-stubs

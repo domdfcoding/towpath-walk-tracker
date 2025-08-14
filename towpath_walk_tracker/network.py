@@ -31,7 +31,7 @@ from typing import Dict, Tuple
 
 # 3rd party
 import networkx
-from scipy.spatial import KDTree  # type: ignore[import]
+from scipy.spatial import KDTree
 
 # this package
 from towpath_walk_tracker.watercourses import FeatureCollection

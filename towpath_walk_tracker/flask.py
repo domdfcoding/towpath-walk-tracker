@@ -27,19 +27,21 @@ Flask routes and helper functions.
 #
 
 # stdlib
+import json
 from typing import Any, Dict, List, Tuple, Union, cast
 
 # 3rd party
-from flask import Flask, Response, json, redirect, render_template, request
+from flask import Flask, Response, make_response, redirect, render_template, request
 from flask_caching import Cache
-from flask_compress import Compress  # type: ignore[import]
-from flask_wtf.csrf import CSRFProtect  # type: ignore[import]
+from flask_compress import Compress  # type: ignore[import-untyped]
+from flask_sqlalchemy_lite import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect  # type: ignore[import-untyped]
 from folium import Figure, JavascriptLink
 
 # this package
 from towpath_walk_tracker.forms import WalkForm
 from towpath_walk_tracker.map import create_map
-from towpath_walk_tracker.models import Walk, db
+from towpath_walk_tracker.models import Walk
 from towpath_walk_tracker.route import Route
 from towpath_walk_tracker.util import _get_filtered_watercourses
 
@@ -70,14 +72,13 @@ app.config["COMPRESS_MIMETYPES"] = [
 app.config["CACHE_TYPE"] = "SimpleCache"
 app.config["CACHE_DEFAULT_TIMEOUT"] = 300
 app.config["SECRET_KEY"] = "1234"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///walks.db"
+app.config["SQLALCHEMY_ENGINES"] = {"default": "sqlite:///walks.db"}
 app.jinja_env.globals["enumerate"] = enumerate
 
 Compress(app)
 cache = Cache(app)
 csrf = CSRFProtect(app)
-
-db.init_app(app)
+db = SQLAlchemy(app)  # type: ignore[arg-type]
 
 
 @app.route("/watercourses.geojson")
@@ -102,10 +103,10 @@ def all_walks() -> Response:
 	data = []
 	with app.app_context():
 		walk: Walk
-		for walk in Walk.query.all():
+		for walk in db.session.query(Walk).all():
 			data.append(walk.to_json())
 
-	return data
+	return make_response(data)
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -135,7 +136,7 @@ def main_page() -> Union[str, Response]:
 	form = WalkForm()
 	if form.validate_on_submit():
 		with app.app_context():
-			walk = Walk.from_form(form)
+			walk = Walk.from_form(db, form)
 			return redirect(f"/walk/{walk.id}")  # type: ignore[return-value]
 
 	return render_template(
@@ -160,9 +161,9 @@ def get_route() -> List[Tuple[float, float]]:
 	points: List[Tuple[float, float]] = []
 	for point in request.get_json():
 		if isinstance(point, dict):
-			points.append((point["lat"], point["lng"]))
+			points.append((cast(float, point["lat"]), cast(float, point["lng"])))
 		else:
-			points.append(tuple(point))  # type: ignore[arg-type]
+			points.append(tuple(point))
 
 	print(f"Create walk with points {points}")
 
@@ -181,7 +182,7 @@ def get_route() -> List[Tuple[float, float]]:
 @app.route("/walk/<int:walk_id>")
 def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 	with app.app_context():
-		result = Walk.query.get(walk_id)
+		result = db.session.query(Walk).get(walk_id)
 		if result is None:
 			return Response("Not Found", 404)
 

@@ -15,6 +15,8 @@ enable_docs: false
 pre_commit_exclude: "(\\.min.(css|js)|leaflet.geometryutil.js|leaflet.polylineDecorator.js|js/main.js|js/watercourses_geojson_utils.js)$"
 on_pypi: false
 use_whey: true
+mypy_version: 1.17.1
+python_deploy_version: 3.11
 
 manifest_additional:
  - recursive-include towpath_walk_tracker/static *
@@ -31,6 +33,10 @@ additional_ignore:
  - package-lock.json
  - .env
  - "**/.sass-cache"
+ - "*.db"
+ - towpath_walk_tracker/static/js/core
+ - licence-report.html
+ - "*.bak"
 
 exclude_files:
  - justfile

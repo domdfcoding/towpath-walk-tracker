@@ -29,12 +29,12 @@ Functions for finding a route through two or more points.
 # stdlib
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import TYPE_CHECKING, Dict, List, Tuple
+from typing import TYPE_CHECKING, Dict, List, Tuple, cast
 
 # 3rd party
 import networkx
 from networkx import all_shortest_paths
-from scipy.spatial import KDTree  # type: ignore[import]
+from scipy.spatial import KDTree
 
 # this package
 from towpath_walk_tracker.network import build_kdtree, build_network, get_node_coordinates
@@ -57,11 +57,22 @@ def _get_network_and_tree() -> Tuple["networkx.Graph[int]", KDTree]:
 
 @dataclass
 class Route:
+	"""
+	Represents a route constructed through two or more points.
+	"""
+
+	# IDs of every node along the route.
 	nodes: List[int]
+
+	# Mapping of IDs to lat/lng coordinates.
 	node_coordinates: Dict[int, Tuple[float, float]]
 
 	@property
 	def coordinates(self) -> List[Tuple[float, float]]:
+		"""
+		Returns the coordinates of the nodes, in order.
+		"""
+
 		coords: List[Tuple[float, float]] = []
 		for path_node in self.nodes:
 			coords.append(self.node_coordinates[path_node])
@@ -70,16 +81,27 @@ class Route:
 
 	@classmethod
 	def from_db(cls, nodes: List["Node"]) -> "Route":
+		"""
+		Construct a :class:`~.Route` from the database.
+
+		:param nodes:
+		"""
+
 		node_coordinates = {}
 		node_ids = []
 		for node in nodes:
 			node_ids.append(node.id)
-			node_coordinates[node.id] = (node.latitude, node.longitude)
+			node_coordinates[node.id] = (cast(float, node.latitude), cast(float, node.longitude))
 
 		return cls(node_ids, node_coordinates)
 
 	@classmethod
 	def from_points(cls, points: List[Tuple[float, float]]) -> "Route":
+		"""
+		Construct a route from a list of coordinates the route must pass through.
+
+		:param points:
+		"""
 
 		G, tree = _get_network_and_tree()
 
@@ -90,13 +112,14 @@ class Route:
 		node_dist: float
 		node_idx: int
 		for coord in points:
-			node_dist, node_idx = tree.query(coord)
+			coord = cast(Tuple[float, float], coord)
+			node_dist, node_idx = cast(Tuple[float, int], tree.query(coord))
 			node = nckl[node_idx]
 			point_data.append((coord, node_dist, node_idx, node))
 
 		# solve path from 1st node to 2nd node to... nth node
 		path: List[int] = []
 		for orig, dest in zip(point_data[:-1], point_data[1:]):
-			path = path[:-1] + next(all_shortest_paths(G, orig[3], dest[3]))  # type: ignore[call-overload]
+			path = path[:-1] + next(all_shortest_paths(G, orig[3], dest[3]))
 
 		return cls(path, node_coordinates)

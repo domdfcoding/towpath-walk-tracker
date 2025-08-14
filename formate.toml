@@ -34,13 +34,14 @@ known_third_party = [
     "flask_caching",
     "flask_compress",
     "flask_debugtoolbar",
-    "flask_sqlalchemy",
+    "flask_sqlalchemy_lite",
     "flask_wtf",
     "folium",
     "networkx",
     "osm2geojson",
     "requests",
     "scipy",
+    "sqlalchemy",
     "wtforms",
 ]
 known_first_party = [ "towpath_walk_tracker",]

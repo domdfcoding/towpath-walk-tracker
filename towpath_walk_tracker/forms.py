@@ -31,7 +31,7 @@ import itertools
 from typing import Any, Callable, Iterable, Optional, Sequence, Union
 
 # 3rd party
-from flask_wtf import FlaskForm  # type: ignore[import]
+from flask_wtf import FlaskForm  # type: ignore[import-untyped]
 from wtforms import (
 		DateTimeLocalField,
 		Field,
@@ -133,9 +133,9 @@ class WalkForm(FlaskForm):
 	"""
 
 	points = FieldListMinRequired(FormField(PointForm), min_required_entries=2, min_entries=50)
-	title = StringField("Title", [validators.length(max=200)])  # , DataRequired()])
+	title = StringField("Title", [validators.length(max=200)], default='')  # , DataRequired()])
 	start = DateTimeLocalField("Start")  # , validators=[DataRequired()])
 	duration = StringField(
 			"Duration", default="00:00"
 			)  # , validators=[DataRequired()])  # TODO: custom field type to convert to int minutes
-	notes = TextAreaField("Notes")  # , validators=[DataRequired()])
+	notes = TextAreaField("Notes", default='')  # , validators=[DataRequired()])
