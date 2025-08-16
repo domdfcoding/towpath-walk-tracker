@@ -37,6 +37,7 @@ additional_ignore:
  - towpath_walk_tracker/static/js/core
  - licence-report.html
  - "*.bak"
+ - licence-report.html
 
 exclude_files:
  - justfile

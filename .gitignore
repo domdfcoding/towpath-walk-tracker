@@ -91,3 +91,4 @@ package-lock.json
 **/.sass-cache
 *.db
 towpath_walk_tracker/static/js/core
+licence-report.html

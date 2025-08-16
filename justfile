@@ -44,3 +44,9 @@ scss:
 
 run: scss tsc webpack-dev
 	python3 -m towpath_walk_tracker run
+
+build: scss tsc webpack
+	tox -e build
+
+licence-report:
+	npx license-report --only=prod --output html > licence-report.html
