@@ -31,7 +31,20 @@
     </style>
 
 
-    <style>.folium-map {flex-grow: 1}</style>
+    <style>
+
+    .folium-map {
+        flex-grow: 1;
+    }
+
+    .walk-details p, .walk-details span, .walk-details strong {
+        font-size: 1.25rem;
+    }
+
+    .walk-details strong {
+        font-weight: 500;
+    }
+    </style>
 
 
 
@@ -40,10 +53,32 @@
 {% block content %}
 
     <div class="container">
-        <form class="needs-validation" id="walk-form" novalidate>
-            <div class="min-vh-100 d-flex flex-column">
-                {{ form.csrf_token }}
-                <div class="row g-3">
+        <div class="min-vh-100 d-flex flex-column">
+
+            <div id="walkDetails" class="row g-3 walk-details">
+                <div class="col-md-12 d-flex justify-content-between pb-1 border-bottom">
+                    <h2>{{ form.title.default }}</h2>
+                    <button id="walkEditBtn" class="btn btn-secondary ml-auto me-0">Edit</button>
+                </div>
+                <div class="col-md-12 d-flex mt-1">
+                    <div class="me-4">
+                        <p>
+                            <strong>Start</strong> {{ form.start.default }}
+                        </p>
+                    </div>
+                    <p>
+                        {% set duration_hrs, duration_mins = form.duration.default.split(':') %}
+                        <strong>Duration</strong> {{ duration_hrs }}h {{ duration_mins }}mins
+                    </p>
+                </div>
+                <div class="border mt-0 mb-2">
+                    <h5 class="mt-1">Notes</h5>
+                    <p>{{ form.notes.default }}</p>
+                </div>
+            </div>
+            <div class="row g-3 walk-edit">
+                <form class="needs-validation" id="walk-form" novalidate>
+                    {{ form.csrf_token }}
                     <div class="col-12">
                         {{ form.title.label(class_='form-label') }}
                         {{ form.title(class_='form-control') }}
@@ -57,18 +92,18 @@
                     <div class="col-sm-4">
                         {{ form.duration.label(class_='form-label') }}
                         {# TODO: html-duration-picker class breaks form label when wrapping #}
-                        {{ form.duration(class_='form-control html-duration-picker', value='00:00', **{"data-hide-seconds": ''}) }}
+                        {{ form.duration(class_='form-control html-duration-picker', **{"data-hide-seconds": ''}) }}
                     </div>
 
                     <div class="col-12">
                         {{ form.notes.label(class_='form-label') }}
                         {{ form.notes(class_='form-control') }}
                     </div>
-                </div>
-
-                <div class="col-sm-12 d-flex flex-column flex-grow-1 mt-4 mb-2 pb-1">{{ body|safe }}</div>
+                </form>
             </div>
-        </form>
+
+            <div class="col-sm-12 d-flex flex-column flex-grow-1 mt-4 mb-2 pb-1">{{ body|safe }}</div>
+        </div>
     </div>
 
 {% endblock content %}
@@ -84,6 +119,12 @@
     <script src="https://cdn.jsdelivr.net/gh/domdfcoding/html-duration-picker.js@bootstrap/dist/html-duration-picker.min.js"></script>
 
     <script>
+
+        document.getElementById("walk-form").classList.add("d-none")
+        walkEditBtn.addEventListener('click', (e) => {
+            walkDetails.classList.add("d-none");
+            document.getElementById("walk-form").classList.remove("d-none")
+            });
 
         {# const walkForm = new WalkForm(document.querySelector('table.walk-points'));
         walkForm.setupButtons();

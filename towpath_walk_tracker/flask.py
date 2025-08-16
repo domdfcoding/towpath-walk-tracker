@@ -214,6 +214,12 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 		child.render()
 
 	form = WalkForm()
+	form.title.default = walk.title
+	form.start.default = walk.start
+	form.duration.default = f"{walk.duration // 60:02d}:{walk.duration % 60:02d}"
+	form.notes.default = walk.notes
+	form.process()
+
 	# if form.validate_on_submit():
 	# 	with app.app_context():
 	# 		walk = Walk.from_form(db, form)
