@@ -2911,7 +2911,7 @@ L.GeometryUtil = L.extend(L.GeometryUtil || {}, {
 
         return new L.LatLng(ty, tx);
     },
-    
+
 
     /**
         Returns the closest latlng on layer.
@@ -3265,7 +3265,7 @@ L.GeometryUtil = L.extend(L.GeometryUtil || {}, {
 			cumulativeDistanceToA = cumulativeDistanceToB;
 			cumulativeDistanceToB += pointA.distanceTo(pointB);
 		}
-		
+
 		if (pointA == undefined && pointB == undefined) { // Happens when line has no length
 			var pointA = pts[0], pointB = pts[1], i = 1;
 		}
@@ -19104,7 +19104,7 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -19118,14 +19118,14 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -19138,7 +19138,7 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -19150,12 +19150,12 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -19166,7 +19166,7 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.

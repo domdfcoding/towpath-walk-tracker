@@ -10,7 +10,7 @@ import './leaflet-sidebar.min.js';
 // === Walks & Watercourses ===
 import 'leaflet-polylinedecorator';
 import 'leaflet-geometryutil';
-import { LeafletWalkPreview, drawWalk, drawPreviousWalks } from './core/walk';
+import { LeafletWalkPreview, drawWalk, drawPreviousWalks, placeMarkerOnMap } from './core/walk';
 import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './core/watercourses_geojson_utils';
 
 // === Map ===
@@ -34,6 +34,9 @@ window.drawWalk = drawWalk;
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.drawPreviousWalks = drawPreviousWalks;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.placeMarkerOnMap = placeMarkerOnMap;
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.WalkForm = WalkForm;

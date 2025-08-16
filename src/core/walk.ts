@@ -67,9 +67,7 @@ export class LeafletWalkPreview {
 		this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
 
-		const walkMarkersLayer: L.FeatureGroup = feature_group_walk_markers; // eslint-disable-line camelcase
-
-		marker.addTo(walkMarkersLayer);
+		marker.addTo(feature_group_walk_markers);
 
 		marker.on('contextmenu', (e: LeafletEvent) => {
 			this.walkForm!.removePointWithCoord(e.target.getLatLng());
@@ -92,15 +90,12 @@ export class LeafletWalkPreview {
 		if (lng === undefined) {
 			throw ({ lng });
 		}
-
-		const map: L.Map = map_canal_towpath_walking; // eslint-disable-line camelcase
-
 		const watercourses: L.GeoJSON = geo_json_watercourses; // eslint-disable-line camelcase
 
 		// @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
 		// See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293
 		const coordinatesArray = watercourses.getLayers().map(l => l.feature.geometry.coordinates);
-		const closestLatLng = L.GeometryUtil.closest(map, coordinatesArray, [lng, lat])!;
+		const closestLatLng = L.GeometryUtil.closest(map_canal_towpath_walking, coordinatesArray, [lng, lat])!;
 		return L.latLng(closestLatLng.lng, closestLatLng.lat);
 	}
 
@@ -222,4 +217,16 @@ export function drawPreviousWalks () {
 				);
 			}
 		});
+}
+
+export function placeMarkerOnMap (latlng: L.LatLng, walkPreview: LeafletWalkPreview, walkForm: WalkForm) {
+	const closestLatLng = walkPreview.snapCoordToLine(latlng.lat, latlng.lng);
+	const distance = L.GeometryUtil.distance(map_canal_towpath_walking, latlng, closestLatLng);
+	console.log('Distance from click to point is', distance);
+
+	if (distance <= 20) {
+		walkPreview.addMarker(closestLatLng.lat, closestLatLng.lng);
+		walkForm.addPoint(closestLatLng.lat, closestLatLng.lng);
+		walkPreview.refresh(false);
+	}
 }
