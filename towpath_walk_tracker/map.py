@@ -41,6 +41,7 @@ from towpath_walk_tracker.folium import (
 		WatercoursesGeoJson,
 		ZoomStateJS
 		)
+from towpath_walk_tracker.models import Walk
 
 __all__ = ["create_map"]
 
@@ -101,6 +102,25 @@ def create_map(
 	# m.add_js_link("walk", "/static/js/walk.js")
 	m.add_js_link("htmx.min", "/static/js/htmx.min.js")
 	m.add_css_link("leaflet-sidebar.css", "/static/css/leaflet-sidebar.min.css")
+	m.add_css_link("map.css", "/static/css/map.css")
+
+	return m
+
+
+def create_single_walk_map(walk: Walk) -> Map:
+
+	m = Map(control_scale=True)
+	m._id = "canal_towpath_walking"
+
+	feature_group_walk_markers = folium.FeatureGroup("Walk Markers").add_to(m)
+	feature_group_walk_markers._id = "walk_markers"
+
+	feature_group_current_walk = folium.FeatureGroup("Current Walk").add_to(m)
+	feature_group_current_walk._id = "current_walk"
+
+	# folium.LayerControl().add_to(m)._id = "layer_control"
+	WalkStartEnd().add_to(m)
+
 	m.add_css_link("map.css", "/static/css/map.css")
 
 	return m

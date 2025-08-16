@@ -40,7 +40,7 @@ from folium import Figure, JavascriptLink
 
 # this package
 from towpath_walk_tracker.forms import WalkForm
-from towpath_walk_tracker.map import create_map
+from towpath_walk_tracker.map import create_map, create_single_walk_map
 from towpath_walk_tracker.models import Walk
 from towpath_walk_tracker.route import Route
 from towpath_walk_tracker.util import _get_filtered_watercourses
@@ -178,11 +178,52 @@ def get_route() -> List[Tuple[float, float]]:
 # 	return render_template("walk_form.jinja2", form=form)
 
 
-@app.route("/walk/<int:walk_id>")
-def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
+@app.route("/api/walk/<int:walk_id>/")
+def api_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 	with app.app_context():
 		result = db.session.query(Walk).get(walk_id)
 		if result is None:
 			return Response("Not Found", 404)
 
 		return cast(Walk, result).to_json()
+
+
+@app.route("/walk/<int:walk_id>/", methods=["GET", "POST"])
+def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
+
+	with app.app_context():
+		result = db.session.query(Walk).get(walk_id)
+		if result is None:
+			return Response("Not Found", 404)
+
+		walk: Walk = cast(Walk, result)
+
+	m = create_single_walk_map(walk)
+
+	root: Figure = m.get_root()  # type: ignore[assignment]
+
+	js_libs = m.default_js
+	m.default_js = []
+
+	scripts = []
+	for lib in js_libs:
+		if lib[0] not in {"bootstrap"}:
+			scripts.append(JavascriptLink(lib[1]).render())
+
+	for child in root._children.values():
+		child.render()
+
+	form = WalkForm()
+	# if form.validate_on_submit():
+	# 	with app.app_context():
+	# 		walk = Walk.from_form(db, form)
+	# 		return redirect(f"/walk/{walk.id}")  # type: ignore[return-value]
+
+	return render_template(
+			"single_walk_map.jinja2",
+			form=form,
+			header=root.header.render(),
+			body=root.html.render(),
+			script=root.script.render(),
+			scripts='\n'.join(scripts)
+			)
