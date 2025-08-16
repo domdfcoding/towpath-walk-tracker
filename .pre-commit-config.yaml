@@ -104,7 +104,7 @@ repos:
        - stylelint-config-standard@22.0.0
       args:
        - --fix
-      exclude: \.min.css
+      exclude: (\.min.css|scss.bootstrap/)
 
  - repo: https://github.com/pre-commit/mirrors-eslint
    rev: v8.56.0

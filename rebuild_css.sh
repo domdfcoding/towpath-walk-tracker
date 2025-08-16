@@ -41,7 +41,10 @@ compile () {
 }
 
 # Compile SCSS for Font Awesome
-compile "scss/fontawesome.scss" "towpath_walk_tracker/static/css/fontawesome.min.css"
+compile "scss/fontawesome/fontawesome.scss" "towpath_walk_tracker/static/css/fontawesome.min.css"
+
+# Compile SCSS for Font Awesome
+compile "scss/bootstrap/bootstrap.scss" "towpath_walk_tracker/static/css/bootstrap.min.css"
 
 # Minify other files
 # compile "towpath_walk_tracker/static/css/main.css" "towpath_walk_tracker/static/css/main.min.css"

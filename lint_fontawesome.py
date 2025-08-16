@@ -8,7 +8,7 @@ import bs4
 import dict2css
 from domdf_python_tools.paths import PathPlus, unwanted_dirs
 
-icons_scss_file = PathPlus("scss/_icons.scss")
+icons_scss_file = PathPlus("scss/fontawesome/_icons.scss")
 icons_scss = icons_scss_file.read_lines()
 
 enabled_icons: Dict[str, int] = {}

@@ -127,8 +127,7 @@ def main_page() -> Union[str, Response]:
 
 	scripts = []
 	for lib in js_libs:
-		if lib[0] not in {"bootstrap"}:
-			scripts.append(JavascriptLink(lib[1]).render())
+		scripts.append(JavascriptLink(lib[1]).render())
 
 	for child in root._children.values():
 		child.render()

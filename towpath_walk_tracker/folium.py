@@ -47,15 +47,23 @@ def _load_template(name: str) -> Template:
 class Map(folium.Map):  # noqa: D101
 	_template = _load_template("folium_map.jinja2")
 
-	# Remove folium's entry to pull from CDN
 	default_css_dict = dict(folium.Map.default_css)
+
+	# Remove folium's entry to pull from CDN
 	del default_css_dict["awesome_markers_font_css"]
+
+	# Remove folium's entry to use local version
+	del default_css_dict["bootstrap_css"]
+
 	default_css = list(default_css_dict.items())
 
 	default_js_dict = dict(folium.Map.default_js)
 
 	# Remove folium's entry to pull from CDN
 	del default_js_dict["jquery"]
+
+	# Remove folium's entry to use local version
+	del default_js_dict["bootstrap"]
 
 	# Replace the folium entry with the webpack bundle
 	default_js_dict["leaflet"] = "/static/js/main.js"
