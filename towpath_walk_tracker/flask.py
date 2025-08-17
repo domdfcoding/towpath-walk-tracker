@@ -217,12 +217,10 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 		form.start.default = walk.start
 		form.duration.default = f"{walk.duration // 60:02d}:{walk.duration % 60:02d}"
 		form.notes.default = walk.notes
-
 		form.process()
 
 		walk_points = [point.to_json() for point in walk.points]
-		print(walk_points)
-
+		walk_route = [node.to_json() for node in walk.route]
 
 	# if form.validate_on_submit():
 	# 	with app.app_context():
@@ -233,6 +231,7 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 			"single_walk_map.jinja2",
 			form=form,
 			walk_points=walk_points,
+			walk_route=walk_route,
 			header=root.header.render(),
 			body=root.html.render(),
 			script=root.script.render(),

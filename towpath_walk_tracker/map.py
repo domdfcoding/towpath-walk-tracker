@@ -115,13 +115,8 @@ def create_single_walk_map(walk: Walk) -> Map:
 	feature_group_walk_markers = folium.FeatureGroup("Walk Markers").add_to(m)
 	feature_group_walk_markers._id = "walk_markers"
 
-	for point in walk.points:
-		folium.Marker((point.latitude, point.longitude)).add_to(feature_group_walk_markers)
-
 	feature_group_current_walk = folium.FeatureGroup("Current Walk").add_to(m)
 	feature_group_current_walk._id = "current_walk"
-
-	folium.PolyLine([(node.latitude, node.longitude) for node in walk.route]).add_to(feature_group_current_walk)
 
 	# folium.LayerControl().add_to(m)._id = "layer_control"
 	WalkStartEnd().add_to(m)

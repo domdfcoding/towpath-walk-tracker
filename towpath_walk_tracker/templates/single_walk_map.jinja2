@@ -102,6 +102,16 @@
             return (!document.getElementById("walk-form").classList.contains("d-none"))
         } #}
 
+        {% for point in walk_points %}
+        walkPreview.addMarker({{ point.latitude }}, {{ point.longitude }})
+        {% endfor %}
+
+        walkPreview.polyLineWalk = drawWalk([
+            {% for node in walk_route %}
+            L.latLng({{ node.latitude }}, {{ node.longitude }}),
+            {% endfor %}
+        ], feature_group_current_walk, '#ff0000', false);
+
         document.querySelector('table.walk-points').addEventListener('changed',
             (e) => { walkPreview.syncFromForm(); }
         );
@@ -121,10 +131,10 @@
         {# walkPreview.syncFromForm();  #}
 
         map_canal_towpath_walking.fitBounds(
-            feature_group_current_walk.getBounds()
+            feature_group_walk_markers.getBounds()
         );
 
-    </script>
+</script>
 
 
 

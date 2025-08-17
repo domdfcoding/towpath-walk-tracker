@@ -228,3 +228,14 @@ class Node(Model):
 
 	def __repr__(self) -> str:
 		return f"<Node({self.id}, {self.latitude}, {self.longitude})>"
+
+	def to_json(self) -> Dict[str, Any]:
+		"""
+		Return a JSON representation of the node.
+		"""
+
+		return {
+				"latitude": self.latitude,
+				"longitude": self.longitude,
+				"id": self.id,
+				}
