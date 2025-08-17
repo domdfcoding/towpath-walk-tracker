@@ -31,6 +31,7 @@ from typing import Tuple
 
 # 3rd party
 import folium
+from xyzservices.lib import TileProvider
 
 # this package
 from towpath_walk_tracker.folium import (
@@ -69,6 +70,8 @@ def create_map(
 
 	m = Map(map_centre, zoom_start=zoom_level, control_scale=True)
 	m._id = "canal_towpath_walking"
+	folium.TileLayer(TileProvider.from_qms("OpenTopoMap"), show=False).add_to(m)
+
 	ZoomStateJS().add_to(m)
 
 	tooltip = GeoJsonTooltip(
@@ -111,6 +114,7 @@ def create_single_walk_map(walk: Walk) -> Map:
 
 	m = Map(control_scale=True)
 	m._id = "canal_towpath_walking"
+	folium.TileLayer(TileProvider.from_qms("OpenTopoMap"), show=False).add_to(m)
 
 	feature_group_walk_markers = folium.FeatureGroup("Walk Markers").add_to(m)
 	feature_group_walk_markers._id = "walk_markers"
@@ -118,7 +122,7 @@ def create_single_walk_map(walk: Walk) -> Map:
 	feature_group_current_walk = folium.FeatureGroup("Current Walk").add_to(m)
 	feature_group_current_walk._id = "current_walk"
 
-	# folium.LayerControl().add_to(m)._id = "layer_control"
+	folium.LayerControl().add_to(m)._id = "layer_control"
 	WalkStartEnd().add_to(m)
 
 	m.add_css_link("map.css", "/static/css/map.css")
