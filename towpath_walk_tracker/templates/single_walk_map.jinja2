@@ -98,6 +98,10 @@
 
         const walkPreview = new LeafletWalkPreview(walkForm);
 
+        {# walkPreview.is_active = () => {
+            return (!document.getElementById("walk-form").classList.contains("d-none"))
+        } #}
+
         document.querySelector('table.walk-points').addEventListener('changed',
             (e) => { walkPreview.syncFromForm(); }
         );

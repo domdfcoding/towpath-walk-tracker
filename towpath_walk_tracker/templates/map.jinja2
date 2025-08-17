@@ -153,6 +153,9 @@
         setupWalkFormValidation(document.querySelectorAll('.needs-validation#walk-form'), walkForm)
 
         const walkPreview = new LeafletWalkPreview(walkForm);
+        walkPreview.is_active = () => {
+            return (sidebar_add_walk_pane.classList.contains("active") && !sidebar._sidebar.classList.contains("collapsed"))
+        }
 
         document.querySelector('table.walk-points').addEventListener('changed',
             (e) => { walkPreview.syncFromForm(); }

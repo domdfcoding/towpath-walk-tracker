@@ -18579,8 +18579,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LeafletWalkPreview: () => (/* binding */ LeafletWalkPreview),
 /* harmony export */   drawPreviousWalks: () => (/* binding */ drawPreviousWalks),
-/* harmony export */   drawWalk: () => (/* binding */ drawWalk),
-/* harmony export */   placeMarkerOnMap: () => (/* binding */ placeMarkerOnMap)
+/* harmony export */   drawWalk: () => (/* binding */ drawWalk)
 /* harmony export */ });
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_0__);
@@ -18599,6 +18598,7 @@ class LeafletWalkPreview {
         // this.placedMarkers = [];
         this.polyLineWalk = null;
         this.walkForm = walkForm;
+        this.is_active = () => false;
     }
     clearMarkers() {
         // for (const m of this.placedMarkers) m.remove();
@@ -18642,6 +18642,9 @@ class LeafletWalkPreview {
         this.placedMarkerCount += 1;
         marker.addTo(feature_group_walk_markers);
         marker.on('contextmenu', (e) => {
+            if (!this.is_active()) {
+                return;
+            }
             this.walkForm.removePointWithCoord(e.target.getLatLng());
             this.removeMarker(e.target);
             this.refresh();
@@ -18701,10 +18704,23 @@ class LeafletWalkPreview {
         }
         this.refresh(false);
     }
+    placeMarkerOnMap(latlng) {
+        if (!this.is_active()) {
+            return;
+        }
+        const closestLatLng = this.snapCoordToLine(latlng.lat, latlng.lng);
+        const distance = leaflet__WEBPACK_IMPORTED_MODULE_0__.GeometryUtil.distance(map_canal_towpath_walking, latlng, closestLatLng);
+        console.log('Distance from click to point is', distance);
+        if (distance <= 20) {
+            this.addMarker(closestLatLng.lat, closestLatLng.lng);
+            this.walkForm.addPoint(closestLatLng.lat, closestLatLng.lng);
+            this.refresh(false);
+        }
+    }
 }
 _LeafletWalkPreview_instances = new WeakSet(), _LeafletWalkPreview_getMarkers = function _LeafletWalkPreview_getMarkers() {
     // @ts-expect-error // Cast
-    return feature_group_walk_markers.getLayers();
+    return feature_group_walk_markers.getLayers(); // eslint-disable-line camelcase
 };
 function drawWalk(coords, layerGroup, lineColour, interactive = true) {
     // Line itself
@@ -18755,16 +18771,6 @@ function drawPreviousWalks() {
             });
         }
     });
-}
-function placeMarkerOnMap(latlng, walkPreview, walkForm) {
-    const closestLatLng = walkPreview.snapCoordToLine(latlng.lat, latlng.lng);
-    const distance = leaflet__WEBPACK_IMPORTED_MODULE_0__.GeometryUtil.distance(map_canal_towpath_walking, latlng, closestLatLng);
-    console.log('Distance from click to point is', distance);
-    if (distance <= 20) {
-        walkPreview.addMarker(closestLatLng.lat, closestLatLng.lng);
-        walkForm.addPoint(closestLatLng.lat, closestLatLng.lng);
-        walkPreview.refresh(false);
-    }
 }
 
 
@@ -19269,8 +19275,6 @@ window.LeafletWalkPreview = _core_walk__WEBPACK_IMPORTED_MODULE_4__.LeafletWalkP
 window.drawWalk = _core_walk__WEBPACK_IMPORTED_MODULE_4__.drawWalk;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.drawPreviousWalks = _core_walk__WEBPACK_IMPORTED_MODULE_4__.drawPreviousWalks;
-// @ts-expect-error  // Exporting to "window" global namespace
-window.placeMarkerOnMap = _core_walk__WEBPACK_IMPORTED_MODULE_4__.placeMarkerOnMap;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.WalkForm;
 // @ts-expect-error  // Exporting to "window" global namespace

@@ -16,11 +16,15 @@ export class LeafletWalkPreview {
 	polyLineWalk: NullOrUndefinedOr<L.Polyline>;
 	walkForm: NullOrUndefinedOr<WalkForm>;
 
+	// Callable to check whether the preview can be interacted with (add or remove points).
+	is_active: () => boolean;
+
 	constructor (walkForm: NullOrUndefinedOr<WalkForm>) {
 		this.placedMarkerCount = 0;
 		// this.placedMarkers = [];
 		this.polyLineWalk = null;
 		this.walkForm = walkForm;
+		this.is_active = () => false;
 	}
 
 	clearMarkers (): void {
@@ -71,6 +75,7 @@ export class LeafletWalkPreview {
 		marker.addTo(feature_group_walk_markers);
 
 		marker.on('contextmenu', (e: LeafletEvent) => {
+			if (!this.is_active()) { return; }
 			this.walkForm!.removePointWithCoord(e.target.getLatLng());
 			this.removeMarker(e.target);
 			this.refresh();
@@ -103,7 +108,7 @@ export class LeafletWalkPreview {
 
 	#getMarkers (): L.Marker[] {
 		// @ts-expect-error // Cast
-		return feature_group_walk_markers.getLayers();
+		return feature_group_walk_markers.getLayers(); // eslint-disable-line camelcase
 	}
 
 	syncFromForm (): void {
@@ -143,6 +148,20 @@ export class LeafletWalkPreview {
 		}
 
 		this.refresh(false);
+	}
+
+	placeMarkerOnMap (latlng: L.LatLng) {
+		if (!this.is_active()) { return; }
+
+		const closestLatLng = this.snapCoordToLine(latlng.lat, latlng.lng);
+		const distance = L.GeometryUtil.distance(map_canal_towpath_walking, latlng, closestLatLng);
+		console.log('Distance from click to point is', distance);
+
+		if (distance <= 20) {
+			this.addMarker(closestLatLng.lat, closestLatLng.lng);
+			this.walkForm!.addPoint(closestLatLng.lat, closestLatLng.lng);
+			this.refresh(false);
+		}
 	}
 }
 
@@ -226,16 +245,4 @@ export function drawPreviousWalks () {
 				);
 			}
 		});
-}
-
-export function placeMarkerOnMap (latlng: L.LatLng, walkPreview: LeafletWalkPreview, walkForm: WalkForm) {
-	const closestLatLng = walkPreview.snapCoordToLine(latlng.lat, latlng.lng);
-	const distance = L.GeometryUtil.distance(map_canal_towpath_walking, latlng, closestLatLng);
-	console.log('Distance from click to point is', distance);
-
-	if (distance <= 20) {
-		walkPreview.addMarker(closestLatLng.lat, closestLatLng.lng);
-		walkForm.addPoint(closestLatLng.lat, closestLatLng.lng);
-		walkPreview.refresh(false);
-	}
 }

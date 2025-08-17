@@ -2,9 +2,7 @@
 {% macro script(this, kwargs) %}
 
     function placeMarkerOnClick(e) {
-        if (sidebar_add_walk_pane.classList.contains("active")) {
-            placeMarkerOnMap(e.latlng, walkPreview, walkForm);
-        }
+        walkPreview.placeMarkerOnMap(e.latlng);
     }
 
     map_canal_towpath_walking.on('click', placeMarkerOnClick);
