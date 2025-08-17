@@ -24,7 +24,7 @@
 
 <label class="form-label mt-2">Points</label>
 <div class="walk-points-scroll">
-    <table class="walk-points">
+    <table class="walk-points my-1 w-auto">
         {% for idx, point in enumerate(form.points) %}
             <tr id="points-{{ idx }}" data-point-index="{{ idx }}">
                 <th class="point-idx">
@@ -37,14 +37,14 @@
                         <div class="row g-1">
                             <div class="col">
                                 <div class="input-group has-validation">
-                                    {{ point.latitude(class_='form-control point-latitude') }}
+                                    {{ point.latitude(class_='form-control point-latitude', readonly='') }}
                                     <span class="input-group-text">° N</span>
                                     <div class="invalid-feedback">A value is required.</div>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="input-group has-validation">
-                                    {{ point.longitude(class_='form-control point-longitude') }}
+                                    {{ point.longitude(class_='form-control point-longitude', readonly='') }}
                                     <span class="input-group-text">° E</span>
                                     <div class="invalid-feedback">A value is required.</div>
                                 </div>

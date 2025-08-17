@@ -23,6 +23,27 @@ html, body, #map {
 	width: 42px !important;
 }
 
+.sidebar.sidebar-left {
+	left: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.sidebar-content {
+	max-height: 100%;
+}
+
+.sidebar-pane {
+	height: 100%;
+}
+
+form#walk-form {
+	position: absolute;
+	top: 40px;
+	left: 10px;
+	right: 10px;
+	bottom: 10px;
+}
 
 .lorem {
 	font-style: italic;
@@ -44,6 +65,7 @@ div.walk-points-scroll {
 
 	/* max-height:400px; */
 	flex-grow: 1;
+	flex-shrink: 1;
 }
 
 table.walk-points tbody tr:first-child .point-move-up {
