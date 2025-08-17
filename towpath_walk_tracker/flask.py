@@ -94,7 +94,7 @@ def watercourses_geojson() -> Response:
 	return resp
 
 
-@app.route("/all-walks")
+@app.route("/all-walks/")
 def all_walks() -> Response:
 	"""
 	Flask route for the walks JSON data.
@@ -148,7 +148,7 @@ def main_page() -> Union[str, Response]:
 			)
 
 
-@app.route("/get-route", methods=["POST"])
+@app.route("/get-route/", methods=["POST"])
 @csrf.exempt
 def get_route() -> List[Tuple[float, float]]:
 	"""

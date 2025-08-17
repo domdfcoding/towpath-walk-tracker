@@ -27,17 +27,24 @@ lint: unused-imports incomplete-defs bare-ignore fontawesome
 tsc:
 	- npx tsc
 	- pre-commit run eslint --files towpath_walk_tracker/static/**/*.js
+	- just --justfile "{{justfile()}}" clean-js
 
 myts:
 	npx tsc --noEmit -p tsconfig_all.json
 
 webpack-dev:
 	- npm run dev
-	- pre-commit run end-of-file-fixer --files towpath_walk_tracker/static/js/*
+	- just --justfile "{{justfile()}}" clean-js
 
 webpack:
 	- npm run prod
-	- pre-commit run end-of-file-fixer --files towpath_walk_tracker/static/js/*
+	- just --justfile "{{justfile()}}" clean-js
+
+clean-js:
+	- pre-commit run trailing-whitespace --files towpath_walk_tracker/static/**/*.js
+	- pre-commit run end-of-file-fixer --files towpath_walk_tracker/static/**/*.js
+	- pre-commit run end-of-file-fixer --files towpath_walk_tracker/static/**/*.map
+	- pre-commit run remove-crlf --files towpath_walk_tracker/static/**/*.js
 
 scss:
 	pre-commit run compile-css --all-files
