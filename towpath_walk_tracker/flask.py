@@ -198,27 +198,31 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 
 		walk: Walk = cast(Walk, result)
 
-	m = create_single_walk_map(walk)
+		m = create_single_walk_map(walk)
 
-	root: Figure = m.get_root()  # type: ignore[assignment]
+		root: Figure = m.get_root()  # type: ignore[assignment]
 
-	js_libs = m.default_js
-	m.default_js = []
+		js_libs = m.default_js
+		m.default_js = []
 
-	scripts = []
-	for lib in js_libs:
-		if lib[0] not in {"bootstrap"}:
+		scripts = []
+		for lib in js_libs:
 			scripts.append(JavascriptLink(lib[1]).render())
 
-	for child in root._children.values():
-		child.render()
+		for child in root._children.values():
+			child.render()
 
-	form = WalkForm()
-	form.title.default = walk.title
-	form.start.default = walk.start
-	form.duration.default = f"{walk.duration // 60:02d}:{walk.duration % 60:02d}"
-	form.notes.default = walk.notes
-	form.process()
+		form = WalkForm()
+		form.title.default = walk.title
+		form.start.default = walk.start
+		form.duration.default = f"{walk.duration // 60:02d}:{walk.duration % 60:02d}"
+		form.notes.default = walk.notes
+
+		form.process()
+
+		walk_points = [point.to_json() for point in walk.points]
+		print(walk_points)
+
 
 	# if form.validate_on_submit():
 	# 	with app.app_context():
@@ -228,6 +232,7 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 	return render_template(
 			"single_walk_map.jinja2",
 			form=form,
+			walk_points=walk_points,
 			header=root.header.render(),
 			body=root.html.render(),
 			script=root.script.render(),

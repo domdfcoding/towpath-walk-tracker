@@ -2911,7 +2911,7 @@ L.GeometryUtil = L.extend(L.GeometryUtil || {}, {
 
         return new L.LatLng(ty, tx);
     },
-
+    
 
     /**
         Returns the closest latlng on layer.
@@ -3265,7 +3265,7 @@ L.GeometryUtil = L.extend(L.GeometryUtil || {}, {
 			cumulativeDistanceToA = cumulativeDistanceToB;
 			cumulativeDistanceToB += pointA.distanceTo(pointB);
 		}
-
+		
 		if (pointA == undefined && pointB == undefined) { // Happens when line has no length
 			var pointA = pts[0], pointB = pts[1], i = 1;
 		}
@@ -18541,6 +18541,33 @@ L$1.polylineDecorator = function (paths, options) {
 
 /***/ }),
 
+/***/ "./src/core/map.ts":
+/*!*************************!*\
+  !*** ./src/core/map.ts ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   setupResizeObserver: () => (/* binding */ setupResizeObserver)
+/* harmony export */ });
+function setupResizeObserver(map) {
+    // set up an observer that just logs the new width
+    const observer = new ResizeObserver(entries => {
+        const e = entries[0]; // should be only one
+        console.log('Leaflet Map Size Changed');
+        console.log(e.contentRect.height);
+        console.log(e.contentRect.width);
+        map.invalidateSize();
+    });
+    // start listening for size changes
+    observer.observe(map.getContainer());
+}
+
+
+/***/ }),
+
 /***/ "./src/core/walk.ts":
 /*!**************************!*\
   !*** ./src/core/walk.ts ***!
@@ -18552,23 +18579,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LeafletWalkPreview: () => (/* binding */ LeafletWalkPreview),
 /* harmony export */   drawPreviousWalks: () => (/* binding */ drawPreviousWalks),
-/* harmony export */   drawWalk: () => (/* binding */ drawWalk)
+/* harmony export */   drawWalk: () => (/* binding */ drawWalk),
+/* harmony export */   placeMarkerOnMap: () => (/* binding */ placeMarkerOnMap)
 /* harmony export */ });
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_0__);
+var __classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var _LeafletWalkPreview_instances, _LeafletWalkPreview_getMarkers;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class LeafletWalkPreview {
     constructor(walkForm) {
+        _LeafletWalkPreview_instances.add(this);
         this.placedMarkerCount = 0;
-        this.placedMarkers = [];
+        // this.placedMarkers = [];
         this.polyLineWalk = null;
         this.walkForm = walkForm;
     }
     clearMarkers() {
-        for (const m of this.placedMarkers)
+        // for (const m of this.placedMarkers) m.remove();
+        for (const m of __classPrivateFieldGet(this, _LeafletWalkPreview_instances, "m", _LeafletWalkPreview_getMarkers).call(this))
             m.remove();
-        this.placedMarkers = [];
+        // this.placedMarkers = [];
         this.placedMarkerCount = 0;
     }
     refresh(propagate = true) {
@@ -18602,10 +18638,9 @@ class LeafletWalkPreview {
             throw ({ lng });
         }
         const marker = leaflet__WEBPACK_IMPORTED_MODULE_0__.marker([lat, lng], {});
-        this.placedMarkers.push(marker);
+        // this.placedMarkers.push(marker);
         this.placedMarkerCount += 1;
-        const walkMarkersLayer = feature_group_walk_markers; // eslint-disable-line camelcase
-        marker.addTo(walkMarkersLayer);
+        marker.addTo(feature_group_walk_markers);
         marker.on('contextmenu', (e) => {
             this.walkForm.removePointWithCoord(e.target.getLatLng());
             this.removeMarker(e.target);
@@ -18613,7 +18648,8 @@ class LeafletWalkPreview {
         });
     }
     removeMarker(marker) {
-        this.placedMarkers = this.placedMarkers.filter(v => v !== marker);
+        console.log('Remove marker', marker);
+        // this.placedMarkers = this.placedMarkers.filter(v => v !== marker);
         this.placedMarkerCount -= 1;
         marker.remove();
     }
@@ -18625,17 +18661,17 @@ class LeafletWalkPreview {
         if (lng === undefined) {
             throw ({ lng });
         }
-        const map = map_canal_towpath_walking; // eslint-disable-line camelcase
         const watercourses = geo_json_watercourses; // eslint-disable-line camelcase
         // @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
         // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293
         const coordinatesArray = watercourses.getLayers().map(l => l.feature.geometry.coordinates);
-        const closestLatLng = leaflet__WEBPACK_IMPORTED_MODULE_0__.GeometryUtil.closest(map, coordinatesArray, [lng, lat]);
+        const closestLatLng = leaflet__WEBPACK_IMPORTED_MODULE_0__.GeometryUtil.closest(map_canal_towpath_walking, coordinatesArray, [lng, lat]);
         return leaflet__WEBPACK_IMPORTED_MODULE_0__.latLng(closestLatLng.lng, closestLatLng.lat);
     }
     syncFromForm() {
         const coordinates = this.walkForm.getCoordinates();
-        for (const m of this.placedMarkers) {
+        // for (const m of this.placedMarkers) {
+        for (const m of __classPrivateFieldGet(this, _LeafletWalkPreview_instances, "m", _LeafletWalkPreview_getMarkers).call(this)) {
             const pos = m.getLatLng();
             let foundMarker = false;
             for (const c of coordinates) {
@@ -18651,7 +18687,8 @@ class LeafletWalkPreview {
         // add missing markers
         for (const c of coordinates) {
             let foundCoord = false;
-            for (const m of this.placedMarkers) {
+            // for (const m of this.placedMarkers) {
+            for (const m of __classPrivateFieldGet(this, _LeafletWalkPreview_instances, "m", _LeafletWalkPreview_getMarkers).call(this)) {
                 const pos = m.getLatLng();
                 if (pos.lat === c.lat && pos.lng === c.lng) {
                     foundCoord = true;
@@ -18665,6 +18702,10 @@ class LeafletWalkPreview {
         this.refresh(false);
     }
 }
+_LeafletWalkPreview_instances = new WeakSet(), _LeafletWalkPreview_getMarkers = function _LeafletWalkPreview_getMarkers() {
+    // @ts-expect-error // Cast
+    return feature_group_walk_markers.getLayers();
+};
 function drawWalk(coords, layerGroup, lineColour, interactive = true) {
     // Line itself
     const walkPolyLine = leaflet__WEBPACK_IMPORTED_MODULE_0__.polyline(coords, { interactive, bubblingMouseEvents: true, color: lineColour, fill: false, fillOpacity: 0.2, fillRule: 'evenodd', lineCap: 'round', lineJoin: 'round', noClip: false, opacity: 1.0, smoothFactor: 1.0, stroke: true, weight: 3 }).addTo(layerGroup);
@@ -18714,6 +18755,16 @@ function drawPreviousWalks() {
             });
         }
     });
+}
+function placeMarkerOnMap(latlng, walkPreview, walkForm) {
+    const closestLatLng = walkPreview.snapCoordToLine(latlng.lat, latlng.lng);
+    const distance = leaflet__WEBPACK_IMPORTED_MODULE_0__.GeometryUtil.distance(map_canal_towpath_walking, latlng, closestLatLng);
+    console.log('Distance from click to point is', distance);
+    if (distance <= 20) {
+        walkPreview.addMarker(closestLatLng.lat, closestLatLng.lng);
+        walkForm.addPoint(closestLatLng.lat, closestLatLng.lng);
+        walkPreview.refresh(false);
+    }
 }
 
 
@@ -19104,7 +19155,7 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -19118,14 +19169,14 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+/******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -19138,7 +19189,7 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -19150,12 +19201,12 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -19166,7 +19217,7 @@ function zoomStateFromURL(defaultZoom, defaultCentre) {
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
@@ -19187,8 +19238,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_walk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./core/walk */ "./src/core/walk.ts");
 /* harmony import */ var _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./core/watercourses_geojson_utils */ "./src/core/watercourses_geojson_utils.ts");
 /* harmony import */ var _zoom_state__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./zoom_state */ "./src/zoom_state.ts");
-/* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
-/* harmony import */ var _core_walk_form__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./core/walk_form */ "./src/core/walk_form.ts");
+/* harmony import */ var _core_map__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./core/map */ "./src/core/map.ts");
+/* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
+/* harmony import */ var _core_walk_form__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./core/walk_form */ "./src/core/walk_form.ts");
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 // === Sidebar ===
@@ -19202,6 +19254,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // === Map ===
+
 
 // === Walk Form ===
 
@@ -19217,15 +19270,19 @@ window.drawWalk = _core_walk__WEBPACK_IMPORTED_MODULE_4__.drawWalk;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.drawPreviousWalks = _core_walk__WEBPACK_IMPORTED_MODULE_4__.drawPreviousWalks;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_8__.WalkForm;
+window.placeMarkerOnMap = _core_walk__WEBPACK_IMPORTED_MODULE_4__.placeMarkerOnMap;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_8__.walkPointsChangedEvent;
+window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.WalkForm;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_8__.setupWalkFormValidation;
+window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.walkPointsChangedEvent;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.setupWalkFormValidation;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupZoomState = _zoom_state__WEBPACK_IMPORTED_MODULE_6__.setupZoomState;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.zoomStateFromURL = _zoom_state__WEBPACK_IMPORTED_MODULE_6__.zoomStateFromURL;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupResizeObserver = _core_map__WEBPACK_IMPORTED_MODULE_7__.setupResizeObserver;
 
 })();
 

@@ -15,6 +15,7 @@ import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './core/watercou
 
 // === Map ===
 import { setupZoomState, zoomStateFromURL } from './zoom_state';
+import { setupResizeObserver } from './core/map';
 
 // === Walk Form ===
 import 'flatpickr';
@@ -52,3 +53,6 @@ window.setupZoomState = setupZoomState;
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.zoomStateFromURL = zoomStateFromURL;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupResizeObserver = setupResizeObserver;

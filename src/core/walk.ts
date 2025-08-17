@@ -12,20 +12,21 @@ declare let feature_group_walks: L.FeatureGroup; // eslint-disable-line camelcas
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class LeafletWalkPreview {
 	placedMarkerCount: number;
-	placedMarkers: L.Marker[];
+	// placedMarkers: L.Marker[];
 	polyLineWalk: NullOrUndefinedOr<L.Polyline>;
 	walkForm: NullOrUndefinedOr<WalkForm>;
 
 	constructor (walkForm: NullOrUndefinedOr<WalkForm>) {
 		this.placedMarkerCount = 0;
-		this.placedMarkers = [];
+		// this.placedMarkers = [];
 		this.polyLineWalk = null;
 		this.walkForm = walkForm;
 	}
 
 	clearMarkers (): void {
-		for (const m of this.placedMarkers) m.remove();
-		this.placedMarkers = [];
+		// for (const m of this.placedMarkers) m.remove();
+		for (const m of this.#getMarkers()) m.remove();
+		// this.placedMarkers = [];
 		this.placedMarkerCount = 0;
 	}
 
@@ -64,7 +65,7 @@ export class LeafletWalkPreview {
 
 		const marker: L.Marker = L.marker([lat, lng], {});
 
-		this.placedMarkers.push(marker);
+		// this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
 
 		marker.addTo(feature_group_walk_markers);
@@ -77,7 +78,8 @@ export class LeafletWalkPreview {
 	}
 
 	removeMarker (marker: L.Marker): void {
-		this.placedMarkers = this.placedMarkers.filter(v => v !== marker);
+		console.log('Remove marker', marker);
+		// this.placedMarkers = this.placedMarkers.filter(v => v !== marker);
 		this.placedMarkerCount -= 1;
 		marker.remove();
 	}
@@ -99,10 +101,16 @@ export class LeafletWalkPreview {
 		return L.latLng(closestLatLng.lng, closestLatLng.lat);
 	}
 
+	#getMarkers (): L.Marker[] {
+		// @ts-expect-error // Cast
+		return feature_group_walk_markers.getLayers();
+	}
+
 	syncFromForm (): void {
 		const coordinates: Array<L.LatLng> = this.walkForm!.getCoordinates();
 
-		for (const m of this.placedMarkers) {
+		// for (const m of this.placedMarkers) {
+		for (const m of this.#getMarkers()) {
 			const pos = m.getLatLng();
 			let foundMarker: boolean = false;
 			for (const c of coordinates) {
@@ -120,7 +128,8 @@ export class LeafletWalkPreview {
 		// add missing markers
 		for (const c of coordinates) {
 			let foundCoord: boolean = false;
-			for (const m of this.placedMarkers) {
+			// for (const m of this.placedMarkers) {
+			for (const m of this.#getMarkers()) {
 				const pos = m.getLatLng();
 				if (pos.lat === c.lat && pos.lng === c.lng) {
 					foundCoord = true;

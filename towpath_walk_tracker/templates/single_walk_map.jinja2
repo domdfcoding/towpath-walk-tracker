@@ -11,30 +11,10 @@
           href="{{ url_for('static', filename='css/fontawesome.min.css') }}">
 
     <style>
-        table.walk-points th.point-idx, table.walk-points td {vertical-align: top;}
-        div.walk-points-scroll {
-            overflow-y: scroll;
-            height:400px;
-        }
-
-        table.walk-points tbody tr:first-child .point-move-up {
-            background-color: #a0a6ab !important;
-            border-color: #a0a6ab !important;
-            pointer-events: none;
-        }
-
-        table.walk-points tbody tr:nth-last-child(1 of :not(.d-none)) .point-move-down {
-            background-color: #a0a6ab !important;
-            border-color: #a0a6ab !important;
-            pointer-events: none;
-        }
-    </style>
-
-
-    <style>
 
     .folium-map {
         flex-grow: 1;
+        min-height: 40vh;
     }
 
     .walk-details p, .walk-details span, .walk-details strong {
@@ -43,6 +23,11 @@
 
     .walk-details strong {
         font-weight: 500;
+    }
+
+    div.walk-points-scroll {
+        overflow-y: scroll;
+        max-height: 170px;
     }
     </style>
 
@@ -78,27 +63,7 @@
             </div>
             <div class="row g-3 walk-edit">
                 <form class="needs-validation" id="walk-form" novalidate>
-                    {{ form.csrf_token }}
-                    <div class="col-12">
-                        {{ form.title.label(class_='form-label') }}
-                        {{ form.title(class_='form-control') }}
-                    </div>
-
-                    <div class="col-sm-8">
-                        {{ form.start.label(class_='form-label') }}
-                        {{ form.start(class_='form-control') }}
-                    </div>
-
-                    <div class="col-sm-4">
-                        {{ form.duration.label(class_='form-label') }}
-                        {# TODO: html-duration-picker class breaks form label when wrapping #}
-                        {{ form.duration(class_='form-control html-duration-picker', **{"data-hide-seconds": ''}) }}
-                    </div>
-
-                    <div class="col-12">
-                        {{ form.notes.label(class_='form-label') }}
-                        {{ form.notes(class_='form-control') }}
-                    </div>
+                    {% include "walk_form.jinja2" %}
                 </form>
             </div>
 
@@ -126,7 +91,7 @@
             document.getElementById("walk-form").classList.remove("d-none")
             });
 
-        {# const walkForm = new WalkForm(document.querySelector('table.walk-points'));
+        const walkForm = new WalkForm(document.querySelector('table.walk-points'));
         walkForm.setupButtons();
 
         setupWalkFormValidation(document.querySelectorAll('.needs-validation#walk-form'), walkForm)
@@ -135,12 +100,27 @@
 
         document.querySelector('table.walk-points').addEventListener('changed',
             (e) => { walkPreview.syncFromForm(); }
-        ); #}
+        );
 
         flatpickr(".form-control#start", {enableTime: true, dateFormat: "Y-m-d H:i"});
         var form = document.getElementById("walk-form")
-        document.querySelector('table.walk-points').dispatchEvent(walkPointsChangedEvent);
-</script>
+
+        setupResizeObserver(map_canal_towpath_walking);
+
+        walkForm.populatePointsTable([
+                {% for point in walk_points %}
+                L.latLng({{ point.latitude }}, {{ point.longitude}}),
+                {% endfor %}
+        ]);
+
+        {# document.querySelector('table.walk-points').dispatchEvent(walkPointsChangedEvent); #}
+        {# walkPreview.syncFromForm();  #}
+
+        map_canal_towpath_walking.fitBounds(
+            feature_group_current_walk.getBounds()
+        );
+
+    </script>
 
 
 

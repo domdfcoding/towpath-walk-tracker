@@ -10,25 +10,6 @@
           type="text/css"
           href="{{ url_for('static', filename='css/fontawesome.min.css') }}">
 
-    <style>
-        table.walk-points th.point-idx, table.walk-points td {vertical-align: top;}
-        div.walk-points-scroll {
-            overflow-y: scroll;
-            height:400px;
-        }
-
-        table.walk-points tbody tr:first-child .point-move-up {
-            background-color: #a0a6ab !important;
-            border-color: #a0a6ab !important;
-            pointer-events: none;
-        }
-
-        table.walk-points tbody tr:nth-last-child(1 of :not(.d-none)) .point-move-down {
-            background-color: #a0a6ab !important;
-            border-color: #a0a6ab !important;
-            pointer-events: none;
-        }
-    </style>
 {% endblock extrahead %}
 
 {% block content %}
@@ -64,7 +45,7 @@
         </div>
 
         <!-- Tab panes -->
-        <div class="sidebar-content">
+        <div class="sidebar-content d-flex flex-column">
             <div class="sidebar-pane" id="home">
                 <h1 class="sidebar-header">
                     sidebar-v2
@@ -104,11 +85,27 @@
                 </h1>
             </div>
 
-            <div class="sidebar-pane" id="add">
+            <div class="sidebar-pane d-flex flex-column flex-grow-1" id="add">
                 <h1 class="sidebar-header">
                     Add a Walk<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
-                {% include "walk_form.jinja2" %}
+                {# <span class="text-muted">(Optional)</span> #}
+                <form class="needs-validation d-flex flex-column flex-grow-1"
+                      id="walk-form"
+                      novalidate
+                      method="POST"
+                      action="{{ url_for('main_page') }}">
+                    {#  onsubmit="submitWalkForm();return false" #}
+
+                    {% include "walk_form.jinja2" %}
+                    <div class="gap-2 d-md-flex justify-content-md-center">
+                        <button class="col-sm-5 btn btn-primary btn-lg" type="submit">Save Walk</button>
+                        <button class="col-sm-5 btn btn-danger btn-lg" type="reset">Reset and Clear Points</button>
+                    </div>
+
+                    {# <input type="submit" value="Go"> #}
+                </form>
+
             </div>
 
             <div class="sidebar-pane" id="settings">
@@ -170,6 +167,8 @@
         bsLoadingModal.show();
 
         drawPreviousWalks();
+
+        setupResizeObserver(map_canal_towpath_walking);
     </script>
 
 

@@ -32,3 +32,28 @@ html, body, #map {
 div#flDebugToolbarHandle {
 	top: 20% !important;
 }
+
+
+/* Walk Form Table */
+table.walk-points th.point-idx, table.walk-points td {
+	vertical-align: top;
+}
+
+div.walk-points-scroll {
+	overflow-y: scroll;
+
+	/* max-height:400px; */
+	flex-grow: 1;
+}
+
+table.walk-points tbody tr:first-child .point-move-up {
+	background-color: #a0a6ab !important;
+	border-color: #a0a6ab !important;
+	pointer-events: none;
+}
+
+table.walk-points tbody tr:nth-last-child(1 of :not(.d-none)) .point-move-down {
+	background-color: #a0a6ab !important;
+	border-color: #a0a6ab !important;
+	pointer-events: none;
+}
