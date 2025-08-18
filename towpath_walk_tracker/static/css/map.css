@@ -37,7 +37,7 @@ html, body, #map {
 	height: 100%;
 }
 
-form#walk-form {
+.sidebar-pane form#walk-form {
 	position: absolute;
 	top: 40px;
 	left: 10px;
