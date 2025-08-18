@@ -58,7 +58,7 @@ export class LeafletWalkPreview {
 		}
 	}
 
-	addMarker (lat: number, lng: number): void {
+	addMarker (lat: number, lng: number, num: number = -1): void {
 		// Check haven't tried to treat L.latLng as array or array as L.latLng
 		if (lat === undefined) {
 			throw ({ lat });
@@ -67,7 +67,18 @@ export class LeafletWalkPreview {
 			throw ({ lng });
 		}
 
-		const marker: L.Marker = L.marker([lat, lng], {});
+		let markerOptions: L.MarkerOptions = {};
+		if (num > -1) {
+			const customMarker = L.AwesomeMarkers.icon({
+				icon: num.toString(),
+				markerColor: 'blue',
+				// @ts-expect-error  // Doesn't like `prefix` being custom.
+				prefix: 'num'
+			});
+
+			markerOptions = { icon: customMarker };
+		}
+		const marker: L.Marker = L.marker([lat, lng], markerOptions);
 
 		// this.placedMarkers.push(marker);
 		this.placedMarkerCount += 1;
@@ -114,36 +125,36 @@ export class LeafletWalkPreview {
 	syncFromForm (): void {
 		const coordinates: Array<L.LatLng> = this.walkForm!.getCoordinates();
 
-		// for (const m of this.placedMarkers) {
 		for (const m of this.#getMarkers()) {
-			const pos = m.getLatLng();
-			let foundMarker: boolean = false;
-			for (const c of coordinates) {
-				if (pos.lat === c.lat && pos.lng === c.lng) {
-					foundMarker = true;
-					break;
-				}
-			}
+			// const pos = m.getLatLng();
+			// let foundMarker: boolean = false;
+			// for (const c of coordinates) {
+			// 	if (pos.lat === c.lat && pos.lng === c.lng) {
+			// 		foundMarker = true;
+			// 		break;
+			// 	}
+			// }
 
-			if (!foundMarker) {
-				this.removeMarker(m);
-			}
+			// if (!foundMarker) {
+			this.removeMarker(m);
+			// }
 		}
 
-		// add missing markers
+		// add markers with correct index number
+		let markerIdx = 0;
 		for (const c of coordinates) {
-			let foundCoord: boolean = false;
-			// for (const m of this.placedMarkers) {
-			for (const m of this.#getMarkers()) {
-				const pos = m.getLatLng();
-				if (pos.lat === c.lat && pos.lng === c.lng) {
-					foundCoord = true;
-					break;
-				}
-			}
+			markerIdx += 1;
+			const foundCoord: boolean = false;
+			// for (const m of this.#getMarkers()) {
+			// 	const pos = m.getLatLng();
+			// 	if (pos.lat === c.lat && pos.lng === c.lng) {
+			// 		foundCoord = true;
+			// 		break;
+			// 	}
+			// }
 
 			if (!foundCoord) {
-				this.addMarker(c.lat, c.lng);
+				this.addMarker(c.lat, c.lng, markerIdx);
 			}
 		}
 
@@ -158,7 +169,7 @@ export class LeafletWalkPreview {
 		console.log('Distance from click to point is', distance);
 
 		if (distance <= 20) {
-			this.addMarker(closestLatLng.lat, closestLatLng.lng);
+			this.addMarker(closestLatLng.lat, closestLatLng.lng, this.placedMarkerCount + 2);
 			this.walkForm!.addPoint(closestLatLng.lat, closestLatLng.lng);
 			this.refresh(false);
 		}

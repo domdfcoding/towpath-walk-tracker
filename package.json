@@ -9,12 +9,14 @@
     "leaflet": "^1.9.4",
     "leaflet-geometryutil": "^0.10.3",
     "leaflet-polylinedecorator": "^1.6.0",
-    "leaflet-sidebar": "^0.2.4"
+    "leaflet-sidebar": "^0.2.4",
+    "leaflet.awesome-markers": "^2.0.5"
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
     "@types/leaflet": "^1.9.20",
     "@types/leaflet-polylinedecorator": "^1.6.4",
+    "@types/leaflet.awesome-markers": "^2.0.28",
     "license-report": "^6.8.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",

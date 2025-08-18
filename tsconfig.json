@@ -3,7 +3,7 @@
     "outDir": "./towpath_walk_tracker/static/js",
     "allowJs": true,
     "target": "es2015",
-    "types": ["leaflet-geometryutil", "leaflet-polylinedecorator"],
+    "types": ["leaflet-geometryutil", "leaflet-polylinedecorator", "leaflet.awesome-markers"],
     "moduleResolution": "node",
     "noImplicitReturns": true,
     "noImplicitAny": true,
