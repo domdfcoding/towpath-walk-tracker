@@ -1,3 +1,9 @@
+/*!
+* map.scss
+* Copyright © 2025 Dominic Davis-Foster <dominic@davis-foster.co.uk>
+* MIT Licenced
+*/
+
 html, body {
 	/* width: 100%; */
 
@@ -19,6 +25,7 @@ html, body, #map {
 	left: 0;
 }
 
+/* === Sidebar === */
 .sidebar.collapsed {
 	width: 42px !important;
 }
@@ -45,17 +52,8 @@ html, body, #map {
 	bottom: 10px;
 }
 
-.lorem {
-	font-style: italic;
-	color: #aaa;
-}
 
-div#flDebugToolbarHandle {
-	top: 20% !important;
-}
-
-
-/* Walk Form Table */
+/* === Walk Form Table === */
 table.walk-points th.point-idx, table.walk-points td {
 	vertical-align: top;
 }
@@ -80,6 +78,8 @@ table.walk-points tbody tr:nth-last-child(1 of :not(.d-none)) .point-move-down {
 	pointer-events: none;
 }
 
+
+/* === Map Marker Numbers === */
 .num-1::before { content: '1'; }
 .num-2::before { content: '2'; }
 .num-3::before { content: '3'; }
@@ -150,4 +150,15 @@ table.walk-points tbody tr:nth-last-child(1 of :not(.d-none)) .point-move-down {
 	font-variant: normal;
 	text-rendering: auto;
 	line-height: 1;
+}
+
+/* === Other === */
+
+.lorem {
+	font-style: italic;
+	color: #aaa;
+}
+
+div#flDebugToolbarHandle {
+	top: 20% !important;
 }

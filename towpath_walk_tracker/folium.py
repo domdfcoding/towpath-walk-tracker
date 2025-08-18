@@ -64,7 +64,6 @@ class Map(folium.Map):  # noqa: D101
 					"awesome_rotate_css",
 					"https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css",
 					),
-			("map", "/static/css/map.css"),
 			]
 
 
