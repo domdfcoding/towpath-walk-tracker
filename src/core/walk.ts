@@ -42,7 +42,7 @@ export class LeafletWalkPreview {
 		if (propagate) this.walkForm!.replaceAllPoints(placedMarkerLatLng);
 
 		if (placedMarkerLatLng.length >= 2) {
-			fetch('/get-route', {
+			fetch('/get-route/', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(placedMarkerLatLng)
@@ -232,7 +232,7 @@ function makePreviousWalkTooltip (walk: WalkDictionary) {
 }
 
 export function drawPreviousWalks () {
-	fetch('/all-walks', { method: 'get' }).then(res => res.json())
+	fetch('/all-walks/', { method: 'get' }).then(res => res.json())
 		.then((walks) => {
 			for (const walk of walks) {
 				console.log(walk.title);
