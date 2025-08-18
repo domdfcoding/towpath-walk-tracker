@@ -73,6 +73,7 @@ def create_map(
 	folium.TileLayer(TileProvider.from_qms("OpenTopoMap"), show=False).add_to(m)
 
 	ZoomStateJS().add_to(m)
+	Sidebar().add_to(m)
 
 	tooltip = GeoJsonTooltip(
 			fields=["id", "tags"],
@@ -84,47 +85,58 @@ def create_map(
 			max_width=800,
 			)
 
-	g = WatercoursesGeoJson(watercourses_geojson_file, embed=False, tooltip=tooltip, name="Watercourses").add_to(m)
-	g._id = "watercourses"
+	g = WatercoursesGeoJson(watercourses_geojson_file, tooltip=tooltip).add_to(m)
 
-	feature_group_walk_markers = folium.FeatureGroup("Walk Markers").add_to(m)
-	feature_group_walk_markers._id = "walk_markers"
-
-	feature_group_walks = folium.FeatureGroup("Walks").add_to(m)
-	feature_group_walks._id = "walks"
-
-	feature_group_current_walk = folium.FeatureGroup("Current Walk").add_to(m)
-	feature_group_current_walk._id = "current_walk"
+	FeatureGroupWalkMarkers().add_to(m)
+	feature_group_walks = FeatureGroupWalks().add_to(m)
+	feature_group_current_walk = FeatureGroupCurrentWalk().add_to(m)
 
 	m.keep_in_front(g, feature_group_walks, feature_group_current_walk)  # type: ignore[arg-type]
 
-	folium.LayerControl().add_to(m)._id = "layer_control"
-	Sidebar().add_to(m)
+	LayerControl().add_to(m)
 	WalkStartEnd().add_to(m)
-
-	# m.add_js_link("walk", "/static/js/walk.js")
-	m.add_js_link("htmx.min", "/static/js/htmx.min.js")
-	m.add_css_link("leaflet-sidebar.css", "/static/css/leaflet-sidebar.min.css")
-	m.add_css_link("map.css", "/static/css/map.css")
 
 	return m
 
 
-def create_single_walk_map(walk: Walk) -> Map:
+class FeatureGroupWalkMarkers(folium.FeatureGroup):
+
+	def __init__(self):
+		super().__init__(name="Walk Markers", control=False)
+		self._id = "walk_markers"
+
+
+class FeatureGroupCurrentWalk(folium.FeatureGroup):
+
+	def __init__(self):
+		super().__init__(name="Current Walk", control=False)
+		self._id = "current_walk"
+
+
+class FeatureGroupWalks(folium.FeatureGroup):
+
+	def __init__(self):
+		super().__init__(name="Walks", control=False)
+		self._id = "walks"
+
+
+class LayerControl(folium.LayerControl):
+
+	def __init__(self):
+		super().__init__()
+		self._id = "layer_control"
+
+
+def create_basic_map() -> Map:
 
 	m = Map(control_scale=True)
 	m._id = "canal_towpath_walking"
 	folium.TileLayer(TileProvider.from_qms("OpenTopoMap"), show=False).add_to(m)
 
-	feature_group_walk_markers = folium.FeatureGroup("Walk Markers").add_to(m)
-	feature_group_walk_markers._id = "walk_markers"
+	FeatureGroupWalkMarkers().add_to(m)
+	FeatureGroupCurrentWalk().add_to(m)
 
-	feature_group_current_walk = folium.FeatureGroup("Current Walk").add_to(m)
-	feature_group_current_walk._id = "current_walk"
-
-	folium.LayerControl().add_to(m)._id = "layer_control"
+	LayerControl().add_to(m)
 	WalkStartEnd().add_to(m)
-
-	m.add_css_link("map.css", "/static/css/map.css")
 
 	return m

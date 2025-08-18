@@ -40,7 +40,7 @@ from folium import Figure, JavascriptLink
 
 # this package
 from towpath_walk_tracker.forms import WalkForm
-from towpath_walk_tracker.map import create_map, create_single_walk_map
+from towpath_walk_tracker.map import create_basic_map, create_map
 from towpath_walk_tracker.models import Walk
 from towpath_walk_tracker.route import Route
 from towpath_walk_tracker.util import _get_filtered_watercourses
@@ -198,7 +198,7 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 
 		walk: Walk = cast(Walk, result)
 
-		m = create_single_walk_map(walk)
+		m = create_basic_map()
 
 		root: Figure = m.get_root()  # type: ignore[assignment]
 

@@ -45,30 +45,27 @@ def _load_template(name: str) -> Template:
 
 
 class Map(folium.Map):  # noqa: D101
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self._id = "canal_towpath_walking"
+
 	_template = _load_template("folium_map.jinja2")
 
-	default_css_dict = dict(folium.Map.default_css)
+	default_js = [("main", "/static/js/main.js")]
 
-	# Remove folium's entry to pull from CDN
-	del default_css_dict["awesome_markers_font_css"]
-
-	# Remove folium's entry to use local version
-	del default_css_dict["bootstrap_css"]
-
-	default_css = list(default_css_dict.items())
-
-	default_js_dict = dict(folium.Map.default_js)
-
-	# Remove folium's entry to pull from CDN
-	del default_js_dict["jquery"]
-
-	# Remove folium's entry to use local version
-	del default_js_dict["bootstrap"]
-
-	# Replace the folium entry with the webpack bundle
-	default_js_dict["leaflet"] = "/static/js/main.js"
-
-	default_js = list(default_js_dict.items())
+	default_css = [
+			("leaflet_css", "https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"),
+			(
+					"awesome_markers_css",
+					"https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css",
+					),
+			(
+					"awesome_rotate_css",
+					"https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css",
+					),
+			("map", "/static/css/map.css"),
+			]
 
 
 class WalkStartEnd(folium.MacroElement):
@@ -119,7 +116,6 @@ class WatercoursesGeoJson(folium.GeoJson):
 			self,
 			data: Any,
 			popup_keep_highlighted: bool = False,
-			name: Optional[str] = None,
 			overlay: bool = True,
 			control: bool = True,
 			show: bool = True,
@@ -131,7 +127,7 @@ class WatercoursesGeoJson(folium.GeoJson):
 			# marker: Union[folium.Circle, folium.CircleMarker, folium.Marker, None] = None,
 			**kwargs: Any,
 			):
-		Layer.__init__(self, name=name, overlay=overlay, control=control, show=show)
+		Layer.__init__(self, name="Watercourses", overlay=overlay, control=control, show=show)
 		self._name = "GeoJson"
 		self.embed = False
 		self.embed_link: Optional[str] = data
@@ -161,6 +157,8 @@ class WatercoursesGeoJson(folium.GeoJson):
 		if isinstance(popup, (folium.GeoJsonPopup, folium.Popup)):
 			self.add_child(popup)
 
+		self._id = "watercourses"
+
 
 class GeoJsonTooltip(folium.GeoJsonTooltip):
 
@@ -187,6 +185,15 @@ class Sidebar(folium.MacroElement):
 	def __init__(self):
 		super().__init__()
 		self._name = "Sidebar"
+
+	def add_to(self, parent: folium.Map, name: Optional[str] = None, index: Optional[int] = None) -> "Sidebar":
+		"""
+		Add element to a parent.
+		"""
+
+		parent.add_child(self, name=name, index=index)
+		parent.add_css_link("leaflet-sidebar.css", "/static/css/leaflet-sidebar.min.css")
+		return self
 
 	# def render(self, **kwargs):
 	# 	super().render(**kwargs)

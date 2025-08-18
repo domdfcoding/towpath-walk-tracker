@@ -47,7 +47,7 @@ clean-js:
 	- pre-commit run remove-crlf --files towpath_walk_tracker/static/**/*.js
 
 scss:
-	pre-commit run compile-css --all-files
+	- pre-commit run compile-css --all-files
 
 run: scss tsc webpack-dev
 	python3 -m towpath_walk_tracker run

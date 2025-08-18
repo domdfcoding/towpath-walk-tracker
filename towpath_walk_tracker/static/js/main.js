@@ -4020,6 +4020,141 @@ L$1.polylineDecorator = function (paths, options) {
 
 /***/ }),
 
+/***/ "./node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.js ***!
+  \******************************************************************************/
+/***/ (function() {
+
+/*
+  Leaflet.AwesomeMarkers, a plugin that adds colorful iconic markers for Leaflet, based on the Font Awesome icons
+  (c) 2012-2013, Lennard Voogdt
+
+  http://leafletjs.com
+  https://github.com/lvoogdt
+*/
+
+/*global L*/
+
+(function (window, document, undefined) {
+    "use strict";
+    /*
+     * Leaflet.AwesomeMarkers assumes that you have already included the Leaflet library.
+     */
+
+    L.AwesomeMarkers = {};
+
+    L.AwesomeMarkers.version = '2.0.1';
+
+    L.AwesomeMarkers.Icon = L.Icon.extend({
+        options: {
+            iconSize: [35, 45],
+            iconAnchor:   [17, 42],
+            popupAnchor: [1, -32],
+            shadowAnchor: [10, 12],
+            shadowSize: [36, 16],
+            className: 'awesome-marker',
+            prefix: 'glyphicon',
+            spinClass: 'fa-spin',
+            extraClasses: '',
+            icon: 'home',
+            markerColor: 'blue',
+            iconColor: 'white'
+        },
+
+        initialize: function (options) {
+            options = L.Util.setOptions(this, options);
+        },
+
+        createIcon: function () {
+            var div = document.createElement('div'),
+                options = this.options;
+
+            if (options.icon) {
+                div.innerHTML = this._createInner();
+            }
+
+            if (options.bgPos) {
+                div.style.backgroundPosition =
+                    (-options.bgPos.x) + 'px ' + (-options.bgPos.y) + 'px';
+            }
+
+            this._setIconStyles(div, 'icon-' + options.markerColor);
+            return div;
+        },
+
+        _createInner: function() {
+            var iconClass, iconSpinClass = "", iconColorClass = "", iconColorStyle = "", options = this.options;
+
+            if(options.icon.slice(0,options.prefix.length+1) === options.prefix + "-") {
+                iconClass = options.icon;
+            } else {
+                iconClass = options.prefix + "-" + options.icon;
+            }
+
+            if(options.spin && typeof options.spinClass === "string") {
+                iconSpinClass = options.spinClass;
+            }
+
+            if(options.iconColor) {
+                if(options.iconColor === 'white' || options.iconColor === 'black') {
+                    iconColorClass = "icon-" + options.iconColor;
+                } else {
+                    iconColorStyle = "style='color: " + options.iconColor + "' ";
+                }
+            }
+
+            return "<i " + iconColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + iconClass + " " + iconSpinClass + " " + iconColorClass + "'></i>";
+        },
+
+        _setIconStyles: function (img, name) {
+            var options = this.options,
+                size = L.point(options[name === 'shadow' ? 'shadowSize' : 'iconSize']),
+                anchor;
+
+            if (name === 'shadow') {
+                anchor = L.point(options.shadowAnchor || options.iconAnchor);
+            } else {
+                anchor = L.point(options.iconAnchor);
+            }
+
+            if (!anchor && size) {
+                anchor = size.divideBy(2, true);
+            }
+
+            img.className = 'awesome-marker-' + name + ' ' + options.className;
+
+            if (anchor) {
+                img.style.marginLeft = (-anchor.x) + 'px';
+                img.style.marginTop  = (-anchor.y) + 'px';
+            }
+
+            if (size) {
+                img.style.width  = size.x + 'px';
+                img.style.height = size.y + 'px';
+            }
+        },
+
+        createShadow: function () {
+            var div = document.createElement('div');
+
+            this._setIconStyles(div, 'shadow');
+            return div;
+      }
+    });
+
+    L.AwesomeMarkers.icon = function (options) {
+        return new L.AwesomeMarkers.Icon(options);
+    };
+
+}(this, document));
+
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/leaflet/dist/leaflet-src.js":
 /*!**************************************************!*\
   !*** ./node_modules/leaflet/dist/leaflet-src.js ***!
@@ -19251,12 +19386,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var leaflet_polylinedecorator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(leaflet_polylinedecorator__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! leaflet-geometryutil */ "./node_modules/leaflet-geometryutil/src/leaflet.geometryutil.js");
 /* harmony import */ var leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(leaflet_geometryutil__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _core_walk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./core/walk */ "./src/core/walk.ts");
-/* harmony import */ var _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./core/watercourses_geojson_utils */ "./src/core/watercourses_geojson_utils.ts");
-/* harmony import */ var _zoom_state__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./zoom_state */ "./src/zoom_state.ts");
-/* harmony import */ var _core_map__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./core/map */ "./src/core/map.ts");
-/* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
-/* harmony import */ var _core_walk_form__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./core/walk_form */ "./src/core/walk_form.ts");
+/* harmony import */ var leaflet_awesome_markers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! leaflet.awesome-markers */ "./node_modules/leaflet.awesome-markers/dist/leaflet.awesome-markers.js");
+/* harmony import */ var leaflet_awesome_markers__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(leaflet_awesome_markers__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _core_walk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./core/walk */ "./src/core/walk.ts");
+/* harmony import */ var _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./core/watercourses_geojson_utils */ "./src/core/watercourses_geojson_utils.ts");
+/* harmony import */ var _zoom_state__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./zoom_state */ "./src/zoom_state.ts");
+/* harmony import */ var _core_map__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./core/map */ "./src/core/map.ts");
+/* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
+/* harmony import */ var _core_walk_form__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./core/walk_form */ "./src/core/walk_form.ts");
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 // === Sidebar ===
@@ -19269,6 +19406,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 // === Map ===
 
 
@@ -19276,27 +19414,27 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // @ts-expect-error  // Exporting to "window" global namespace
-window.watercoursesZoomOnClick = _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_5__.watercoursesZoomOnClick;
+window.watercoursesZoomOnClick = _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__.watercoursesZoomOnClick;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.addWatercoursesGeoJson = _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_5__.addWatercoursesGeoJson;
+window.addWatercoursesGeoJson = _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__.addWatercoursesGeoJson;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.LeafletWalkPreview = _core_walk__WEBPACK_IMPORTED_MODULE_4__.LeafletWalkPreview;
+window.LeafletWalkPreview = _core_walk__WEBPACK_IMPORTED_MODULE_5__.LeafletWalkPreview;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.drawWalk = _core_walk__WEBPACK_IMPORTED_MODULE_4__.drawWalk;
+window.drawWalk = _core_walk__WEBPACK_IMPORTED_MODULE_5__.drawWalk;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.drawPreviousWalks = _core_walk__WEBPACK_IMPORTED_MODULE_4__.drawPreviousWalks;
+window.drawPreviousWalks = _core_walk__WEBPACK_IMPORTED_MODULE_5__.drawPreviousWalks;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.WalkForm;
+window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.WalkForm;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.walkPointsChangedEvent;
+window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.walkPointsChangedEvent;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.setupWalkFormValidation;
+window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.setupWalkFormValidation;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.setupZoomState = _zoom_state__WEBPACK_IMPORTED_MODULE_6__.setupZoomState;
+window.setupZoomState = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.setupZoomState;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.zoomStateFromURL = _zoom_state__WEBPACK_IMPORTED_MODULE_6__.zoomStateFromURL;
+window.zoomStateFromURL = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.zoomStateFromURL;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.setupResizeObserver = _core_map__WEBPACK_IMPORTED_MODULE_7__.setupResizeObserver;
+window.setupResizeObserver = _core_map__WEBPACK_IMPORTED_MODULE_8__.setupResizeObserver;
 
 })();
 

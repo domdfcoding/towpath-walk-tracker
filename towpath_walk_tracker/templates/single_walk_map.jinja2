@@ -102,8 +102,8 @@
             return (!document.getElementById("walk-form").classList.contains("d-none"))
         } #}
 
-        {% for point in walk_points %}
-        walkPreview.addMarker({{ point.latitude }}, {{ point.longitude }})
+        {% for point_idx, point in enumerate(walk_points) %}
+        walkPreview.addMarker({{ point.latitude }}, {{ point.longitude }}, {{ point_idx+1 }})
         {% endfor %}
 
         walkPreview.polyLineWalk = drawWalk([

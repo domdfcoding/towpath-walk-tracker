@@ -10,6 +10,7 @@ import './leaflet-sidebar.min.js';
 // === Walks & Watercourses ===
 import 'leaflet-polylinedecorator';
 import 'leaflet-geometryutil';
+import 'leaflet.awesome-markers';
 import { LeafletWalkPreview, drawWalk, drawPreviousWalks } from './core/walk';
 import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './core/watercourses_geojson_utils';
 
