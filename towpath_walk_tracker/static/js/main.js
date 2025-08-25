@@ -18734,6 +18734,7 @@ class LeafletWalkPreview {
         this.polyLineWalk = null;
         this.walkForm = walkForm;
         this.is_active = () => false;
+        this.abortController = new AbortController();
     }
     clearMarkers() {
         // for (const m of this.placedMarkers) m.remove();
@@ -18748,7 +18749,11 @@ class LeafletWalkPreview {
         if (propagate)
             this.walkForm.replaceAllPoints(placedMarkerLatLng);
         if (placedMarkerLatLng.length >= 2) {
+            // Abort outstanding requests
+            this.abortController.abort();
+            this.abortController = new AbortController();
             fetch('/get-route/', {
+                signal: this.abortController.signal,
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(placedMarkerLatLng)
@@ -18758,6 +18763,13 @@ class LeafletWalkPreview {
                 currentWalkLayer.clearLayers();
                 this.polyLineWalk = drawWalk(coords, currentWalkLayer, '#ff0000', false);
                 console.log('Request complete! response:', coords);
+            }).catch(function (error) {
+                if (error instanceof DOMException && error.name === 'AbortError') {
+                    console.info('Aborted incomplete route calculation.');
+                }
+                else {
+                    console.error('Fetch error:', error);
+                }
             });
         }
         else {
