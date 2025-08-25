@@ -27,11 +27,12 @@ Flask routes and helper functions.
 #
 
 # stdlib
+from io import BytesIO
 import json
 from typing import Any, Dict, List, Tuple, Union, cast
 
 # 3rd party
-from flask import Flask, Response, make_response, redirect, render_template, request
+from flask import Flask, Response, make_response, redirect, render_template, request, url_for
 from flask_caching import Cache
 from flask_compress import Compress  # type: ignore[import-untyped]
 from flask_sqlalchemy_lite import SQLAlchemy
@@ -120,6 +121,7 @@ def main_page() -> Union[str, Response]:
 	# lng = float(request.args.get("lng", -2))
 	# print(zoom_level, lat, lng)
 	m = create_map("http://localhost:5000/watercourses.geojson")  # , (lat, lng), zoom_level)
+
 	root: Figure = m.get_root()  # type: ignore[assignment]
 
 	js_libs = m.default_js
@@ -179,13 +181,41 @@ def get_route() -> List[Tuple[float, float]]:
 
 
 @app.route("/api/walk/<int:walk_id>/")
-def api_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
+def api_walk(walk_id: int) -> Response:
+	# TODO: URL for thumbnail (with url_for)
 	with app.app_context():
 		result = db.session.query(Walk).get(walk_id)
 		if result is None:
 			return Response("Not Found", 404)
 
-		return cast(Walk, result).to_json()
+		data = cast(Walk, result).to_json()
+		data["thumbnail_url"] = url_for("api_walk_thumbnail", walk_id=walk_id)
+		return make_response(data)
+
+
+@app.route("/api/walk/<int:walk_id>/thumbnail/")
+def api_walk_thumbnail(walk_id: int) -> Response:
+	with app.app_context():
+		result = db.session.query(Walk).get(walk_id)
+		if result is None:
+			return Response("Not Found", 404)
+
+		walk = cast(Walk, result)
+		route = Route.from_db(walk.route)
+		fig, ax = route.plot_thumbnail(
+			figsize=(1.5, 1.5), 
+			# colour=walk.colour,
+			colour="#139c25",
+			)
+
+		buffer = BytesIO()
+		fig.savefig(buffer, format='png')
+		buffer.seek(0)
+		image_png = buffer.getvalue()
+		buffer.close()
+
+		return Response(image_png, content_type="image/png")
+		
 
 
 @app.route("/walk/<int:walk_id>/", methods=["GET", "POST"])

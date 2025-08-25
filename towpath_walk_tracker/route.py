@@ -29,16 +29,23 @@ Functions for finding a route through two or more points.
 # stdlib
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import TYPE_CHECKING, Dict, List, Tuple, cast
+from typing import TYPE_CHECKING, Dict, List, Literal, Tuple, Union, cast
 
 # 3rd party
+import contextily
+import geopandas
+import matplotlib
 import networkx
+from geopandas.plotting import GeoplotAccessor
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from networkx import all_shortest_paths
 from scipy.spatial import KDTree
+from shapely.geometry import LineString
 
 # this package
 from towpath_walk_tracker.network import build_kdtree, build_network, get_node_coordinates
-from towpath_walk_tracker.util import _get_filtered_watercourses
+from towpath_walk_tracker.util import Coordinate, _get_filtered_watercourses
 
 if TYPE_CHECKING:
 	# this package
@@ -65,10 +72,10 @@ class Route:
 	nodes: List[int]
 
 	# Mapping of IDs to lat/lng coordinates.
-	node_coordinates: Dict[int, Tuple[float, float]]
+	node_coordinates: Dict[int, Coordinate]
 
 	@property
-	def coordinates(self) -> List[Tuple[float, float]]:
+	def coordinates(self) -> List[Coordinate]:
 		"""
 		Returns the coordinates of the nodes, in order.
 		"""
@@ -91,9 +98,34 @@ class Route:
 		node_ids = []
 		for node in nodes:
 			node_ids.append(node.id)
-			node_coordinates[node.id] = (cast(float, node.latitude), cast(float, node.longitude))
+			node_coordinates[node.id] = Coordinate(cast(float, node.latitude), cast(float, node.longitude))
 
 		return cls(node_ids, node_coordinates)
+
+	@classmethod
+	def from_json_dict(cls, data: List[Dict[str, float]]) -> "Route":
+		"""
+		Construct a :class:`~.Route` from the given JSON data.
+
+		:param nodes:
+		"""
+
+		node_coordinates = {}
+		node_ids = []
+		for node in data:
+			node_ids.append(node["id"])
+			node_coordinates[node["id"]
+								] = Coordinate(cast(float, node["latitude"]), cast(float, node["longitude"]))
+
+		return cls(node_ids, node_coordinates)
+
+	def to_linestring(self) -> LineString:
+		"""
+		Create a shapely :class:`~shapely.geometry.LineString` for the route.
+		"""
+
+		route: List[Tuple[float, float]] = [(r.longitude, r.latitude) for r in self.coordinates]
+		return LineString(route)
 
 	@classmethod
 	def from_points(cls, points: List[Tuple[float, float]]) -> "Route":
@@ -123,3 +155,43 @@ class Route:
 			path = path[:-1] + next(all_shortest_paths(G, orig[3], dest[3]))
 
 		return cls(path, node_coordinates)
+
+	def plot_thumbnail(
+			self,
+			figsize: Tuple[float, float] = (2, 2),
+			zoom: Union[Literal["auto"], int] = "auto",
+			zoom_adjust: int = -2,
+			colour: str = "#139c25",
+			linewidth: int = 5,
+			) -> Tuple[Figure, Axes]:
+
+		matplotlib.rcParams["axes.xmargin"] = matplotlib.rcParams["axes.ymargin"] = 0.2
+
+		# TODO: support non-square sizes
+		df = geopandas.GeoDataFrame({"ID": [0], "geometry": [self.to_linestring()]},
+									crs="EPSG:4326").to_crs(epsg=3857)
+
+		plot_fn: GeoplotAccessor = df.plot
+		ax = plot_fn(figsize=figsize, alpha=0.5, edgecolor=colour, linewidth=linewidth)
+		fig = ax.get_figure()
+
+		ax.set_axis_off()
+		fig.tight_layout()
+		fig.subplots_adjust(top=1, right=1, bottom=0, left=0)
+
+		tightbox = ax.get_tightbbox()
+		x_width = tightbox.x1 - tightbox.x0
+		y_height = tightbox.y1 - tightbox.y0
+		ratio = y_height / x_width
+
+		xlim = ax.get_xlim()
+		current_x_range = xlim[1] - xlim[0]
+		new_x_range = current_x_range * ratio
+		x_range_delta = (new_x_range - current_x_range) / 2
+		ax.set_xlim(xlim[0] - x_range_delta, xlim[1] + x_range_delta)
+
+		# TODO: credits somewhere on website; footer maybe?
+		# © OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France
+		contextily.add_basemap(ax, zoom=zoom, attribution=False, zoom_adjust=zoom_adjust)
+
+		return fig, ax

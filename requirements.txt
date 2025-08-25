@@ -1,6 +1,7 @@
 # overpass
 # git+https://github.com/mvexel/overpass-api-python-wrapper
 consolekit>=1.9.0
+contextily>=1.6.2
 domdf-python-tools>=3.10.0
 flask>=3.1.1
 flask-caching>=2.3.1
@@ -9,10 +10,13 @@ flask-debugtoolbar>=0.16.0
 flask-sqlalchemy-lite>=0.1.0
 flask-wtf>=1.2.2
 folium>=0.20.0
+geopandas>=1.1.1
+matplotlib>=3.10.5
 networkx>=3.2.1
 osm2geojson>=0.2.6
 requests>=2.32.4
 scipy>=1.13.1
+shapely>=2.1.1
 sqlalchemy>=2.0.43
 wtforms>=3.2.1
 xyzservices>=2025.4.0

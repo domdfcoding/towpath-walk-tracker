@@ -28,12 +28,18 @@ Utility functions.
 
 # stdlib
 from functools import lru_cache
+from typing import NamedTuple
 
 # 3rd party
 from domdf_python_tools.paths import PathPlus
 
 # this package
 from towpath_walk_tracker.watercourses import FeatureCollection, exclude_tags, filter_watercourses
+
+__all__ = (
+		"ids_to_exclude",
+		"Coordinate",
+		)
 
 ids_to_exclude = {
 		28500157,
@@ -55,3 +61,12 @@ def _get_filtered_watercourses() -> FeatureCollection:
 	raw_data = PathPlus("data.filtered.geojson").load_json()
 	watercourses = filter_watercourses(raw_data, tags_to_exclude=exclude_tags, ids_to_exclude=ids_to_exclude)
 	return watercourses
+
+
+class Coordinate(NamedTuple):
+	"""
+	A coordinate (latitude and longitude)
+	"""
+
+	latitude: float
+	longitude: float

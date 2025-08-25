@@ -33,9 +33,6 @@ from functools import partial
 from consolekit import CONTEXT_SETTINGS, SuggestionGroup, click_group
 from consolekit.options import flag_option
 
-# this package
-from towpath_walk_tracker.flask import app
-
 __all__ = ["create_db", "get_data", "main", "run"]
 
 
@@ -60,7 +57,13 @@ def run() -> None:
 	from pathlib import Path
 
 	# 3rd party
-	from flask_debugtoolbar import DebugToolbarExtension
+	import contextily
+	from domdf_python_tools.paths import PathPlus
+
+	# this package
+	from towpath_walk_tracker.flask import app
+
+	contextily.set_cache_dir(PathPlus("cache").abspath())
 
 	app.jinja_env.auto_reload = True
 	app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -76,7 +79,7 @@ def create_db() -> None:
 	"""
 
 	# this package
-	from towpath_walk_tracker.flask import db
+	from towpath_walk_tracker.flask import app, db
 	from towpath_walk_tracker.models import Model
 
 	with app.app_context():
