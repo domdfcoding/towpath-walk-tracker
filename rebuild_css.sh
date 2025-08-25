@@ -28,7 +28,7 @@ compile () {
 
   if [ "$CURRENT_SHA" != "$(sha256sum "$OUTFILE")" ]; then
     echo "$OUTFILE changed"
-    git stage "$OUTFILE"
+    # git stage "$OUTFILE"
     RETV=1
   fi
 

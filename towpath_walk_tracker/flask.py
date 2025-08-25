@@ -27,8 +27,8 @@ Flask routes and helper functions.
 #
 
 # stdlib
-from io import BytesIO
 import json
+from io import BytesIO
 from typing import Any, Dict, List, Tuple, Union, cast
 
 # 3rd party
@@ -203,19 +203,18 @@ def api_walk_thumbnail(walk_id: int) -> Response:
 		walk = cast(Walk, result)
 		route = Route.from_db(walk.route)
 		fig, ax = route.plot_thumbnail(
-			figsize=(1.5, 1.5), 
+			figsize=(1.5, 1.5),
 			# colour=walk.colour,
 			colour="#139c25",
 			)
 
 		buffer = BytesIO()
-		fig.savefig(buffer, format='png')
+		fig.savefig(buffer, format="png")
 		buffer.seek(0)
 		image_png = buffer.getvalue()
 		buffer.close()
 
 		return Response(image_png, content_type="image/png")
-		
 
 
 @app.route("/walk/<int:walk_id>/", methods=["GET", "POST"])

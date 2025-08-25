@@ -26,9 +26,6 @@ Command-line entry point.
 #  OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-# stdlib
-from functools import partial
-
 # 3rd party
 from consolekit import CONTEXT_SETTINGS, SuggestionGroup, click_group
 from consolekit.options import flag_option
@@ -43,11 +40,7 @@ def main() -> None:
 	"""
 
 
-command = partial(main.command, context_settings=CONTEXT_SETTINGS)
-group = partial(main.group, context_settings=CONTEXT_SETTINGS, cls=SuggestionGroup)
-
-
-@command()
+@main.command()
 def run() -> None:
 	"""
 	Run the towpath-walk-tracker development flask server in debug mode.
@@ -72,7 +65,7 @@ def run() -> None:
 	app.run(debug=True, extra_files=list(Path("towpath_walk_tracker/templates").glob("*.jinja2")))
 
 
-@command()
+@main.command()
 def create_db() -> None:
 	"""
 	Configure the towpath-walk-tracker database for the first time.
@@ -102,7 +95,7 @@ out geom;
 
 
 @flag_option("-d/-D", "--download/--no-download", default=True)
-@command()
+@main.command()
 def get_data(download: bool = True) -> None:
 	"""
 	Query overpass for watercourses data.
