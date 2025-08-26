@@ -18703,6 +18703,28 @@ function setupResizeObserver(map) {
 
 /***/ }),
 
+/***/ "./src/core/util.ts":
+/*!**************************!*\
+  !*** ./src/core/util.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   checkForLatLngMistakes: () => (/* binding */ checkForLatLngMistakes)
+/* harmony export */ });
+function checkForLatLngMistakes(value) {
+    // Check haven't tried to treat L.latLng as array or array as L.latLng
+    if (value === undefined) {
+        throw ({ value });
+    }
+    return value;
+}
+
+
+/***/ }),
+
 /***/ "./src/core/walk.ts":
 /*!**************************!*\
   !*** ./src/core/walk.ts ***!
@@ -18718,12 +18740,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util */ "./src/core/util.ts");
 var __classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _LeafletWalkPreview_instances, _LeafletWalkPreview_getMarkers;
+
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class LeafletWalkPreview {
@@ -18777,13 +18801,8 @@ class LeafletWalkPreview {
         }
     }
     addMarker(lat, lng, num = -1) {
-        // Check haven't tried to treat L.latLng as array or array as L.latLng
-        if (lat === undefined) {
-            throw ({ lat });
-        }
-        if (lng === undefined) {
-            throw ({ lng });
-        }
+        lat = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(lat);
+        lng = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(lng);
         let markerOptions = {};
         if (num > -1) {
             const customMarker = leaflet__WEBPACK_IMPORTED_MODULE_0__.AwesomeMarkers.icon({
@@ -18814,13 +18833,8 @@ class LeafletWalkPreview {
         marker.remove();
     }
     snapCoordToLine(lat, lng) {
-        // Check haven't tried to treat L.latLng as array or array as L.latLng
-        if (lat === undefined) {
-            throw ({ lat });
-        }
-        if (lng === undefined) {
-            throw ({ lng });
-        }
+        lat = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(lat);
+        lng = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(lng);
         const watercourses = geo_json_watercourses; // eslint-disable-line camelcase
         // @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON
         // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/44293
@@ -18949,12 +18963,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util */ "./src/core/util.ts");
 var __classPrivateFieldGet = (undefined && undefined.__classPrivateFieldGet) || function (receiver, state, kind, f) {
     if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _WalkForm_instances, _WalkForm_setupEnableCtrl;
+
 
 Object.assign(HTMLCollection.prototype, {
     forEach(func) {
@@ -18998,13 +19014,8 @@ class WalkFormPoint {
         return [parseFloat(this.pointLatitude.value), parseFloat(this.pointLongitude.value)];
     }
     setLatLng(lat, lng) {
-        // Check haven't tried to treat L.latLng as array or array as L.latLng
-        if (lat === undefined) {
-            throw ({ lat });
-        }
-        if (lng === undefined) {
-            throw ({ lng });
-        }
+        lat = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(lat);
+        lng = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(lng);
         // Clear values if null
         if (lat === null) {
             this.pointLatitude.value = '';

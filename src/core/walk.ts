@@ -2,6 +2,7 @@ import * as L from 'leaflet';
 import { LeafletEvent } from 'leaflet';
 import { NullOrUndefinedOr, LatLngArray } from './types';
 import { WalkForm } from './walk_form';
+import { checkForLatLngMistakes } from './util';
 
 declare let map_canal_towpath_walking: L.Map; // eslint-disable-line camelcase
 declare let geo_json_watercourses: L.GeoJSON; // eslint-disable-line camelcase
@@ -72,13 +73,8 @@ export class LeafletWalkPreview {
 	}
 
 	addMarker (lat: number, lng: number, num: number = -1): void {
-		// Check haven't tried to treat L.latLng as array or array as L.latLng
-		if (lat === undefined) {
-			throw ({ lat });
-		}
-		if (lng === undefined) {
-			throw ({ lng });
-		}
+		lat = checkForLatLngMistakes(lat);
+		lng = checkForLatLngMistakes(lng);
 
 		let markerOptions: L.MarkerOptions = {};
 		if (num > -1) {
@@ -114,13 +110,9 @@ export class LeafletWalkPreview {
 	}
 
 	snapCoordToLine (lat: number, lng: number): L.LatLng {
-		// Check haven't tried to treat L.latLng as array or array as L.latLng
-		if (lat === undefined) {
-			throw ({ lat });
-		}
-		if (lng === undefined) {
-			throw ({ lng });
-		}
+		lat = checkForLatLngMistakes(lat);
+		lng = checkForLatLngMistakes(lng);
+
 		const watercourses: L.GeoJSON = geo_json_watercourses; // eslint-disable-line camelcase
 
 		// @ts-expect-error  // Doesn't think `feature` exists, but it does for layers of GeoJSON

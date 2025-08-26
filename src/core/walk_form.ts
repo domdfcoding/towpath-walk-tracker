@@ -1,5 +1,6 @@
 import * as L from 'leaflet';
 import { NullOrUndefinedOr, LatLngArray } from './types';
+import { checkForLatLngMistakes } from './util';
 
 Object.assign(HTMLCollection.prototype, {
 	forEach (func: Function) { // eslint-disable-line @typescript-eslint/no-unsafe-function-type
@@ -58,13 +59,8 @@ export class WalkFormPoint {
 	}
 
 	setLatLng (lat: NullOrUndefinedOr<number>, lng: NullOrUndefinedOr<number>): WalkFormPoint {
-		// Check haven't tried to treat L.latLng as array or array as L.latLng
-		if (lat === undefined) {
-			throw ({ lat });
-		}
-		if (lng === undefined) {
-			throw ({ lng });
-		}
+		lat = checkForLatLngMistakes(lat);
+		lng = checkForLatLngMistakes(lng);
 
 		// Clear values if null
 		if (lat === null) {
