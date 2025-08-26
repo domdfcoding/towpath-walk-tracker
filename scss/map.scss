@@ -162,3 +162,7 @@ table.walk-points tbody tr:nth-last-child(1 of :not(.d-none)) .point-move-down {
 div#flDebugToolbarHandle {
 	top: 20% !important;
 }
+
+table.walk-points .point-idx .input-group .input-group-text {
+	min-width: 5ch;
+}

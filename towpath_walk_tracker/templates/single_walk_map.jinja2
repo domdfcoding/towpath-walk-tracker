@@ -58,8 +58,11 @@
                 </div>
             </div>
             <div class="row g-3 walk-edit">
-                <form class="needs-validation" id="walk-form" novalidate>
-                    {% include "walk_form.jinja2" %}
+                <form class="needs-validation d-none" id="walk-form" novalidate>
+                    <div class="row">
+                        {% set twocol = true %}
+                        {% include "walk_form.jinja2" %}
+                    </div>
                 </form>
             </div>
 
@@ -81,7 +84,6 @@
 
     <script>
 
-        document.getElementById("walk-form").classList.add("d-none")
         walkEditBtn.addEventListener('click', (e) => {
             walkDetails.classList.add("d-none");
             document.getElementById("walk-form").classList.remove("d-none")
