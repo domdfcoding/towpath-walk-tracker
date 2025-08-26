@@ -168,6 +168,8 @@ class Route:
 		"""
 		Plot the walk against the OpenStreetMap base map as a small thumbnail image.
 
+		Must include the following attribution for the base map: ``© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France``.
+
 		:param figsize: The image size in inches.
 		:param zoom: Base map zoom level.
 		:param zoom_adjust: Adjust the automatic zoom level by this amount.

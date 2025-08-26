@@ -1,10 +1,17 @@
 {% extends "layout.jinja2" %}
+{% set home = True %}
 
 {% block extrahead %}
     {{ header|safe }}
 
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+    html {
+        overflow-y: hidden !important;
+    }
+    </style>
 
 {% endblock extrahead %}
 
@@ -115,7 +122,7 @@
 
     {{ body|safe }}
 
-    <div class="modal fade"
+    <div class="modal fade loading-modal"
          id="loadingModal"
          data-bs-backdrop="static"
          data-bs-keyboard="false"
@@ -173,3 +180,6 @@
 
 
 {% endblock scripts %}
+
+{% block footer %}
+{% endblock footer %}

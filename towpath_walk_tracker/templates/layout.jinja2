@@ -47,47 +47,55 @@
     </head>
 
     <body>
-        <!--- <header class="site-header">
-		<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-			<div class="container">
-				{% if home %}
-					<a class="navbar-brand mr-4 no-fade" href="#">dependency-dash</a>
-				{% elif title %}
-					<a class="navbar-brand mr-4" href="/">dependency-dash</a>
-					<a class="navbar-brand pull-left mr-4 navbar-page-title" href="#" tabindex="-1">{{ title }}</a>
-				{% else %}
-					<a class="navbar-brand mr-4 no-fade" href="/">dependency-dash</a>
-				{% endif %}
+        <header class="site-header">
+            <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+                <div class="container">
+                    {% if home %}
+                        <a class="navbar-brand mr-4 no-fade" href="#">Towpath Walk Tracker</a>
+                    {% elif title %}
+                        <a class="navbar-brand mr-4" href="{{ url_for('main_page') }}">Towpath Walk Tracker</a>
+                        <a class="navbar-brand pull-left mr-4 navbar-page-title"
+                           href="#"
+                           tabindex="-1">{{ title }}</a>
+                    {% else %}
+                        <a class="navbar-brand mr-4 no-fade" href="{{ url_for('main_page') }}">Towpath Walk Tracker</a>
+                    {% endif %}
 
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+                    <button class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarToggle"
+                            aria-controls="navbarToggle"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-				<div class="collapse navbar-collapse" id="navbarToggle">
-					<div class="navbar-nav ml-auto mr-3">
-						{% macro navbar_link(name, url) -%}
-							{% if name == title %}
-								<a class="nav-item nav-link active" href="#">{{ name }}</a>
-							{% else %}
-								<a class="nav-item nav-link" href="{{ url }}">{{ name }}</a>
-							{% endif %}
-						{%- endmacro %}
+                    <div class="collapse navbar-collapse" id="navbarToggle">
+                        <div class="navbar-nav ms-auto mr-3">
+                            {% macro navbar_link(name, url) -%}
+                                {% if name == title %}
+                                    <a class="nav-item nav-link active" href="#">{{ name }}</a>
+                                {% else %}
+                                    <a class="nav-item nav-link" href="{{ url }}">{{ name }}</a>
+                                {% endif %}
+                            {%- endmacro %}
 
-						{% if home %}
-							<a class="nav-item nav-link active" href="#">Home</a>
-						{% else %}
-							<a class="nav-item nav-link" href="/">Home</a>
-						{% endif %}
+                            {% if home %}
+                                <a class="nav-item nav-link active" href="#">Map</a>
+                            {% else %}
+                                <a class="nav-item nav-link" href="{{ url_for('main_page') }}">Map</a>
+                            {% endif %}
 
-						{{ navbar_link("About", "/about/") }}
-						{# {{ navbar_link("Usage", "/usage/") }} #}
-						{# {{ navbar_link("Configuration", "/configuration/") }} #}
-						{# {{ navbar_link("API", "/api/") }} #}
-					</div>
-				</div>
-			</div>
-		</nav>
-	</header> --->
+                            {{ navbar_link('Walks', '/walks/') }}
+                            {{ navbar_link('About', '/about/') }}
+                            {{ navbar_link('Usage', '/usage/') }}
+                            {{ navbar_link('API', '/api/') }}
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
 
         {% block main %}
             {# <main role="main" class="container flex-grow-1 w-100"> #}
@@ -98,12 +106,18 @@
 
         {% block footer %}
             <!-- Footer -->
-            {# <footer class="page-footer font-small blue pt-4"> #}
-            <!-- Footer Links -->
-            {# <div class="container-fluid text-center"> #}
-            {# Powered by <a href="https://github.com/domdfcoding/towpath-walk-tracker">towpath-walk-tracker</a> #}
-            {# </div> #}
-            {# </footer> #}
+            <footer class="page-footer font-small blue pt-4">
+                <!-- Footer Links -->
+                <div class="container text-center">
+                    Powered by <a href="https://github.com/domdfcoding/towpath-walk-tracker">towpath-walk-tracker</a>.
+                    © 2025 Dominic Davis-Foster.
+                    <br>
+                    Map and watercourse data from <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. © OpenStreetMap contributors.
+                    Uses <a href="https://github.com/gravitystorm/openstreetmap-carto">OpenStreetMap Carto</a> style.
+                    Uses <a href="https://github.com/der-stefan/OpenTopoMap">OpenTopoMap</a> tiles (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">CC-BY-SA</a>).
+                    Uses <a href="https://github.com/hotosm/HDM-CartoCSS">HDM-CartoCSS</a> style Humanitarian OpenStreetMap Team hosted by OpenStreetMap France.
+                </div>
+            </footer>
         {% endblock footer %}
 
         {% block scripts %}
@@ -114,7 +128,8 @@
                     integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
                     crossorigin="anonymous"></script>
 
-            {# <script src="{{ url_for('static', filename='js/dash.js') }}"></script> #}
+            <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+            <script> setupNavbarTitleScroll() </script>
         {% endblock scripts %}
 
     </body>

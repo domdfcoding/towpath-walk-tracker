@@ -1,0 +1,36 @@
+/*!
+* _header.scss
+* Copyright © 2025 Dominic Davis-Foster <dominic@davis-foster.co.uk>
+* MIT Licence
+*/
+
+$header-height: 4rem;
+
+
+body {
+	margin-top: $header-height;
+}
+
+.min-vh-100-nav {
+	min-height: calc(100vh - #{$header-height});
+}
+
+.bg-steel {
+	background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+	color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+	color: #fff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+	font-weight: 500;
+}
+
+footer {
+	margin-bottom: 20px;
+}

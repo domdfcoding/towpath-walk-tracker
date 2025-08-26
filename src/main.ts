@@ -14,14 +14,6 @@ import 'leaflet.awesome-markers';
 import { LeafletWalkPreview, drawWalk, drawPreviousWalks } from './core/walk';
 import { watercoursesZoomOnClick, addWatercoursesGeoJson } from './core/watercourses_geojson_utils';
 
-// === Map ===
-import { setupZoomState, zoomStateFromURL } from './zoom_state';
-import { setupResizeObserver } from './core/map';
-
-// === Walk Form ===
-import 'flatpickr';
-import { WalkForm, walkPointsChangedEvent, setupWalkFormValidation } from './core/walk_form';
-
 // @ts-expect-error  // Exporting to "window" global namespace
 window.watercoursesZoomOnClick = watercoursesZoomOnClick;
 
@@ -37,14 +29,9 @@ window.drawWalk = drawWalk;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.drawPreviousWalks = drawPreviousWalks;
 
-// @ts-expect-error  // Exporting to "window" global namespace
-window.WalkForm = WalkForm;
-
-// @ts-expect-error  // Exporting to "window" global namespace
-window.walkPointsChangedEvent = walkPointsChangedEvent;
-
-// @ts-expect-error  // Exporting to "window" global namespace
-window.setupWalkFormValidation = setupWalkFormValidation;
+// === Map ===
+import { setupZoomState, zoomStateFromURL } from './zoom_state';
+import { setupResizeObserver } from './core/map';
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupZoomState = setupZoomState;
@@ -54,3 +41,22 @@ window.zoomStateFromURL = zoomStateFromURL;
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupResizeObserver = setupResizeObserver;
+
+// === Walk Form ===
+import 'flatpickr';
+import { WalkForm, walkPointsChangedEvent, setupWalkFormValidation } from './core/walk_form';
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.WalkForm = WalkForm;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.walkPointsChangedEvent = walkPointsChangedEvent;
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupWalkFormValidation = setupWalkFormValidation;
+
+// === Navbar Title Scroll ===
+import { setupNavbarTitleScroll } from './core/navbar_title';
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupNavbarTitleScroll = setupNavbarTitleScroll;

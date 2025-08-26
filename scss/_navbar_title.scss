@@ -1,0 +1,30 @@
+/*!
+* _navbar_title.scss
+* Copyright © 2025 Dominic Davis-Foster <dominic@davis-foster.co.uk>
+* MIT Licence
+*/
+
+/* === Animation for transition between site and page title === */
+.navbar.fixed-top .navbar-brand:not(.no-fade) {
+	transition: opacity 0.25s ease-in;
+	opacity: 1;
+}
+
+.navbar.fixed-top.nav-scrolled .navbar-brand:not(.no-fade) {
+	opacity: 0;
+	transition: opacity 0.25s ease-out;
+}
+
+.navbar.fixed-top .navbar-brand.navbar-page-title {
+	position: fixed;
+	opacity: 0;
+	transition: opacity 0.25s ease-out;
+	z-index: -1;
+}
+
+.navbar.fixed-top.nav-scrolled .navbar-brand.navbar-page-title {
+	transition: opacity 0.25s ease-in;
+	opacity: 1;
+	top: 8px;
+	z-index: initial;
+}

@@ -52,7 +52,7 @@ class Map(folium.Map):  # noqa: D101
 
 	_template = _load_template("folium_map.jinja2")
 
-	default_js = [("main", "/static/js/main.js")]
+	default_js = []
 
 	default_css = [
 			("leaflet_css", "https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"),

@@ -18703,6 +18703,54 @@ function setupResizeObserver(map) {
 
 /***/ }),
 
+/***/ "./src/core/navbar_title.ts":
+/*!**********************************!*\
+  !*** ./src/core/navbar_title.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   setupNavbarTitleScroll: () => (/* binding */ setupNavbarTitleScroll)
+/* harmony export */ });
+function setupNavbarTitleScroll() {
+    // The top-of-page navbar
+    const navbar = document.querySelector('.navbar.fixed-top');
+    // The main "brand" button
+    const navbarBrand = document.querySelector('.navbar.fixed-top .navbar-brand:not(navbar-page-title)');
+    // The page title button
+    const navbarPageTitle = document.querySelector('.navbar.fixed-top .navbar-page-title');
+    if (navbar == null) {
+        console.error("'navbar.fixed-top' not found.");
+        return;
+    }
+    if (navbarBrand == null) {
+        console.error("'navbar-brand' not found.");
+        return;
+    }
+    if (navbarPageTitle == null) {
+        console.error("'navbar-page-title' not found.");
+        return;
+    }
+    window.onscroll = () => {
+        // Change the navbar label to the page title
+        if (window.scrollY > 200) {
+            navbar.classList.add('nav-scrolled');
+            navbarBrand.tabIndex = -1;
+            navbarPageTitle.removeAttribute('tabindex');
+        }
+        else {
+            navbar.classList.remove('nav-scrolled');
+            navbarPageTitle.tabIndex = -1;
+            navbarBrand.removeAttribute('tabindex');
+        }
+    };
+}
+
+
+/***/ }),
+
 /***/ "./src/core/util.ts":
 /*!**************************!*\
   !*** ./src/core/util.ts ***!
@@ -19405,6 +19453,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_map__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./core/map */ "./src/core/map.ts");
 /* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
 /* harmony import */ var _core_walk_form__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./core/walk_form */ "./src/core/walk_form.ts");
+/* harmony import */ var _core_navbar_title__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./core/navbar_title */ "./src/core/navbar_title.ts");
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 // === Sidebar ===
@@ -19418,12 +19467,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// === Map ===
-
-
-// === Walk Form ===
-
-
 // @ts-expect-error  // Exporting to "window" global namespace
 window.watercoursesZoomOnClick = _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__.watercoursesZoomOnClick;
 // @ts-expect-error  // Exporting to "window" global namespace
@@ -19434,18 +19477,28 @@ window.LeafletWalkPreview = _core_walk__WEBPACK_IMPORTED_MODULE_5__.LeafletWalkP
 window.drawWalk = _core_walk__WEBPACK_IMPORTED_MODULE_5__.drawWalk;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.drawPreviousWalks = _core_walk__WEBPACK_IMPORTED_MODULE_5__.drawPreviousWalks;
-// @ts-expect-error  // Exporting to "window" global namespace
-window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.WalkForm;
-// @ts-expect-error  // Exporting to "window" global namespace
-window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.walkPointsChangedEvent;
-// @ts-expect-error  // Exporting to "window" global namespace
-window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.setupWalkFormValidation;
+// === Map ===
+
+
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupZoomState = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.setupZoomState;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.zoomStateFromURL = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.zoomStateFromURL;
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupResizeObserver = _core_map__WEBPACK_IMPORTED_MODULE_8__.setupResizeObserver;
+// === Walk Form ===
+
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.WalkForm;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.walkPointsChangedEvent;
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.setupWalkFormValidation;
+// === Navbar Title Scroll ===
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.setupNavbarTitleScroll = _core_navbar_title__WEBPACK_IMPORTED_MODULE_11__.setupNavbarTitleScroll;
 
 })();
 

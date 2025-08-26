@@ -1,5 +1,5 @@
 /*!
-* map.scss
+* _map.scss
 * Copyright © 2025 Dominic Davis-Foster <dominic@davis-foster.co.uk>
 * MIT Licence
 */
@@ -23,6 +23,10 @@ html, body, #map {
 	bottom: 0;
 	right: 0;
 	left: 0;
+}
+
+nav.navbar {
+	z-index: 2100;
 }
 
 /* === Sidebar === */
