@@ -1,5 +1,5 @@
 import * as L from 'leaflet';
-import { NullOrUndefinedOr, LatLngArray } from './types';
+import { NullOrUndefinedOr } from './types';
 import { checkForLatLngMistakes } from './util';
 
 Object.assign(HTMLCollection.prototype, {
@@ -12,12 +12,14 @@ export const walkPointsChangedEvent = new Event('changed');
 
 export class WalkFormPoint {
 	element: HTMLTableRowElement;
+	pointID: HTMLInputElement;
 	pointLatitude: HTMLInputElement;
 	pointLongitude: HTMLInputElement;
 	pointEnabled: HTMLInputElement;
 
 	constructor (element: HTMLTableRowElement) {
 		this.element = element;
+		this.pointID = this.element.getElementsByClassName('point-id')[0] as HTMLInputElement;
 		this.pointLatitude = this.element.getElementsByClassName('point-latitude')[0] as HTMLInputElement;
 		this.pointLongitude = this.element.getElementsByClassName('point-longitude')[0] as HTMLInputElement;
 		this.pointEnabled = this.element.getElementsByClassName('point-enabled')[0] as HTMLInputElement;
@@ -50,29 +52,31 @@ export class WalkFormPoint {
 
 	disable (): WalkFormPoint {
 		this.setEnableValue(0);
-		this.setLatLng(null, null);
+		this.setLatLng(null);
 		return this;
 	}
 
-	getLatLng (): LatLngArray {
-		return [parseFloat(this.pointLatitude.value), parseFloat(this.pointLongitude.value)];
+	getLatLng (): L.LatLng {
+		return L.latLng(parseFloat(this.pointLatitude.value), parseFloat(this.pointLongitude.value), parseFloat(this.pointID.value));
 	}
 
-	setLatLng (lat: NullOrUndefinedOr<number>, lng: NullOrUndefinedOr<number>): WalkFormPoint {
-		lat = checkForLatLngMistakes(lat);
-		lng = checkForLatLngMistakes(lng);
-
+	setLatLng (latLng: NullOrUndefinedOr<L.LatLng>): WalkFormPoint {
 		// Clear values if null
-		if (lat === null) {
+		if (latLng == null) { // Or undefined
 			this.pointLatitude.value = '';
-		} else {
-			this.pointLatitude.value = lat.toString();
+			this.pointLongitude.value = '';
+			this.pointID.value = '';
+
+			return this;
 		}
 
-		if (lng === null) {
-			this.pointLongitude.value = '';
+		this.pointLatitude.value = checkForLatLngMistakes(latLng.lat).toString();
+		this.pointLongitude.value = checkForLatLngMistakes(latLng.lng).toString();
+
+		if (latLng.alt == null) { // Or undefined
+			this.pointID.value = '';
 		} else {
-			this.pointLongitude.value = lng.toString();
+			this.pointID.value = latLng.alt.toString();
 		}
 
 		return this;
@@ -172,9 +176,8 @@ export class WalkForm {
 		this.rows.forEach((pointRow) => {
 			if (pointRow.isEnabled() === 1) {
 				const latLng = pointRow.getLatLng();
-				if (!isNaN(latLng[0]) || !isNaN(latLng[1])) {
-					coordinates.push(L.latLng(latLng));
-				// coordinates.push(latLng);
+				if (!isNaN(latLng.lat) || !isNaN(latLng.lng)) {
+					coordinates.push(latLng);
 				}
 			}
 		});
@@ -184,7 +187,7 @@ export class WalkForm {
 
 	populatePointsTable (coordinates: L.LatLng[]): void {
 		for (let i = 0; i < coordinates.length; i++) {
-			this.rows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
+			this.rows[i].setLatLng(coordinates[i]);
 			this.rows[i].enable();
 		}
 
@@ -224,11 +227,11 @@ export class WalkForm {
 		return lastEnabledRow;
 	}
 
-	addPoint (lat: number, lng: number): void {
+	addPoint (latLng: L.LatLng): void {
 		console.log(this.getLastEnabledRowIdx());
 		const pointRow = this.rows[1 + (this.getLastEnabledRowIdx() * 1)];
 		console.log(pointRow);
-		pointRow.enable().setLatLng(lat, lng);
+		pointRow.enable().setLatLng(latLng);
 	}
 
 	removePointWithCoord (coord: L.LatLng): void {
@@ -243,7 +246,7 @@ export class WalkForm {
 
 	replaceAllPoints (coordinates: L.LatLng[]): void {
 		for (let i = 0; i < coordinates.length; i++) {
-			this.rows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
+			this.rows[i].setLatLng(coordinates[i]);
 			this.rows[i].enable();
 		}
 

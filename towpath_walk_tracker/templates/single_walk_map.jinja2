@@ -119,7 +119,7 @@
 
         walkForm.populatePointsTable([
                 {% for point in walk_points %}
-                L.latLng({{ point.latitude }}, {{ point.longitude}}),
+                L.latLng({{ point.latitude }}, {{ point.longitude}}, {{ point.id}}),
                 {% endfor %}
         ]);
 

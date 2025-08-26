@@ -18872,7 +18872,7 @@ class LeafletWalkPreview {
         console.log('Distance from click to point is', distance);
         if (distance <= 20) {
             this.addMarker(closestLatLng.lat, closestLatLng.lng, this.placedMarkerCount + 1);
-            this.walkForm.addPoint(closestLatLng.lat, closestLatLng.lng);
+            this.walkForm.addPoint(closestLatLng);
             this.refresh(false);
         }
     }
@@ -18969,6 +18969,7 @@ const walkPointsChangedEvent = new Event('changed');
 class WalkFormPoint {
     constructor(element) {
         this.element = element;
+        this.pointID = this.element.getElementsByClassName('point-id')[0];
         this.pointLatitude = this.element.getElementsByClassName('point-latitude')[0];
         this.pointLongitude = this.element.getElementsByClassName('point-longitude')[0];
         this.pointEnabled = this.element.getElementsByClassName('point-enabled')[0];
@@ -18995,27 +18996,27 @@ class WalkFormPoint {
     }
     disable() {
         this.setEnableValue(0);
-        this.setLatLng(null, null);
+        this.setLatLng(null);
         return this;
     }
     getLatLng() {
-        return [parseFloat(this.pointLatitude.value), parseFloat(this.pointLongitude.value)];
+        return leaflet__WEBPACK_IMPORTED_MODULE_0__.latLng(parseFloat(this.pointLatitude.value), parseFloat(this.pointLongitude.value), parseFloat(this.pointID.value));
     }
-    setLatLng(lat, lng) {
-        lat = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(lat);
-        lng = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(lng);
+    setLatLng(latLng) {
         // Clear values if null
-        if (lat === null) {
+        if (latLng == null) { // Or undefined
             this.pointLatitude.value = '';
-        }
-        else {
-            this.pointLatitude.value = lat.toString();
-        }
-        if (lng === null) {
             this.pointLongitude.value = '';
+            this.pointID.value = '';
+            return this;
+        }
+        this.pointLatitude.value = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(latLng.lat).toString();
+        this.pointLongitude.value = (0,_util__WEBPACK_IMPORTED_MODULE_1__.checkForLatLngMistakes)(latLng.lng).toString();
+        if (latLng.alt == null) { // Or undefined
+            this.pointID.value = '';
         }
         else {
-            this.pointLongitude.value = lng.toString();
+            this.pointID.value = latLng.alt.toString();
         }
         return this;
     }
@@ -19074,9 +19075,8 @@ class WalkForm {
         this.rows.forEach((pointRow) => {
             if (pointRow.isEnabled() === 1) {
                 const latLng = pointRow.getLatLng();
-                if (!isNaN(latLng[0]) || !isNaN(latLng[1])) {
-                    coordinates.push(leaflet__WEBPACK_IMPORTED_MODULE_0__.latLng(latLng));
-                    // coordinates.push(latLng);
+                if (!isNaN(latLng.lat) || !isNaN(latLng.lng)) {
+                    coordinates.push(latLng);
                 }
             }
         });
@@ -19084,7 +19084,7 @@ class WalkForm {
     }
     populatePointsTable(coordinates) {
         for (let i = 0; i < coordinates.length; i++) {
-            this.rows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
+            this.rows[i].setLatLng(coordinates[i]);
             this.rows[i].enable();
         }
         for (let i = coordinates.length; i < 50; i++) {
@@ -19115,11 +19115,11 @@ class WalkForm {
             lastEnabledRow = parseInt(query.dataset.pointIndex);
         return lastEnabledRow;
     }
-    addPoint(lat, lng) {
+    addPoint(latLng) {
         console.log(this.getLastEnabledRowIdx());
         const pointRow = this.rows[1 + (this.getLastEnabledRowIdx() * 1)];
         console.log(pointRow);
-        pointRow.enable().setLatLng(lat, lng);
+        pointRow.enable().setLatLng(latLng);
     }
     removePointWithCoord(coord) {
         for (const pointRow of this.rows) {
@@ -19132,7 +19132,7 @@ class WalkForm {
     }
     replaceAllPoints(coordinates) {
         for (let i = 0; i < coordinates.length; i++) {
-            this.rows[i].setLatLng(coordinates[i].lat, coordinates[i].lng);
+            this.rows[i].setLatLng(coordinates[i]);
             this.rows[i].enable();
         }
         for (let i = coordinates.length; i < 50; i++) {

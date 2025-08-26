@@ -1,6 +1,6 @@
 import * as L from 'leaflet';
 import { LeafletEvent } from 'leaflet';
-import { NullOrUndefinedOr, LatLngArray } from './types';
+import { NullOrUndefinedOr } from './types';
 import { WalkForm } from './walk_form';
 import { checkForLatLngMistakes } from './util';
 
@@ -56,7 +56,7 @@ export class LeafletWalkPreview {
 				body: JSON.stringify(placedMarkerLatLng)
 			})
 				.then(res => res.json())
-				.then((coords: Array<LatLngArray>) => {
+				.then((coords: Array<L.LatLng>) => {
 					currentWalkLayer.clearLayers();
 					this.polyLineWalk = drawWalk(coords, currentWalkLayer, '#ff0000', false);
 					console.log('Request complete! response:', coords);
@@ -162,7 +162,7 @@ export class LeafletWalkPreview {
 
 		if (distance <= 20) {
 			this.addMarker(closestLatLng.lat, closestLatLng.lng, this.placedMarkerCount + 1);
-			this.walkForm!.addPoint(closestLatLng.lat, closestLatLng.lng);
+			this.walkForm!.addPoint(closestLatLng);
 			this.refresh(false);
 		}
 	}
