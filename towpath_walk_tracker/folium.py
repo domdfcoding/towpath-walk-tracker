@@ -60,10 +60,10 @@ class Map(folium.Map):  # noqa: D101
 					"awesome_markers_css",
 					"https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css",
 					),
-			(
-					"awesome_rotate_css",
-					"https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css",
-					),
+			# (
+			# 		"awesome_rotate_css",
+			# 		"https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css",
+			# 		),
 			]
 
 
