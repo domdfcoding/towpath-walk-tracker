@@ -38,8 +38,23 @@ from towpath_walk_tracker.watercourses import FeatureCollection, exclude_tags, f
 
 __all__ = (
 		"ids_to_exclude",
+		"overpass_query",
 		"Coordinate",
 		)
+
+overpass_query = """
+[out:json][timeout:200];
+area(id:3600062149)->.searchArea;
+(
+nwr["waterway"="canal"](area.searchArea);
+nwr["waterway"="river"]["boat"="yes"](area.searchArea);
+nwr["tunnel"="canal"]["towpath"="yes"](area.searchArea);
+nwr["leisure"="marina"](area.searchArea);
+nwr["water"="basin"](area.searchArea);
+nwr["water"="reservoir"](area.searchArea);
+);
+out geom;
+"""
 
 ids_to_exclude = {
 		28500157,

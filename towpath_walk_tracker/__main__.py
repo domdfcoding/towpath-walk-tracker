@@ -79,21 +79,6 @@ def create_db() -> None:
 		Model.metadata.create_all(db.engine)
 
 
-overpass_query = """
-[out:json][timeout:200];
-area(id:3600062149)->.searchArea;
-(
-nwr["waterway"="canal"](area.searchArea);
-nwr["waterway"="river"]["boat"="yes"](area.searchArea);
-nwr["tunnel"="canal"]["towpath"="yes"](area.searchArea);
-nwr["leisure"="marina"](area.searchArea);
-nwr["water"="basin"](area.searchArea);
-nwr["water"="reservoir"](area.searchArea);
-);
-out geom;
-"""
-
-
 @flag_option("-d/-D", "--download/--no-download", default=True)
 @main.command()
 def get_data(download: bool = True) -> None:
