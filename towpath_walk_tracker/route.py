@@ -32,11 +32,11 @@ from functools import lru_cache
 from typing import TYPE_CHECKING, Dict, List, Literal, Tuple, Union, cast
 
 # 3rd party
-import contextily
-import geopandas
+import contextily  # type: ignore[import-untyped]
+import geopandas  # type: ignore[import-untyped]
 import matplotlib
 import networkx
-from geopandas.plotting import GeoplotAccessor
+from geopandas.plotting import GeoplotAccessor  # type: ignore[import-untyped]
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from networkx import all_shortest_paths
@@ -80,7 +80,7 @@ class Route:
 		Returns the coordinates of the nodes, in order.
 		"""
 
-		coords: List[Tuple[float, float]] = []
+		coords: List[Coordinate] = []
 		for path_node in self.nodes:
 			coords.append(self.node_coordinates[path_node])
 
@@ -111,11 +111,12 @@ class Route:
 		"""
 
 		node_coordinates = {}
-		node_ids = []
+		node_ids: List[int] = []
 		for node in data:
-			node_ids.append(node["id"])
-			node_coordinates[node["id"]
-								] = Coordinate(cast(float, node["latitude"]), cast(float, node["longitude"]))
+			node_id = cast(int, node["id"])
+			node_ids.append(node_id)
+			coord = Coordinate(cast(float, node["latitude"]), cast(float, node["longitude"]))
+			node_coordinates[node_id] = coord
 
 		return cls(node_ids, node_coordinates)
 
@@ -164,12 +165,23 @@ class Route:
 			colour: str = "#139c25",
 			linewidth: int = 5,
 			) -> Tuple[Figure, Axes]:
+		"""
+		Plot the walk against the OpenStreetMap base map as a small thumbnail image.
+
+		:param figsize: The image size in inches.
+		:param zoom: Base map zoom level.
+		:param zoom_adjust: Adjust the automatic zoom level by this amount.
+		:param colour: The walk line colour.
+		:param linewidth: The walk line width.
+		"""
 
 		matplotlib.rcParams["axes.xmargin"] = matplotlib.rcParams["axes.ymargin"] = 0.2
 
 		# TODO: support non-square sizes
-		df = geopandas.GeoDataFrame({"ID": [0], "geometry": [self.to_linestring()]},
-									crs="EPSG:4326").to_crs(epsg=3857)
+		df = geopandas.GeoDataFrame(
+				{"ID": [0], "geometry": [self.to_linestring()]},
+				crs="EPSG:4326",
+				).to_crs(epsg=3857)
 
 		plot_fn: GeoplotAccessor = df.plot
 		ax = plot_fn(figsize=figsize, alpha=0.5, edgecolor=colour, linewidth=linewidth)

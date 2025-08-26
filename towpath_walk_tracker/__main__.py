@@ -50,7 +50,7 @@ def run() -> None:
 	from pathlib import Path
 
 	# 3rd party
-	import contextily
+	import contextily  # type: ignore[import-untyped]
 	from domdf_python_tools.paths import PathPlus
 
 	# this package

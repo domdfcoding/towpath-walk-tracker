@@ -27,13 +27,14 @@ Model of the network of rivers and canals.
 #
 
 # stdlib
-from typing import Dict, Tuple
+from typing import Dict
 
 # 3rd party
 import networkx
 from scipy.spatial import KDTree
 
 # this package
+from towpath_walk_tracker.util import Coordinate
 from towpath_walk_tracker.watercourses import FeatureCollection
 
 __all__ = ["build_kdtree", "build_network", "get_node_coordinates"]
@@ -89,7 +90,7 @@ def build_network(watercourses: FeatureCollection) -> "networkx.Graph[int]":
 	return graph
 
 
-def get_node_coordinates(graph: networkx.Graph) -> Dict[int, Tuple[float, float]]:
+def get_node_coordinates(graph: networkx.Graph) -> Dict[int, Coordinate]:
 	"""
 	Returns a mapping of nodes in the graph and their coordinates on the map.
 
@@ -99,7 +100,7 @@ def get_node_coordinates(graph: networkx.Graph) -> Dict[int, Tuple[float, float]
 	node_coordinates = {}
 
 	for node_id, node_data in graph.nodes.items():
-		node_coordinates[node_id] = (node_data["lat"], node_data["lng"])
+		node_coordinates[node_id] = Coordinate(node_data["lat"], node_data["lng"])
 
 	return node_coordinates
 

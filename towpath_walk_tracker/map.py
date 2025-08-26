@@ -31,7 +31,7 @@ from typing import Tuple
 
 # 3rd party
 import folium
-from xyzservices.lib import TileProvider
+from xyzservices.lib import TileProvider  # type: ignore[import-untyped]
 
 # this package
 from towpath_walk_tracker.folium import (
@@ -42,7 +42,6 @@ from towpath_walk_tracker.folium import (
 		WatercoursesGeoJson,
 		ZoomStateJS
 		)
-from towpath_walk_tracker.models import Walk
 
 __all__ = ["create_map"]
 

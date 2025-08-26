@@ -185,7 +185,12 @@ class Sidebar(folium.MacroElement):
 		super().__init__()
 		self._name = "Sidebar"
 
-	def add_to(self, parent: folium.Map, name: Optional[str] = None, index: Optional[int] = None) -> "Sidebar":
+	def add_to(
+			self,
+			parent: folium.Map,  # type: ignore[override]
+			name: Optional[str] = None,
+			index: Optional[int] = None,
+			) -> "Sidebar":
 		"""
 		Add element to a parent.
 		"""

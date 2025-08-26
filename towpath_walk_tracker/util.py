@@ -80,7 +80,7 @@ def _get_filtered_watercourses() -> FeatureCollection:
 
 class Coordinate(NamedTuple):
 	"""
-	A coordinate (latitude and longitude)
+	A coordinate (latitude and longitude).
 	"""
 
 	latitude: float

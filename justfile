@@ -21,7 +21,7 @@ vdiff:
 bare-ignore:
 	greppy '# type:? *ignore(?!\[|\w)' -s
 
-lint: unused-imports incomplete-defs bare-ignore fontawesome
+lint: unused-imports incomplete-defs bare-ignore fontawesome myts
 	tox -n qa
 
 tsc:

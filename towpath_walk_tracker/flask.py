@@ -27,9 +27,10 @@ Flask routes and helper functions.
 #
 
 # stdlib
+import datetime
 import json
 from io import BytesIO
-from typing import Any, Dict, List, Tuple, Union, cast
+from typing import List, Tuple, Union, cast
 
 # 3rd party
 from flask import Flask, Response, make_response, redirect, render_template, request, url_for
@@ -44,7 +45,7 @@ from towpath_walk_tracker.forms import WalkForm
 from towpath_walk_tracker.map import create_basic_map, create_map
 from towpath_walk_tracker.models import Walk
 from towpath_walk_tracker.route import Route
-from towpath_walk_tracker.util import _get_filtered_watercourses
+from towpath_walk_tracker.util import Coordinate, _get_filtered_watercourses
 
 __all__ = ["add_walk", "leaflet_map", "watercourses_geojson"]
 
@@ -152,7 +153,7 @@ def main_page() -> Union[str, Response]:
 
 @app.route("/get-route/", methods=["POST"])
 @csrf.exempt
-def get_route() -> List[Tuple[float, float]]:
+def get_route() -> List[Coordinate]:
 	"""
 	Flask route to calculate a route along watercourses through points on a map.
 
@@ -218,7 +219,7 @@ def api_walk_thumbnail(walk_id: int) -> Response:
 
 
 @app.route("/walk/<int:walk_id>/", methods=["GET", "POST"])
-def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
+def show_walk(walk_id: int) -> Response:
 
 	with app.app_context():
 		result = db.session.query(Walk).get(walk_id)
@@ -242,10 +243,10 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 			child.render()
 
 		form = WalkForm()
-		form.title.default = walk.title
-		form.start.default = walk.start
+		form.title.default = cast(str, walk.title)
+		form.start.default = cast(datetime.datetime, walk.start)
 		form.duration.default = f"{walk.duration // 60:02d}:{walk.duration % 60:02d}"
-		form.notes.default = walk.notes
+		form.notes.default = cast(str, walk.notes)
 		form.process()
 
 		walk_points = [point.to_json() for point in walk.points]
@@ -256,13 +257,15 @@ def show_walk(walk_id: int) -> Union[Response, Dict[str, Any]]:
 	# 		walk = Walk.from_form(db, form)
 	# 		return redirect(f"/walk/{walk.id}")  # type: ignore[return-value]
 
-	return render_template(
-			"single_walk_map.jinja2",
-			form=form,
-			walk_points=walk_points,
-			walk_route=walk_route,
-			header=root.header.render(),
-			body=root.html.render(),
-			script=root.script.render(),
-			scripts='\n'.join(scripts)
+	return make_response(
+			render_template(
+					"single_walk_map.jinja2",
+					form=form,
+					walk_points=walk_points,
+					walk_route=walk_route,
+					header=root.header.render(),
+					body=root.html.render(),
+					script=root.script.render(),
+					scripts='\n'.join(scripts)
+					)
 			)
