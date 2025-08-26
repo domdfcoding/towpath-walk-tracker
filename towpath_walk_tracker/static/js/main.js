@@ -18844,19 +18844,7 @@ class LeafletWalkPreview {
     }
     syncFromForm() {
         const coordinates = this.walkForm.getCoordinates();
-        for (const m of __classPrivateFieldGet(this, _LeafletWalkPreview_instances, "m", _LeafletWalkPreview_getMarkers).call(this)) {
-            // const pos = m.getLatLng();
-            // let foundMarker: boolean = false;
-            // for (const c of coordinates) {
-            // 	if (pos.lat === c.lat && pos.lng === c.lng) {
-            // 		foundMarker = true;
-            // 		break;
-            // 	}
-            // }
-            // if (!foundMarker) {
-            this.removeMarker(m);
-            // }
-        }
+        this.clearMarkers();
         // add markers with correct index number
         let markerIdx = 0;
         for (const c of coordinates) {
@@ -18883,7 +18871,7 @@ class LeafletWalkPreview {
         const distance = leaflet__WEBPACK_IMPORTED_MODULE_0__.GeometryUtil.distance(map_canal_towpath_walking, latlng, closestLatLng);
         console.log('Distance from click to point is', distance);
         if (distance <= 20) {
-            this.addMarker(closestLatLng.lat, closestLatLng.lng, this.placedMarkerCount + 2);
+            this.addMarker(closestLatLng.lat, closestLatLng.lng, this.placedMarkerCount + 1);
             this.walkForm.addPoint(closestLatLng.lat, closestLatLng.lng);
             this.refresh(false);
         }

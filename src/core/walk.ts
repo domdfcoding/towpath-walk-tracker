@@ -130,20 +130,7 @@ export class LeafletWalkPreview {
 	syncFromForm (): void {
 		const coordinates: Array<L.LatLng> = this.walkForm!.getCoordinates();
 
-		for (const m of this.#getMarkers()) {
-			// const pos = m.getLatLng();
-			// let foundMarker: boolean = false;
-			// for (const c of coordinates) {
-			// 	if (pos.lat === c.lat && pos.lng === c.lng) {
-			// 		foundMarker = true;
-			// 		break;
-			// 	}
-			// }
-
-			// if (!foundMarker) {
-			this.removeMarker(m);
-			// }
-		}
+		this.clearMarkers();
 
 		// add markers with correct index number
 		let markerIdx = 0;
@@ -174,7 +161,7 @@ export class LeafletWalkPreview {
 		console.log('Distance from click to point is', distance);
 
 		if (distance <= 20) {
-			this.addMarker(closestLatLng.lat, closestLatLng.lng, this.placedMarkerCount + 2);
+			this.addMarker(closestLatLng.lat, closestLatLng.lng, this.placedMarkerCount + 1);
 			this.walkForm!.addPoint(closestLatLng.lat, closestLatLng.lng);
 			this.refresh(false);
 		}
