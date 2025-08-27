@@ -52,6 +52,7 @@ def run() -> None:
 	# 3rd party
 	import contextily  # type: ignore[import-untyped]
 	from domdf_python_tools.paths import PathPlus
+	from flask_debugtoolbar import DebugToolbarExtension  # noqa: F401
 
 	# this package
 	from towpath_walk_tracker.flask import app
@@ -94,6 +95,7 @@ def get_data(download: bool = True) -> None:
 
 	# this package
 	from towpath_walk_tracker.network import build_network
+	from towpath_walk_tracker.util import overpass_query
 	from towpath_walk_tracker.watercourses import FeatureCollection, filter_watercourses, query_overpass
 
 	if download:

@@ -63,7 +63,7 @@ class PointForm(FlaskForm):
 			"longitude",
 			validators=[InputRequired(), NumberRange(min=-180, max=180, message="Invalid coordinate")],
 			)
-	point_id = IntegerField("point_id", default='')  # type: ignore[arg-type]
+	point_id = StringField("point_id", default='')
 	enabled = IntegerField(
 			"Enabled",
 			validators=[InputRequired(), NumberRange(min=0, max=1, message="Invalid Value")],

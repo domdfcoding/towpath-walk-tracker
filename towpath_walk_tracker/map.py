@@ -115,7 +115,7 @@ class FeatureGroupCurrentWalk(folium.FeatureGroup):
 class FeatureGroupWalks(folium.FeatureGroup):
 
 	def __init__(self):
-		super().__init__(name="Walks", control=False)
+		super().__init__(name="Walks", control=True)
 		self._id = "walks"
 
 
