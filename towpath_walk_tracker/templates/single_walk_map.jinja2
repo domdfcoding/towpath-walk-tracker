@@ -49,8 +49,7 @@
                         </p>
                     </div>
                     <p>
-                        {% set duration_hrs, duration_mins = form.duration.default.split(':') %}
-                        <strong>Duration</strong> {{ duration_hrs }}h {{ duration_mins }}mins
+                        <strong>Duration</strong> {{ form.duration_hrs.default }}h {{ format(form.duration_mins.default, '02d') }}mins
                     </p>
                 </div>
                 <div class="border mt-0 mb-2">
@@ -81,7 +80,6 @@
     <script>{{ script|safe }}</script>
 
     <script src="/static/js/bootstrap_form_validator.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/domdfcoding/html-duration-picker.js@bootstrap/dist/html-duration-picker.min.js"></script>
 
     <script>
 

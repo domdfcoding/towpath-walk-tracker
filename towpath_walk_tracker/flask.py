@@ -76,6 +76,7 @@ app.config["CACHE_DEFAULT_TIMEOUT"] = 300
 app.config["SECRET_KEY"] = "1234"
 app.config["SQLALCHEMY_ENGINES"] = {"default": "sqlite:///walks.db"}
 app.jinja_env.globals["enumerate"] = enumerate
+app.jinja_env.globals["format"] = format
 
 Compress(app)
 cache = Cache(app)
@@ -245,7 +246,8 @@ def show_walk(walk_id: int) -> Response:
 		form = WalkForm()
 		form.title.default = cast(str, walk.title)
 		form.start.default = cast(datetime.datetime, walk.start)
-		form.duration.default = f"{walk.duration // 60:02d}:{walk.duration % 60:02d}"
+		form.duration_hrs.default = int(walk.duration // 60)
+		form.duration_mins.default = int(walk.duration % 60)
 		form.notes.default = cast(str, walk.notes)
 		form.process()
 

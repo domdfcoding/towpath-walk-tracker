@@ -45,6 +45,7 @@ from wtforms import (
 		validators
 		)
 from wtforms.validators import DataRequired, InputRequired, NumberRange
+from wtforms.widgets import NumberInput
 
 __all__ = ["FieldListMinRequired", "PointForm", "WalkForm"]
 
@@ -135,7 +136,11 @@ class WalkForm(FlaskForm):
 	points = FieldListMinRequired(FormField(PointForm), min_required_entries=2, min_entries=50)
 	title = StringField("Title", [validators.length(max=200)], default='')  # , DataRequired()])
 	start = DateTimeLocalField("Start")  # , validators=[DataRequired()])
-	duration = StringField(
-			"Duration", default="00:00"
-			)  # , validators=[DataRequired()])  # TODO: custom field type to convert to int minutes
+	duration_hrs = IntegerField('h', default=0, widget=NumberInput(min=0), validators=[NumberRange(min=0)])
+	duration_mins = IntegerField(
+			'm',
+			default=0,
+			widget=NumberInput(min=0, max=59),
+			validators=[NumberRange(min=0, max=59)],
+			)
 	notes = TextAreaField("Notes", default='')  # , validators=[DataRequired()])

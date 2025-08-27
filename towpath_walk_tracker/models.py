@@ -107,7 +107,8 @@ class Walk(Model):
 		assert form.title.data is not None
 		title: str = cast(str, form.title.data)
 		start: datetime.datetime = cast(datetime.datetime, form.start.data)
-		duration_hours, duration_mins = map(int, cast(str, form.duration.data).split(':'))
+		duration_hours = int(cast(str, form.duration_hrs.data))
+		duration_mins = int(cast(str, form.duration_mins.data))
 		duration: int = duration_hours * 60 + duration_mins
 		notes: str = cast(str, form.notes.data)
 
