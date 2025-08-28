@@ -57,9 +57,20 @@
                     <p>{{ form.notes.default }}</p>
                 </div>
             </div>
-            <div class="row g-3 walk-edit">
-                <form class="needs-validation d-none" id="walk-form" novalidate>
-                    <div class="row">
+            <div class="row g-3 walk-edit d-none mt-1" id="walkEdit">
+                <div class="row">
+                    <div class="gap-2 mt-2 d-flex justify-content-md-right">
+                        <h3 class="me-auto">
+                            Editing walk <span class="fst-italic">{{ form.title.default }}</span>
+                        </h3>
+                        <button class="btn btn-primary" type="submit" form="walk-form">Save</button>
+                        <button class="btn btn-danger" type="submit" form="hidden_form">Cancel</button>
+                    </div>
+                </div>
+                <form id="hidden_form" method="get">
+                </form>
+                <form class="needs-validation mt-0" id="walk-form" novalidate>
+                    <div class="row mt-0">
                         {% set twocol = true %}
                         {% include "walk_form.jinja2" %}
                     </div>
@@ -85,7 +96,8 @@
 
         walkEditBtn.addEventListener('click', (e) => {
             walkDetails.classList.add("d-none");
-            document.getElementById("walk-form").classList.remove("d-none")
+            walkEdit.classList.remove("d-none");
+            map_canal_towpath_walking.fitBounds(feature_group_walk_markers.getBounds().pad(0.5));
             });
 
         const walkForm = new WalkForm(document.querySelector('table.walk-points'));

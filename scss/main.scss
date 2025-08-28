@@ -6,6 +6,10 @@ $nav-link-font-size: 1.2rem;
 @import "header";
 @import "navbar_title";
 
+.duration-input-group .form-control {
+	max-width: 10ch;
+}
+
 /* === Override sidebar and map heights to stay beneath header === */
 .sidebar.sidebar-left {
 	top: $header-height;

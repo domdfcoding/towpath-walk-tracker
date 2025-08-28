@@ -1,5 +1,5 @@
 {{ form.csrf_token }}
-<div class="{% if twocol %}col-md-9 {% endif %}row gy-2 mx-1">
+<div class="{% if twocol %}col-md-9 {% endif %}row mx-1 gy-1 mt-0">
     <div class="col-12">
         {{ form.title.label(class_='form-label') }}
         {{ form.title(class_='form-control') }}
@@ -12,7 +12,7 @@
 
     <div class="col-sm-6">
         <label for="duration" class="form-label">Duration</label>
-        <div class="input-group" id="duration">
+        <div class="input-group duration-input-group" id="duration">
             {{ form.duration_hrs(class_='form-control') }}
             <div class="input-group-text pb-0">{{ form.duration_hrs.label(class_='form-label') }}</div>
             {{ form.duration_mins(class_='form-control') }}
@@ -26,9 +26,9 @@
     </div>
 </div>
 
-{% if twocol %}<div class="col-md-2 gy-2 mt-3">{% endif %}
-    <label class="form-label{% if not twocol %} mt-2{% endif %} mb-0">Points</label>
-    <div class="walk-points-scroll mt-0">
+{% if twocol %}<div class="col-md-2 row d-block mx-1 gy-1 mt-0">{% endif %}
+    <label class="form-label{% if not twocol %} mt-2 mx-3{% endif %} mb-0">Points</label>
+    <div class="walk-points-scroll mt-0{% if not twocol %} mx-3{% endif %}">
         <table class="walk-points my-1 w-auto">
             {% for idx, point in enumerate(form.points) %}
                 <tr id="points-{{ idx }}" data-point-index="{{ idx }}">
