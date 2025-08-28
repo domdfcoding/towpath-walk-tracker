@@ -128,13 +128,28 @@ class Walk(Model):
 				point = Point(latitude=latitude, longitude=longitude, walk=walk)
 				points.append(point)
 
+		nodes, new_nodes = cls._calculate_route(db, points)
+
+		walk.route = nodes
+
+		db.session.add(walk)
+		db.session.add_all(points)
+		db.session.add_all(new_nodes)
+
+		db.session.commit()
+
+		return walk
+
+	@staticmethod
+	def _calculate_route(db: SQLAlchemy, points: List["Point"]) -> Tuple[List["Node", List["Node"]]]:
+		# Recalculate route
 		coords = [(cast(float, point.latitude), cast(float, point.longitude)) for point in points]
 		route = Route.from_points(coords)
 
 		existing_nodes = {node.id: node for node in db.session.query(Node).where(Node.id.in_(route.nodes))}
 
 		nodes = []  # Nodes in the walk, in order
-		new_nodes_for_walk = []  # Nodes in the walk we have to create
+		new_nodes = []  # Nodes in the walk we have to create
 
 		for node_id in route.nodes:
 			if node_id in existing_nodes:
@@ -142,19 +157,11 @@ class Walk(Model):
 			else:
 				node_lat, node_lng = route.node_coordinates[node_id]
 				node = Node(id=node_id, latitude=node_lat, longitude=node_lng)
-				new_nodes_for_walk.append(node)
+				new_nodes.append(node)
 
 			nodes.append(node)
 
-		walk.route = nodes
-
-		db.session.add(walk)
-		db.session.add_all(points)
-		db.session.add_all(new_nodes_for_walk)
-
-		db.session.commit()
-
-		return walk
+		return nodes, new_nodes
 
 	def to_json(self) -> Dict[str, Any]:
 		"""
@@ -197,12 +204,12 @@ class Walk(Model):
 		"""
 
 		assert form.title.data is not None
-		self.title = cast(str, form.title.data)
-		self.start = cast(datetime.datetime, form.start.data)
+		self.title = cast(Column[str], form.title.data)
+		self.start = cast(Column[datetime.datetime], form.start.data)
 		duration_hours = int(cast(str, form.duration_hrs.data))
 		duration_mins = int(cast(str, form.duration_mins.data))
-		self.duration = duration_hours * 60 + duration_mins
-		self.notes = cast(str, form.notes.data)
+		self.duration = cast(Column[int], duration_hours * 60 + duration_mins)
+		self.notes = cast(Column[str], form.notes.data)
 
 		new_points = []
 		points = []
@@ -219,12 +226,15 @@ class Walk(Model):
 				if point_form.point_id.data:
 					point_id = int(point_form.point_id.data)
 					point = db.session.query(Point).filter_by(id=point_id).first()
+
+					if not point:
+						raise ValueError(f"No existing point with ID {point_id}")
 					if point.walk != self:
 						raise ValueError("Editing a point that does not belong to this walk")
 
 					if point.latitude != latitude or point.longitude != longitude:
-						point.latitude = latitude
-						point.longitude = longitude
+						point.latitude = cast(Column[float], latitude)
+						point.longitude = cast(Column[float], longitude)
 						points_have_changed = True
 
 					points.append(point)
@@ -239,27 +249,9 @@ class Walk(Model):
 
 		if points_have_changed:
 			# Recalculate route
-			coords = [(cast(float, point.latitude), cast(float, point.longitude)) for point in points]
-			route = Route.from_points(coords)
-
-			existing_nodes = {node.id: node for node in db.session.query(Node).where(Node.id.in_(route.nodes))}
-
-			nodes = []  # Nodes in the walk, in order
-			new_nodes_for_walk = []  # Nodes in the walk we have to create
-
-			for node_id in route.nodes:
-				if node_id in existing_nodes:
-					node = existing_nodes[node_id]
-				else:
-					node_lat, node_lng = route.node_coordinates[node_id]
-					node = Node(id=node_id, latitude=node_lat, longitude=node_lng)
-					new_nodes_for_walk.append(node)
-
-				nodes.append(node)
-
+			nodes, new_nodes = self._calculate_route(db, points)
 			self.route = nodes
-
-			db.session.add_all(new_nodes_for_walk)
+			db.session.add_all(new_nodes)
 
 		db.session.commit()
 
