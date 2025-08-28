@@ -97,7 +97,7 @@ def watercourses_geojson() -> Response:
 	return resp
 
 
-@app.route("/all-walks/")
+@app.route("/api/all-walks/")
 def all_walks() -> Response:
 	"""
 	Flask route for the walks JSON data.

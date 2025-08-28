@@ -224,7 +224,7 @@ function makePreviousWalkTooltip (walk: WalkDictionary) {
 }
 
 export function drawPreviousWalks () {
-	fetch('/all-walks/', { method: 'get' }).then(res => res.json())
+	fetch('/api/all-walks/', { method: 'get' }).then(res => res.json())
 		.then((walks) => {
 			for (const walk of walks) {
 				console.log(walk.title);
