@@ -30,7 +30,7 @@ Flask routes and helper functions.
 import datetime
 import json
 from io import BytesIO
-from typing import List, Tuple, Union, cast
+from typing import Any, Dict, List, Tuple, Union, cast
 
 # 3rd party
 from flask import Flask, Response, make_response, redirect, render_template, request, url_for
@@ -97,19 +97,35 @@ def watercourses_geojson() -> Response:
 	return resp
 
 
+def _get_all_walks() -> List[Dict[str, Any]]:
+	data = []
+	with app.app_context():
+		walk: Walk
+		for walk in db.session.query(Walk).all():
+			walk_data = walk.to_json()
+			walk_data["thumbnail_url"] = url_for("api_walk_thumbnail", walk_id=walk_data["id"])
+			walk_data["walk_url"] = url_for("show_walk", walk_id=walk_data["id"])
+			data.append(walk_data)
+
+	return data
+
+
 @app.route("/api/all-walks/")
 def all_walks() -> Response:
 	"""
 	Flask route for the walks JSON data.
 	"""
 
-	data = []
-	with app.app_context():
-		walk: Walk
-		for walk in db.session.query(Walk).all():
-			data.append(walk.to_json())
+	return make_response(_get_all_walks())
 
-	return make_response(data)
+
+@app.route("/walks/")
+def walk_list() -> Response:
+	"""
+	Flask route for the walks page.
+	"""
+
+	return make_response(render_template("walk_list.jinja2", walks=_get_all_walks()))
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -184,7 +200,6 @@ def get_route() -> List[Coordinate]:
 
 @app.route("/api/walk/<int:walk_id>/")
 def api_walk(walk_id: int) -> Response:
-	# TODO: URL for thumbnail (with url_for)
 	with app.app_context():
 		result = db.session.query(Walk).get(walk_id)
 		if result is None:

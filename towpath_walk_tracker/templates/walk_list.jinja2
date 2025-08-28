@@ -1,0 +1,41 @@
+{% extends "layout.jinja2" %}
+{% set title = "Walks" %}
+{# TODO: options to sort alphabetically and by date, search/filter, and to force single column (remove row class) #}
+
+{% block content %}
+    <div class="container pt-2">
+        <div class="row g-1">
+            {% for walk in walks %}
+                <div class="col-md-6  walk-entry">
+                    <div class="row h-100 border m-1">
+                        <div class=" col-8 ms-1">
+                            <div class="col-md-12 pb-1 mt-1 border-bottom">
+                                <h3>
+                                    <a href="{{ walk.walk_url }}">{{ walk.title }}</a>
+                                </h3>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-sm-12 col-xl-6 mb-0">
+                                    <strong>Start</strong> {{ walk.start }}
+                                </div>
+                                <div class="col-sm-12 col-xl-6 mb-0">
+                                    <strong>Duration</strong> {{ walk.duration // 60 }}h {{ format(walk.duration % 60, '02d') }}mins
+                                </div>
+                            </div>
+                            <div class="mt-1 mb-2">
+                                <p>{{ walk.notes }}</p>
+                            </div>
+                        </div>
+                        <div class=" col-3 mt-2 ms-auto">
+                            <img src="{{ walk.thumbnail_url }}"
+                                 class="img-fluid rounded"
+                                 alt="Map showing the walk route">
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock content %}

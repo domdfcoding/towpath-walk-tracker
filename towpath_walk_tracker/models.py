@@ -141,7 +141,7 @@ class Walk(Model):
 		return walk
 
 	@staticmethod
-	def _calculate_route(db: SQLAlchemy, points: List["Point"]) -> Tuple[List["Node", List["Node"]]]:
+	def _calculate_route(db: SQLAlchemy, points: List["Point"]) -> Tuple[List["Node"], List["Node"]]:
 		# Recalculate route
 		coords = [(cast(float, point.latitude), cast(float, point.longitude)) for point in points]
 		route = Route.from_points(coords)
