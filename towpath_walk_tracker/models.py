@@ -101,6 +101,7 @@ class Walk(Model):
 		"""
 		Construct a walk model from a walk form.
 
+		:param db:
 		:param form:
 		"""
 
@@ -147,7 +148,7 @@ class Walk(Model):
 
 		walk.route = nodes
 
-		db.session.add_all([walk])
+		db.session.add(walk)
 		db.session.add_all(points)
 		db.session.add_all(new_nodes_for_walk)
 
@@ -186,6 +187,81 @@ class Walk(Model):
 				"route": route,  # "colour": "#" + "ffa600",  # walk.colour,
 				"colour": '#' + "139c25",  # walk.colour,
 				}
+
+	def update_from_form(self, db: SQLAlchemy, form: WalkForm) -> None:
+		"""
+		Update the walk model from a walk form.
+
+		:param db:
+		:param form:
+		"""
+
+		assert form.title.data is not None
+		self.title = cast(str, form.title.data)
+		self.start = cast(datetime.datetime, form.start.data)
+		duration_hours = int(cast(str, form.duration_hrs.data))
+		duration_mins = int(cast(str, form.duration_mins.data))
+		self.duration = duration_hours * 60 + duration_mins
+		self.notes = cast(str, form.notes.data)
+
+		new_points = []
+		points = []
+		point_form: PointForm
+		points_have_changed: bool = False
+		for point_form in form.points.entries:
+			if point_form.enabled.data:
+				latitude = point_form.latitude.data
+				longitude = point_form.longitude.data
+
+				assert latitude is not None
+				assert longitude is not None
+
+				if point_form.point_id.data:
+					point_id = int(point_form.point_id.data)
+					point = db.session.query(Point).filter_by(id=point_id).first()
+					if point.walk != self:
+						raise ValueError("Editing a point that does not belong to this walk")
+
+					if point.latitude != latitude or point.longitude != longitude:
+						point.latitude = latitude
+						point.longitude = longitude
+						points_have_changed = True
+
+					points.append(point)
+
+				else:
+					points_have_changed = True
+					point = Point(latitude=latitude, longitude=longitude, walk=self)
+					new_points.append(point)
+					points.append(point)
+
+		db.session.add_all(new_points)
+
+		if points_have_changed:
+			# Recalculate route
+			coords = [(cast(float, point.latitude), cast(float, point.longitude)) for point in points]
+			route = Route.from_points(coords)
+
+			existing_nodes = {node.id: node for node in db.session.query(Node).where(Node.id.in_(route.nodes))}
+
+			nodes = []  # Nodes in the walk, in order
+			new_nodes_for_walk = []  # Nodes in the walk we have to create
+
+			for node_id in route.nodes:
+				if node_id in existing_nodes:
+					node = existing_nodes[node_id]
+				else:
+					node_lat, node_lng = route.node_coordinates[node_id]
+					node = Node(id=node_id, latitude=node_lat, longitude=node_lng)
+					new_nodes_for_walk.append(node)
+
+				nodes.append(node)
+
+			self.route = nodes
+
+			db.session.add_all(new_nodes_for_walk)
+
+		db.session.commit()
 
 
 class Point(Model):

@@ -222,12 +222,20 @@ def api_walk_thumbnail(walk_id: int) -> Response:
 @app.route("/walk/<int:walk_id>/", methods=["GET", "POST"])
 def show_walk(walk_id: int) -> Response:
 
+	form = WalkForm()
+
+	form_validated = form.validate_on_submit()
 	with app.app_context():
 		result = db.session.query(Walk).get(walk_id)
 		if result is None:
 			return Response("Not Found", 404)
 
 		walk: Walk = cast(Walk, result)
+
+		if form_validated:
+			print("Edit walk with following data:")
+			print(form)
+			walk.update_from_form(db, form)
 
 		m = create_basic_map()
 
@@ -243,7 +251,6 @@ def show_walk(walk_id: int) -> Response:
 		for child in root._children.values():
 			child.render()
 
-		form = WalkForm()
 		form.title.default = cast(str, walk.title)
 		form.start.default = cast(datetime.datetime, walk.start)
 		form.duration_hrs.default = int(walk.duration // 60)
@@ -251,13 +258,13 @@ def show_walk(walk_id: int) -> Response:
 		form.notes.default = cast(str, walk.notes)
 		form.process()
 
-		walk_points = [point.to_json() for point in walk.points]
-		walk_route = [node.to_json() for node in walk.route]
+		for point in walk.points:
+			assert point.id is not None, point
 
-	# if form.validate_on_submit():
-	# 	with app.app_context():
-	# 		walk = Walk.from_form(db, form)
-	# 		return redirect(f"/walk/{walk.id}")  # type: ignore[return-value]
+		walk_points = [point.to_json() for point in walk.points]
+		assert walk_points
+		walk_route = [node.to_json() for node in walk.route]
+		assert walk_route
 
 	return make_response(
 			render_template(
