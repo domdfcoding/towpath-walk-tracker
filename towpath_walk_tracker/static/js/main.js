@@ -18976,6 +18976,7 @@ function drawPreviousWalks() {
                 sticky: true,
                 className: 'foliumtooltip'
             });
+            walkPolyLine.bindPopup("<a role='button' class='btn btn-primary btn-lg walk-tooltip-button' href='/walk/" + walk.id + "'>View / Edit</a>");
         }
     });
 }

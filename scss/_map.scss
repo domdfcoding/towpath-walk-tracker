@@ -29,6 +29,10 @@ nav.navbar {
 	z-index: 2100;
 }
 
+.walk-tooltip-button {
+	color: var(--#{$prefix}btn-color) !important;
+}
+
 /* === Sidebar === */
 .sidebar.collapsed {
 	width: 42px !important;

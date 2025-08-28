@@ -20,6 +20,7 @@ $navbar-brand-font-size: $font-size-lg * 1.1;
 
 .folium-map#map_canal_towpath_walking {
 	height: calc(100% - #{$header-height});
+	outline: none; // Hide outline when in focus
 }
 
 /* === Stop the horizontal jump === */
