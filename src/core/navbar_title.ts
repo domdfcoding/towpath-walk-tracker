@@ -21,7 +21,7 @@ export function setupNavbarTitleScroll () {
 
 	window.onscroll = () => {
 		// Change the navbar label to the page title
-		if (window.scrollY > 200) {
+		if (window.scrollY > 55) {
 			navbar.classList.add('nav-scrolled');
 			navbarBrand.tabIndex = -1;
 			navbarPageTitle.removeAttribute('tabindex');

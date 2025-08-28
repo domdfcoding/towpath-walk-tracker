@@ -1,4 +1,7 @@
+@import "bootstrap/functions";
+@import "bootstrap/variables";
 $nav-link-font-size: 1.2rem;
+$navbar-brand-font-size: $font-size-lg * 1.1;
 
 @import "map";
 @import "./bootstrap/bootstrap.scss";
