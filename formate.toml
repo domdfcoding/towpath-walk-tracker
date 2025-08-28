@@ -29,6 +29,7 @@ remove_redundant_aliases = true
 default_section = "THIRDPARTY"
 known_third_party = [
     "consolekit",
+    "contextily",
     "domdf_python_tools",
     "flask",
     "flask_caching",
@@ -37,12 +38,16 @@ known_third_party = [
     "flask_sqlalchemy_lite",
     "flask_wtf",
     "folium",
+    "geopandas",
+    "matplotlib",
     "networkx",
     "osm2geojson",
     "requests",
     "scipy",
+    "shapely",
     "sqlalchemy",
     "wtforms",
+    "xyzservices",
 ]
 known_first_party = [ "towpath_walk_tracker",]
 

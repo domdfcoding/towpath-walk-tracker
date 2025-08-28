@@ -1,7 +1,7 @@
 # This file is managed by 'repo_helper'. Don't edit it directly.
 ---
 
-exclude: "^$"
+exclude: ^$
 
 ci:
   autoupdate_schedule: quarterly
@@ -124,7 +124,8 @@ repos:
        - eslint-plugin-promise@7.2.1
        - '@typescript-eslint/parser@8.20.0'
        - '@typescript-eslint/eslint-plugin@8.20.0'
-      exclude: (\.min.js|leaflet.geometryutil.js|leaflet.polylineDecorator.js|js/main.js|js/watercourses_geojson_utils.js)
+      exclude:
+        (\.min.js|leaflet.geometryutil.js|leaflet.polylineDecorator.js|js/main.js|js/watercourses_geojson_utils.js)
 
  - repo: https://github.com/djlint/djLint
    rev: v1.35.2
