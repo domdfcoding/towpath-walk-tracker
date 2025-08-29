@@ -198,14 +198,19 @@ class Route:
 		y_height = tightbox.y1 - tightbox.y0
 		ratio = y_height / x_width
 
-		xlim = ax.get_xlim()
-		current_x_range = xlim[1] - xlim[0]
-		new_x_range = current_x_range * ratio
-		x_range_delta = (new_x_range - current_x_range) / 2
-		ax.set_xlim(xlim[0] - x_range_delta, xlim[1] + x_range_delta)
+		if ratio >= 1:
+			xlim = ax.get_xlim()
+			current_x_range = xlim[1] - xlim[0]
+			new_x_range = current_x_range * ratio
+			x_range_delta = (new_x_range - current_x_range) / 2
+			ax.set_xlim(xlim[0] - x_range_delta, xlim[1] + x_range_delta)
+		else:
+			ylim = ax.get_ylim()
+			current_y_range = ylim[1] - ylim[0]
+			new_y_range = current_y_range / ratio
+			y_range_delta = (new_y_range - current_y_range) / 2
+			ax.set_ylim(ylim[0] - y_range_delta, ylim[1] + y_range_delta)
 
-		# TODO: credits somewhere on website; footer maybe?
-		# © OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France
 		contextily.add_basemap(ax, zoom=zoom, attribution=False, zoom_adjust=zoom_adjust)
 
 		return fig, ax
