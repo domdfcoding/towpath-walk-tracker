@@ -203,6 +203,9 @@ interface WalkDictionary {
 	notes: string;
 	start: string;
 	duration: number;
+	formatted_duration: string;
+	thumbnail_url: string;
+	walk_url: string;
 }
 
 function makePreviousWalkTooltip (walk: WalkDictionary) {
@@ -248,6 +251,38 @@ export function drawPreviousWalks () {
 				);
 
 				walkPolyLine.bindPopup("<a role='button' class='btn btn-primary btn-lg walk-tooltip-button' href='/walk/" + walk.id + "'>View / Edit</a>");
+
+				renderSidebarWalkTemplate(walk);
 			}
 		});
+}
+
+function renderSidebarWalkTemplate (walk: WalkDictionary) {
+	const template: HTMLTemplateElement = document.querySelector('#walkTemplate')!;
+
+	// @ts-expect-error  // Not convinced by type hint
+	const clone: Document = template.content.cloneNode(true);
+
+	const titleAnchorTag: HTMLElement = clone.getElementById('walkTemplateTitle')!;
+	titleAnchorTag.removeAttribute('id');
+	titleAnchorTag.setAttribute('href', walk.walk_url);
+	titleAnchorTag.insertAdjacentHTML('beforeend', walk.title);
+
+	const startDiv: HTMLElement = clone.getElementById('walkTemplateStart')!;
+	startDiv.removeAttribute('id');
+	startDiv.insertAdjacentHTML('beforeend', '<strong>Start</strong> ' + walk.start);
+
+	const durationDiv: HTMLElement = clone.getElementById('walkTemplateDuration')!;
+	durationDiv.removeAttribute('id');
+	durationDiv.insertAdjacentHTML('beforeend', '<strong>Duration</strong> ' + walk.formatted_duration);
+
+	const notesPTag: HTMLElement = clone.getElementById('walkTemplateNotes')!;
+	notesPTag.removeAttribute('id');
+	notesPTag.insertAdjacentHTML('beforeend', walk.notes);
+
+	const imageTag: HTMLElement = clone.getElementById('walkTemplateImg')!;
+	imageTag.removeAttribute('id');
+	imageTag.setAttribute('src', walk.thumbnail_url);
+
+	document.getElementById('walksContent')?.appendChild(clone);
 }

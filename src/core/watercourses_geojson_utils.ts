@@ -1,10 +1,7 @@
-import * as bootstrap from 'bootstrap';
 import * as geojson from 'geojson';
 
 declare let map_canal_towpath_walking: L.Map; // eslint-disable-line camelcase
 declare let geo_json_watercourses: L.GeoJSON; // eslint-disable-line camelcase
-declare let bsLoadingModal: bootstrap.Modal;
-declare let sidebarAddButton: HTMLUListElement;
 
 declare class LeafletMapEvent {
 	target : L.Map;
@@ -30,6 +27,4 @@ export function addWatercoursesGeoJson (data: geojson.GeoJsonObject) {
 	map_canal_towpath_walking.removeLayer(geo_json_watercourses); // eslint-disable-line camelcase
 	geo_json_watercourses.addData(data); // eslint-disable-line camelcase
 	map_canal_towpath_walking.addLayer(geo_json_watercourses); // eslint-disable-line camelcase
-	bsLoadingModal.hide();
-	sidebarAddButton.classList.remove('disabled');
 }

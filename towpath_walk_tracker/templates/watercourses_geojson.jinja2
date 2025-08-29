@@ -11,7 +11,16 @@ MIT Licenced
 		...{{ this.options | tojavascript }}
 	});
 
-	fetch({{ this.embed_link|tojson }}, { headers: { 'Content-Type': 'application/json' } }).then(res => res.json()).then(addWatercoursesGeoJson);
+	fetch(
+		{{ this.embed_link | tojson }},
+		{ headers: { 'Content-Type': 'application/json' } }
+	).then(res => res.json())
+	.then((data) => {
+		addWatercoursesGeoJson(data);
+		bsLoadingModal.hide();
+		sidebarWalksButton.classList.remove('disabled');
+		sidebarAddButton.classList.remove('disabled');
+		});
 
 	{%- if not this.style %}
 		geo_json_watercourses.setStyle(function(feature) {return feature.properties.style;});

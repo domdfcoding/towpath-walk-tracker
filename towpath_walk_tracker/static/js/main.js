@@ -18977,8 +18977,32 @@ function drawPreviousWalks() {
                 className: 'foliumtooltip'
             });
             walkPolyLine.bindPopup("<a role='button' class='btn btn-primary btn-lg walk-tooltip-button' href='/walk/" + walk.id + "'>View / Edit</a>");
+            renderSidebarWalkTemplate(walk);
         }
     });
+}
+function renderSidebarWalkTemplate(walk) {
+    var _a;
+    const template = document.querySelector("#walkTemplate");
+    // @ts-expect-error  // Not convinced by type hint
+    const clone = template.content.cloneNode(true);
+    let titleAnchorTag = clone.getElementById("walkTemplateTitle");
+    titleAnchorTag.removeAttribute("id");
+    titleAnchorTag.setAttribute("href", walk.walk_url);
+    titleAnchorTag.insertAdjacentHTML('beforeend', walk.title);
+    let startDiv = clone.getElementById("walkTemplateStart");
+    startDiv.removeAttribute("id");
+    startDiv.insertAdjacentHTML('beforeend', "<strong>Start</strong> " + walk.start);
+    let durationDiv = clone.getElementById("walkTemplateDuration");
+    durationDiv.removeAttribute("id");
+    durationDiv.insertAdjacentHTML('beforeend', "<strong>Duration</strong> " + walk.formatted_duration);
+    let notesPTag = clone.getElementById("walkTemplateNotes");
+    notesPTag.removeAttribute("id");
+    notesPTag.insertAdjacentHTML('beforeend', walk.notes);
+    let imageTag = clone.getElementById("walkTemplateImg");
+    imageTag.removeAttribute("id");
+    imageTag.setAttribute("src", walk.thumbnail_url);
+    (_a = document.getElementById("walksContent")) === null || _a === void 0 ? void 0 : _a.appendChild(clone);
 }
 
 
@@ -19271,8 +19295,6 @@ function addWatercoursesGeoJson(data) {
     map_canal_towpath_walking.removeLayer(geo_json_watercourses); // eslint-disable-line camelcase
     geo_json_watercourses.addData(data); // eslint-disable-line camelcase
     map_canal_towpath_walking.addLayer(geo_json_watercourses); // eslint-disable-line camelcase
-    bsLoadingModal.hide();
-    sidebarAddButton.classList.remove('disabled');
 }
 
 

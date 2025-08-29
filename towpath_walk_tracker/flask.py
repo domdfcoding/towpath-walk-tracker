@@ -106,6 +106,8 @@ def _get_all_walks() -> List[Dict[str, Any]]:
 			walk_data = walk.to_json()
 			walk_data["thumbnail_url"] = url_for("api_walk_thumbnail", walk_id=walk_data["id"])
 			walk_data["walk_url"] = url_for("show_walk", walk_id=walk_data["id"])
+			formatted_duration = f"{ walk_data['duration'] // 60 }h { format(walk_data['duration'] % 60, '02d') }mins"
+			walk_data["formatted_duration"] = formatted_duration
 			data.append(walk_data)
 
 	return data

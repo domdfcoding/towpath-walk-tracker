@@ -52,7 +52,7 @@ nav.navbar {
 	height: 100%;
 }
 
-.sidebar-pane form#walk-form {
+.sidebar-pane #walksContent, .sidebar-pane form#walk-form {
 	position: absolute;
 	top: 40px;
 	left: 10px;
