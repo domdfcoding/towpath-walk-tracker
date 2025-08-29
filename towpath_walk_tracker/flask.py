@@ -224,8 +224,7 @@ def api_walk_thumbnail(walk_id: int) -> Response:
 		route = Route.from_db(walk.route)
 		fig, ax = route.plot_thumbnail(
 			figsize=(1.5, 1.5),
-			# colour=walk.colour,
-			colour="#139c25",
+			colour='#' + walk.colour,
 			)
 
 		buffer = BytesIO()
@@ -291,6 +290,7 @@ def show_walk(walk_id: int) -> Response:
 					form=form,
 					walk_points=walk_points,
 					walk_route=walk_route,
+					walk_colour='#' + walk.colour,
 					header=root.header.render(),
 					body=root.html.render(),
 					script=root.script.render(),

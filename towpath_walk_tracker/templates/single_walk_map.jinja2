@@ -119,7 +119,7 @@
             {% for node in walk_route %}
             L.latLng({{ node.latitude }}, {{ node.longitude }}),
             {% endfor %}
-        ], feature_group_current_walk, '#ff0000', false);
+        ], feature_group_current_walk, "{{ walk_colour }}", false);
 
         document.querySelector('table.walk-points').addEventListener('changed',
             (e) => { walkPreview.syncFromForm(); }

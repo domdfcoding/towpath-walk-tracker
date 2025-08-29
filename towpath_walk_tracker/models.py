@@ -69,7 +69,7 @@ class Walk(Model):
 	start = Column(DateTime, nullable=True)
 	duration = Column(Integer, nullable=False, default=0)
 	notes = Column(Text, nullable=False)
-	# colour = Column(String(6), nullable=False)  # hex colour
+	colour = Column(String(6), nullable=False)  # hex colour
 	points: Mapped[List["Point"]] = relationship(back_populates="walk")
 	route: Mapped[List["Node"]] = relationship(secondary=association_table)
 
@@ -191,8 +191,8 @@ class Walk(Model):
 				"notes": self.notes,
 				"id": self.id,
 				"points": points,
-				"route": route,  # "colour": "#" + "ffa600",  # walk.colour,
-				"colour": '#' + "139c25",  # walk.colour,
+				"route": route,
+				"colour": '#' + self.colour,
 				}
 
 	def update_from_form(self, db: SQLAlchemy, form: WalkForm) -> None:
