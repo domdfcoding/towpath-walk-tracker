@@ -22,36 +22,25 @@
         <div class="sidebar-tabs">
             <ul role="tablist">
                 <li>
-                    <a href="#home" role="tab"><i class="fa fa-bars"></i></a>
-                </li>
-                <li>
-                    <a href="#profile" role="tab"><i class="fa fa-user"></i></a>
-                </li>
-                <li class="disabled">
-                    <a href="#messages" role="tab"><i class="fa fa-envelope"></i></a>
+                    <a href="#walks" role="tab"><i class="fas fa-route"></i></a>
                 </li>
                 <li class="disabled" id="sidebarAddButton">
                     <a href="#add" role="tab"><i class="fas fa-plus"></i></a>
                 </li>
-                <li>
-                    <a href="https://github.com/domdfcoding/towpath-walk-tracker"
-                       role="tab"
-                       target="_blank"><i class="fab fa-github"></i></a>
-                </li>
             </ul>
 
-            <ul role="tablist">
+            {# <ul role="tablist">
                 <li>
                     <a href="#settings" role="tab"><i class="fa fa-cog"></i></a>
                 </li>
-            </ul>
+            </ul> #}
         </div>
 
         <!-- Tab panes -->
         <div class="sidebar-content">
-            <div class="sidebar-pane" id="home">
+            <div class="sidebar-pane" id="walks">
                 <h1 class="sidebar-header">
-                    sidebar-v2
+                    Walks
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
@@ -76,19 +65,13 @@
                 </p>
             </div>
 
-            <div class="sidebar-pane" id="profile">
-                <h1 class="sidebar-header">
-                    Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
-            </div>
-
             <div class="sidebar-pane" id="messages">
                 <h1 class="sidebar-header">
                     Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
             </div>
 
-            <div class="sidebar-pane d-flex flex-column" id="add">
+            <div class="sidebar-pane flex-column" id="add">
                 <h1 class="sidebar-header">
                     Add a Walk<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
@@ -110,11 +93,11 @@
 
             </div>
 
-            <div class="sidebar-pane" id="settings">
+            {# <div class="sidebar-pane" id="settings">
                 <h1 class="sidebar-header">
                     Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
-            </div>
+            </div> #}
         </div>
 
     </div>

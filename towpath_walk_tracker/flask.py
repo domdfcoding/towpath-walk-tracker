@@ -77,6 +77,7 @@ app.config["SECRET_KEY"] = "1234"
 app.config["SQLALCHEMY_ENGINES"] = {"default": "sqlite:///walks.db"}
 app.jinja_env.globals["enumerate"] = enumerate
 app.jinja_env.globals["format"] = format
+app.jinja_env.globals["github_url"] = "https://github.com/domdfcoding/towpath-walk-tracker"
 
 Compress(app)
 cache = Cache(app)

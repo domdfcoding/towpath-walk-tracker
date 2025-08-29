@@ -91,6 +91,10 @@
                             {{ navbar_link('About', '/about/') }}
                             {{ navbar_link('Usage', '/usage/') }}
                             {{ navbar_link('API', '/api/') }}
+                            <a class="nav-item nav-link"
+                               href="{{ github_url }}"
+                               target="_blank"
+                               rel="noopener"><i class="fab fa-github"></i></a>
                         </div>
                     </div>
                 </div>
@@ -109,7 +113,7 @@
             <footer class="page-footer font-small blue pt-4">
                 <!-- Footer Links -->
                 <div class="container text-center">
-                    Powered by <a href="https://github.com/domdfcoding/towpath-walk-tracker">towpath-walk-tracker</a>.
+                    Powered by <a href="{{ github_url }}">towpath-walk-tracker</a>.
                     © 2025 Dominic Davis-Foster.
                     <br>
                     Map and watercourse data from <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, under <a href="https://opendatacommons.org/licenses/odbl/">ODbL</a>. © OpenStreetMap contributors.
@@ -129,7 +133,7 @@
                     crossorigin="anonymous"></script>
 
             <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-            <script> setupNavbarTitleScroll() </script>
+            {% if not home and title %}<script> setupNavbarTitleScroll() </script>{% endif %}
         {% endblock scripts %}
 
     </body>
