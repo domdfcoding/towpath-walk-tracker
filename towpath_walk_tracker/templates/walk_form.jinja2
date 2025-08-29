@@ -1,9 +1,16 @@
 {{ form.csrf_token }}
 <div class="{% if twocol %}col-md-9 {% endif %}row mx-1 gy-1 mt-0">
-    <div class="col-12">
+    <div class="{% if show_colour %}col-sm-10{% else %}col-12{% endif %}">
         {{ form.title.label(class_='form-label') }}
         {{ form.title(class_='form-control') }}
     </div>
+
+    {% if show_colour %}
+        <div class="col-sm-2">
+            {{ form.colour.label(class_='form-label') }}
+            {{ form.colour(class_='form-control') }}
+        </div>
+    {% endif %}
 
     <div class="col-sm-6">
         {{ form.start.label(class_='form-label') }}

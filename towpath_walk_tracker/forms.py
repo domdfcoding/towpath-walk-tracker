@@ -45,7 +45,7 @@ from wtforms import (
 		validators
 		)
 from wtforms.validators import DataRequired, InputRequired, NumberRange
-from wtforms.widgets import NumberInput
+from wtforms.widgets import ColorInput, NumberInput
 
 __all__ = ["FieldListMinRequired", "PointForm", "WalkForm"]
 
@@ -144,3 +144,4 @@ class WalkForm(FlaskForm):
 			validators=[NumberRange(min=0, max=59)],
 			)
 	notes = TextAreaField("Notes", default='')  # , validators=[DataRequired()])
+	colour = StringField(widget=ColorInput(), default="#139c25")
