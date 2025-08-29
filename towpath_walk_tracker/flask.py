@@ -211,7 +211,9 @@ def api_walk(walk_id: int) -> Response:
 
 
 @app.route("/api/walk/<int:walk_id>/thumbnail/")
+@cache.memoize()
 def api_walk_thumbnail(walk_id: int) -> Response:
+	# TODO: gate cashe on user login
 	with app.app_context():
 		result = db.session.query(Walk).get(walk_id)
 		if result is None:
@@ -251,6 +253,7 @@ def show_walk(walk_id: int) -> Response:
 			print("Edit walk with following data:")
 			print(form)
 			walk.update_from_form(db, form)
+			cache.delete_memoized(api_walk_thumbnail, walk_id)
 
 		m = create_basic_map()
 

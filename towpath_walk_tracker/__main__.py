@@ -51,6 +51,7 @@ def run() -> None:
 
 	# 3rd party
 	import contextily  # type: ignore[import-untyped]
+	import matplotlib
 	from domdf_python_tools.paths import PathPlus
 	from flask_debugtoolbar import DebugToolbarExtension  # noqa: F401
 
@@ -58,6 +59,7 @@ def run() -> None:
 	from towpath_walk_tracker.flask import app
 
 	contextily.set_cache_dir(PathPlus("cache").abspath())
+	matplotlib.rcParams["backend"] = "agg"
 
 	app.jinja_env.auto_reload = True
 	app.config["TEMPLATES_AUTO_RELOAD"] = True
