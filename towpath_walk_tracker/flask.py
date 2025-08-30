@@ -37,10 +37,11 @@ import flask
 from flask import Flask, Response, make_response, redirect, render_template, request, url_for
 from flask_caching import Cache
 from flask_compress import Compress  # type: ignore[import-untyped]
-from flask_restx import Api, Resource  # type: ignore[import]
+from flask_restx import Api, Resource, fields  # type: ignore[import-untyped]
 from flask_sqlalchemy_lite import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect  # type: ignore[import-untyped]
 from folium import Figure, JavascriptLink
+from werkzeug.http import http_date  # nodep
 
 # this package
 from towpath_walk_tracker.forms import WalkForm
@@ -109,6 +110,7 @@ def _get_all_walks() -> List[Dict[str, Any]]:
 		walk: Walk
 		for walk in db.session.query(Walk).all():
 			walk_data = walk.to_json()
+			# TODO: absolute urls
 			walk_data["thumbnail_url"] = url_for("api_walk_thumbnail", walk_id=walk_data["id"])
 			walk_data["walk_url"] = url_for("show_walk", walk_id=walk_data["id"])
 			formatted_duration = f"{ walk_data['duration'] // 60 }h { format(walk_data['duration'] % 60, '02d') }mins"
@@ -118,10 +120,57 @@ def _get_all_walks() -> List[Dict[str, Any]]:
 	return data
 
 
+point_or_node_model = api.model(
+		"PointOrNode",
+		{
+				"latitude": fields.Float(example=51.50106771392076),
+				"longitude": fields.Float(example=-0.14247329116311055),
+				"id": fields.Integer(example=1234),
+				}
+		)
+
+walk_model = api.model(
+		"Walk",
+		{
+				"title":
+						fields.String(example="This Is The Walk Title"),
+				"start":
+						fields.DateTime(
+								dt_format="rfc822",
+								example=http_date(datetime.datetime.now()),
+								description="Walk start time"
+								),
+				"duration":
+						fields.Integer(example=85, description="Walk duration in minutes"),
+				"notes":
+						fields.String(example="These are notes about the walk"),
+				"id":
+						fields.Integer(example=1234),
+				"points":
+						fields.Nested(point_or_node_model),
+				"route":
+						fields.Nested(point_or_node_model),
+				"colour":
+						fields.String(example="#FF0000", description="Display colour for the walk"),
+				"thumbnail_url":
+						fields.Url(example="/api/walk/1234/thumbnail/"),
+				"walk_url":
+						fields.Url(example="/walk/1234/"),
+				"formatted_duration":
+						fields.String(example="1h 25mins"),
+				}
+		)
+
+all_walks_model = api.model("AllWalks", {
+		'*': fields.List(fields.Nested(walk_model)),
+		})
+
+
 @api.route("/all-walks/")
 class AllWalks(Resource):
 
-	def get(self):
+	@api.response(200, "Success", all_walks_model)
+	def get(self) -> Response:
 		"""
 		Returns data about all walks.
 		"""
@@ -212,8 +261,9 @@ def get_route() -> List[Coordinate]:
 @api.doc(params={"walk_id": "The numerical identifier of the walk."})
 class APIWalk(Resource):
 
+	@api.response(200, "Success", walk_model)
 	@api.response(404, "No walk found with that ID or not authorised to view it.")
-	def get(self, walk_id: int):
+	def get(self, walk_id: int) -> Response:
 		"""
 		Returns data about the walk with the given ID.
 		"""
@@ -235,6 +285,7 @@ class APIWalk(Resource):
 @api.doc(params={"walk_id": "The numerical identifier of the walk."})
 class APIWalkThumbnail(Resource):
 
+	@api.produces(["image/png"])
 	@api.response(404, "No walk found with that ID or not authorised to view it.")
 	@cache.memoize()
 	def get(self, walk_id: int) -> Response:
