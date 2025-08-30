@@ -33,9 +33,11 @@ from io import BytesIO
 from typing import Any, Dict, List, Tuple, Union, cast
 
 # 3rd party
+import flask
 from flask import Flask, Response, make_response, redirect, render_template, request, url_for
 from flask_caching import Cache
 from flask_compress import Compress  # type: ignore[import-untyped]
+from flask_restx import Api, Resource  # type: ignore[import]
 from flask_sqlalchemy_lite import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect  # type: ignore[import-untyped]
 from folium import Figure, JavascriptLink
@@ -75,6 +77,8 @@ app.config["CACHE_TYPE"] = "SimpleCache"
 app.config["CACHE_DEFAULT_TIMEOUT"] = 300
 app.config["SECRET_KEY"] = "1234"
 app.config["SQLALCHEMY_ENGINES"] = {"default": "sqlite:///walks.db"}
+app.config["JSON_SORT_KEYS"] = False
+app.config["SWAGGER_UI_DOC_EXPANSION"] = "full"  # change to list when there's another endpoint
 app.jinja_env.globals["enumerate"] = enumerate
 app.jinja_env.globals["format"] = format
 app.jinja_env.globals["github_url"] = "https://github.com/domdfcoding/towpath-walk-tracker"
@@ -83,6 +87,7 @@ Compress(app)
 cache = Cache(app)
 csrf = CSRFProtect(app)
 db = SQLAlchemy(app)  # type: ignore[arg-type]
+api = Api(app, prefix="/api", doc="/api/")
 
 
 @app.route("/watercourses.geojson")
@@ -113,13 +118,15 @@ def _get_all_walks() -> List[Dict[str, Any]]:
 	return data
 
 
-@app.route("/api/all-walks/")
-def all_walks() -> Response:
-	"""
-	Flask route for the walks JSON data.
-	"""
+@api.route("/all-walks/")
+class AllWalks(Resource):
 
-	return make_response(_get_all_walks())
+	def get(self):
+		"""
+		Returns data about all walks.
+		"""
+
+		return flask.jsonify(_get_all_walks())
 
 
 @app.route("/walks/")
@@ -201,41 +208,60 @@ def get_route() -> List[Coordinate]:
 # 	return render_template("walk_form.jinja2", form=form)
 
 
-@app.route("/api/walk/<int:walk_id>/")
-def api_walk(walk_id: int) -> Response:
-	with app.app_context():
-		result = db.session.query(Walk).get(walk_id)
-		if result is None:
-			return Response("Not Found", 404)
+@api.route("/walk/<int:walk_id>/")
+@api.doc(params={"walk_id": "The numerical identifier of the walk."})
+class APIWalk(Resource):
 
-		data = cast(Walk, result).to_json()
-		data["thumbnail_url"] = url_for("api_walk_thumbnail", walk_id=walk_id)
-		return make_response(data)
+	@api.response(404, "No walk found with that ID or not authorised to view it.")
+	def get(self, walk_id: int):
+		"""
+		Returns data about the walk with the given ID.
+		"""
+
+		with app.app_context():
+			result = db.session.query(Walk).get(walk_id)
+			if result is None:
+				flask.abort(404, "Not Found")
+
+			data = cast(Walk, result).to_json()
+			data["thumbnail_url"] = url_for("api_walk_thumbnail", walk_id=walk_id)
+			data["walk_url"] = url_for("show_walk", walk_id=data["id"])
+			formatted_duration = f"{ data['duration'] // 60 }h { format(data['duration'] % 60, '02d') }mins"
+			data["formatted_duration"] = formatted_duration
+			return flask.jsonify(data)
 
 
-@app.route("/api/walk/<int:walk_id>/thumbnail/")
-@cache.memoize()
-def api_walk_thumbnail(walk_id: int) -> Response:
-	# TODO: gate cashe on user login
-	with app.app_context():
-		result = db.session.query(Walk).get(walk_id)
-		if result is None:
-			return Response("Not Found", 404)
+@api.route("/walk/<int:walk_id>/thumbnail/")
+@api.doc(params={"walk_id": "The numerical identifier of the walk."})
+class APIWalkThumbnail(Resource):
 
-		walk = cast(Walk, result)
-		route = Route.from_db(walk.route)
-		fig, ax = route.plot_thumbnail(
-			figsize=(1.5, 1.5),
-			colour='#' + walk.colour,
-			)
+	@api.response(404, "No walk found with that ID or not authorised to view it.")
+	@cache.memoize()
+	def get(self, walk_id: int) -> Response:
+		"""
+		Returns a 150x150px thumbnail PNG for the walk.
+		"""
 
-		buffer = BytesIO()
-		fig.savefig(buffer, format="png")
-		buffer.seek(0)
-		image_png = buffer.getvalue()
-		buffer.close()
+		# TODO: gate cache on user login
+		with app.app_context():
+			result = db.session.query(Walk).get(walk_id)
+			if result is None:
+				flask.abort(404, "Not Found")
 
-		return Response(image_png, content_type="image/png")
+			walk = cast(Walk, result)
+			route = Route.from_db(walk.route)
+			fig, ax = route.plot_thumbnail(
+				figsize=(1.5, 1.5),
+				colour=cast(str, '#' + walk.colour),
+				)
+
+			buffer = BytesIO()
+			fig.savefig(buffer, format="png")
+			buffer.seek(0)
+			image_png = buffer.getvalue()
+			buffer.close()
+
+			return Response(image_png, content_type="image/png")
 
 
 @app.route("/walk/<int:walk_id>/", methods=["GET", "POST"])
@@ -247,7 +273,7 @@ def show_walk(walk_id: int) -> Response:
 	with app.app_context():
 		result = db.session.query(Walk).get(walk_id)
 		if result is None:
-			return Response("Not Found", 404)
+			flask.abort(404, "Not Found")
 
 		walk: Walk = cast(Walk, result)
 
@@ -255,7 +281,7 @@ def show_walk(walk_id: int) -> Response:
 			print("Edit walk with following data:")
 			print(form)
 			walk.update_from_form(db, form)
-			cache.delete_memoized(api_walk_thumbnail, walk_id)
+			cache.delete_memoized(APIWalkThumbnail.get, walk_id)
 
 		m = create_basic_map()
 
