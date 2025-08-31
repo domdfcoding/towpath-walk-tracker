@@ -353,6 +353,7 @@ def show_walk(walk_id: int) -> Response:
 		form.duration_hrs.default = int(walk.duration // 60)
 		form.duration_mins.default = int(walk.duration % 60)
 		form.notes.default = cast(str, walk.notes)
+		form.colour.default = cast(str, '#' + walk.colour)
 		form.process()
 
 		for point in walk.points:

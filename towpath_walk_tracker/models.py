@@ -112,8 +112,9 @@ class Walk(Model):
 		duration_mins = int(cast(str, form.duration_mins.data))
 		duration: int = duration_hours * 60 + duration_mins
 		notes: str = cast(str, form.notes.data)
+		colour: str = cast(str, form.colour.data)[1:]
 
-		walk = cls(title=title, start=start, duration=duration, notes=notes)
+		walk = cls(title=title, start=start, duration=duration, notes=notes, colour=colour)
 
 		points = []
 		point_form: PointForm
@@ -210,6 +211,7 @@ class Walk(Model):
 		duration_mins = int(cast(str, form.duration_mins.data))
 		self.duration = cast(Column[int], duration_hours * 60 + duration_mins)
 		self.notes = cast(Column[str], form.notes.data)
+		self.colour: str = cast(str, form.colour.data)[1:]
 
 		new_points = []
 		points = []
