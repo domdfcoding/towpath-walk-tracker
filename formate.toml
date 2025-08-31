@@ -35,6 +35,7 @@ known_third_party = [
     "flask_caching",
     "flask_compress",
     "flask_debugtoolbar",
+    "flask_restx",
     "flask_sqlalchemy_lite",
     "flask_wtf",
     "folium",

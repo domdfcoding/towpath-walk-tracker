@@ -65,7 +65,7 @@ def run() -> None:
 	app.config["TEMPLATES_AUTO_RELOAD"] = True
 	app.debug = True
 	# DebugToolbarExtension(app)
-	app.run(debug=True, extra_files=list(Path("towpath_walk_tracker/templates").glob("*.jinja2")))
+	app.run(debug=True, extra_files=list(Path("towpath_walk_tracker/templates").iterdir()))
 
 
 @main.command()
