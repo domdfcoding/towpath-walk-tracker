@@ -18983,26 +18983,26 @@ function drawPreviousWalks() {
 }
 function renderSidebarWalkTemplate(walk) {
     var _a;
-    const template = document.querySelector("#walkTemplate");
+    const template = document.querySelector('#walkTemplate');
     // @ts-expect-error  // Not convinced by type hint
     const clone = template.content.cloneNode(true);
-    let titleAnchorTag = clone.getElementById("walkTemplateTitle");
-    titleAnchorTag.removeAttribute("id");
-    titleAnchorTag.setAttribute("href", walk.walk_url);
+    const titleAnchorTag = clone.getElementById('walkTemplateTitle');
+    titleAnchorTag.removeAttribute('id');
+    titleAnchorTag.setAttribute('href', walk.walk_url);
     titleAnchorTag.insertAdjacentHTML('beforeend', walk.title);
-    let startDiv = clone.getElementById("walkTemplateStart");
-    startDiv.removeAttribute("id");
-    startDiv.insertAdjacentHTML('beforeend', "<strong>Start</strong> " + walk.start);
-    let durationDiv = clone.getElementById("walkTemplateDuration");
-    durationDiv.removeAttribute("id");
-    durationDiv.insertAdjacentHTML('beforeend', "<strong>Duration</strong> " + walk.formatted_duration);
-    let notesPTag = clone.getElementById("walkTemplateNotes");
-    notesPTag.removeAttribute("id");
+    const startDiv = clone.getElementById('walkTemplateStart');
+    startDiv.removeAttribute('id');
+    startDiv.insertAdjacentHTML('beforeend', '<strong>Start</strong> ' + walk.start);
+    const durationDiv = clone.getElementById('walkTemplateDuration');
+    durationDiv.removeAttribute('id');
+    durationDiv.insertAdjacentHTML('beforeend', '<strong>Duration</strong> ' + walk.formatted_duration);
+    const notesPTag = clone.getElementById('walkTemplateNotes');
+    notesPTag.removeAttribute('id');
     notesPTag.insertAdjacentHTML('beforeend', walk.notes);
-    let imageTag = clone.getElementById("walkTemplateImg");
-    imageTag.removeAttribute("id");
-    imageTag.setAttribute("src", walk.thumbnail_url);
-    (_a = document.getElementById("walksContent")) === null || _a === void 0 ? void 0 : _a.appendChild(clone);
+    const imageTag = clone.getElementById('walkTemplateImg');
+    imageTag.removeAttribute('id');
+    imageTag.setAttribute('src', walk.thumbnail_url);
+    (_a = document.getElementById('walksContent')) === null || _a === void 0 ? void 0 : _a.appendChild(clone);
 }
 
 

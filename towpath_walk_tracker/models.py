@@ -211,7 +211,7 @@ class Walk(Model):
 		duration_mins = int(cast(str, form.duration_mins.data))
 		self.duration = cast(Column[int], duration_hours * 60 + duration_mins)
 		self.notes = cast(Column[str], form.notes.data)
-		self.colour: str = cast(str, form.colour.data)[1:]
+		self.colour = cast(Column[str], cast(str, form.colour.data)[1:])
 
 		new_points = []
 		points = []
