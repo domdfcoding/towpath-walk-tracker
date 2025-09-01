@@ -26,9 +26,6 @@ Model of the network of rivers and canals.
 #  OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-# stdlib
-from typing import Dict
-
 # 3rd party
 import networkx
 from scipy.spatial import KDTree
@@ -90,7 +87,7 @@ def build_network(watercourses: FeatureCollection) -> "networkx.Graph[int]":
 	return graph
 
 
-def get_node_coordinates(graph: networkx.Graph) -> Dict[int, Coordinate]:
+def get_node_coordinates(graph: networkx.Graph) -> dict[int, Coordinate]:
 	"""
 	Returns a mapping of nodes in the graph and their coordinates on the map.
 

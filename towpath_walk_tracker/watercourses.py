@@ -27,7 +27,8 @@ Data about watercourses.
 #
 
 # stdlib
-from typing import Any, Collection, Dict, List, Literal, TypedDict
+from collections.abc import Collection
+from typing import Any, Literal, TypedDict
 
 # 3rd party
 import osm2geojson  # type: ignore[import-untyped]
@@ -37,7 +38,7 @@ __all__ = ["FeatureCollection", "filter_watercourses", "query_overpass"]
 
 # yapf: disable
 # Tags to exclude from tooltip display
-exclude_tags: List[str] = [
+exclude_tags: list[str] = [
 	"CEMT",
 	"FIXME",
 	# "HE_ref",
@@ -331,7 +332,7 @@ def query_overpass(
 		query: str,
 		*,
 		interpreter_url: str = "https://overpass-api.de/api/interpreter",
-		) -> Dict[str, Any]:
+		) -> dict[str, Any]:
 	"""
 	Query the Overpass API at the givern URL and return the response as GeoJSON.
 
@@ -357,11 +358,11 @@ class FeatureCollection(TypedDict):
 	"""
 
 	type: Literal["FeatureCollection"]
-	features: List[Any]  # TODO: type
+	features: list[Any]  # TODO: type
 
 
 def filter_watercourses(
-		data: Dict[str, Any],
+		data: dict[str, Any],
 		*,
 		tags_to_exclude: Collection[str] = (),
 		ids_to_exclude: Collection[int] = (),

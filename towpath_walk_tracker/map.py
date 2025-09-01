@@ -26,9 +26,6 @@ The map of watercourses and those which have been walked along.
 #  OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-# stdlib
-from typing import Tuple
-
 # 3rd party
 import folium
 from xyzservices.lib import TileProvider  # type: ignore[import-untyped]
@@ -56,7 +53,7 @@ font-size: 12pt;
 
 def create_map(
 		watercourses_geojson_file: str,
-		map_centre: Tuple[float, float] = (55, -2),
+		map_centre: tuple[float, float] = (55, -2),
 		zoom_level: int = 6,
 		) -> Map:
 	"""

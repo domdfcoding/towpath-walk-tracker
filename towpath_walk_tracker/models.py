@@ -28,7 +28,7 @@ Database models.
 
 # stdlib
 import datetime
-from typing import Any, Dict, List, Tuple, Type, cast
+from typing import Any, cast
 
 # 3rd party
 from flask_sqlalchemy_lite import SQLAlchemy
@@ -70,20 +70,20 @@ class Walk(Model):
 	duration = Column(Integer, nullable=False, default=0)
 	notes = Column(Text, nullable=False)
 	colour = Column(String(6), nullable=False)  # hex colour
-	points: Mapped[List["Point"]] = relationship(back_populates="walk")
-	route: Mapped[List["Node"]] = relationship(secondary=association_table)
+	points: Mapped[list["Point"]] = relationship(back_populates="walk")
+	route: Mapped[list["Node"]] = relationship(secondary=association_table)
 
 	# user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
 	def __repr__(self) -> str:
 		return f"<Walk({self.title})>"
 
-	def get_route_coords(self) -> List[Tuple[float, float]]:
+	def get_route_coords(self) -> list[tuple[float, float]]:
 		"""
 		Returns the route as a list of lat/lng coordinates.
 		"""
 
-		coords: List[Tuple[float, float]] = []
+		coords: list[tuple[float, float]] = []
 		for node in self.route:
 			coords.append((cast(float, node.latitude), cast(float, node.longitude)))
 
@@ -97,7 +97,7 @@ class Walk(Model):
 		return Route.from_db(self.route)
 
 	@classmethod
-	def from_form(cls: Type["Walk"], db: SQLAlchemy, form: WalkForm) -> "Walk":
+	def from_form(cls: type["Walk"], db: SQLAlchemy, form: WalkForm) -> "Walk":
 		"""
 		Construct a walk model from a walk form.
 
@@ -142,7 +142,7 @@ class Walk(Model):
 		return walk
 
 	@staticmethod
-	def _calculate_route(db: SQLAlchemy, points: List["Point"]) -> Tuple[List["Node"], List["Node"]]:
+	def _calculate_route(db: SQLAlchemy, points: list["Point"]) -> tuple[list["Node"], list["Node"]]:
 		# Recalculate route
 		coords = [(cast(float, point.latitude), cast(float, point.longitude)) for point in points]
 		route = Route.from_points(coords)
@@ -164,7 +164,7 @@ class Walk(Model):
 
 		return nodes, new_nodes
 
-	def to_json(self) -> Dict[str, Any]:
+	def to_json(self) -> dict[str, Any]:
 		"""
 		Return a JSON representation of the walk.
 		"""
@@ -274,7 +274,7 @@ class Point(Model):
 	def __repr__(self) -> str:
 		return f"<Point({self.latitude}, {self.longitude})>"
 
-	def to_json(self) -> Dict[str, Any]:
+	def to_json(self) -> dict[str, Any]:
 		"""
 		Return a JSON representation of the point.
 		"""
@@ -300,7 +300,7 @@ class Node(Model):
 	def __repr__(self) -> str:
 		return f"<Node({self.id}, {self.latitude}, {self.longitude})>"
 
-	def to_json(self) -> Dict[str, Any]:
+	def to_json(self) -> dict[str, Any]:
 		"""
 		Return a JSON representation of the node.
 		"""

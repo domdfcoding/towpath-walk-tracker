@@ -29,7 +29,7 @@ Functions for finding a route through two or more points.
 # stdlib
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import TYPE_CHECKING, Dict, List, Literal, Tuple, Union, cast
+from typing import TYPE_CHECKING, Literal, Union, cast
 
 # 3rd party
 import contextily  # type: ignore[import-untyped]
@@ -55,7 +55,7 @@ __all__ = ["Route"]
 
 
 @lru_cache
-def _get_network_and_tree() -> Tuple["networkx.Graph[int]", KDTree]:
+def _get_network_and_tree() -> tuple["networkx.Graph[int]", KDTree]:
 	watercourses = _get_filtered_watercourses()
 	G = build_network(watercourses)
 	tree = build_kdtree(G)
@@ -69,25 +69,25 @@ class Route:
 	"""
 
 	# IDs of every node along the route.
-	nodes: List[int]
+	nodes: list[int]
 
 	# Mapping of IDs to lat/lng coordinates.
-	node_coordinates: Dict[int, Coordinate]
+	node_coordinates: dict[int, Coordinate]
 
 	@property
-	def coordinates(self) -> List[Coordinate]:
+	def coordinates(self) -> list[Coordinate]:
 		"""
 		Returns the coordinates of the nodes, in order.
 		"""
 
-		coords: List[Coordinate] = []
+		coords: list[Coordinate] = []
 		for path_node in self.nodes:
 			coords.append(self.node_coordinates[path_node])
 
 		return coords
 
 	@classmethod
-	def from_db(cls, nodes: List["Node"]) -> "Route":
+	def from_db(cls, nodes: list["Node"]) -> "Route":
 		"""
 		Construct a :class:`~.Route` from the database.
 
@@ -103,7 +103,7 @@ class Route:
 		return cls(node_ids, node_coordinates)
 
 	@classmethod
-	def from_json_dict(cls, data: List[Dict[str, float]]) -> "Route":
+	def from_json_dict(cls, data: list[dict[str, float]]) -> "Route":
 		"""
 		Construct a :class:`~.Route` from the given JSON data.
 
@@ -111,7 +111,7 @@ class Route:
 		"""
 
 		node_coordinates = {}
-		node_ids: List[int] = []
+		node_ids: list[int] = []
 		for node in data:
 			node_id = cast(int, node["id"])
 			node_ids.append(node_id)
@@ -125,11 +125,11 @@ class Route:
 		Create a shapely :class:`~shapely.geometry.LineString` for the route.
 		"""
 
-		route: List[Tuple[float, float]] = [(r.longitude, r.latitude) for r in self.coordinates]
+		route: list[tuple[float, float]] = [(r.longitude, r.latitude) for r in self.coordinates]
 		return LineString(route)
 
 	@classmethod
-	def from_points(cls, points: List[Tuple[float, float]]) -> "Route":
+	def from_points(cls, points: list[tuple[float, float]]) -> "Route":
 		"""
 		Construct a route from a list of coordinates the route must pass through.
 
@@ -141,17 +141,17 @@ class Route:
 		node_coordinates = get_node_coordinates(G)
 		nckl = list(node_coordinates.keys())
 
-		point_data: List[Tuple[Tuple[float, float], float, int, int]] = []
+		point_data: list[tuple[tuple[float, float], float, int, int]] = []
 		node_dist: float
 		node_idx: int
 		for coord in points:
-			coord = cast(Tuple[float, float], coord)
-			node_dist, node_idx = cast(Tuple[float, int], tree.query(coord))
+			coord = cast(tuple[float, float], coord)
+			node_dist, node_idx = cast(tuple[float, int], tree.query(coord))
 			node = nckl[node_idx]
 			point_data.append((coord, node_dist, node_idx, node))
 
 		# solve path from 1st node to 2nd node to... nth node
-		path: List[int] = []
+		path: list[int] = []
 		for orig, dest in zip(point_data[:-1], point_data[1:]):
 			path = path[:-1] + next(all_shortest_paths(G, orig[3], dest[3]))
 
@@ -159,12 +159,12 @@ class Route:
 
 	def plot_thumbnail(
 			self,
-			figsize: Tuple[float, float] = (2, 2),
+			figsize: tuple[float, float] = (2, 2),
 			zoom: Union[Literal["auto"], int] = "auto",
 			zoom_adjust: int = -2,
 			colour: str = "#139c25",
 			linewidth: int = 5,
-			) -> Tuple[Figure, Axes]:
+			) -> tuple[Figure, Axes]:
 		"""
 		Plot the walk against the OpenStreetMap base map as a small thumbnail image.
 

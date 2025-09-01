@@ -30,7 +30,7 @@ Flask routes and helper functions.
 import datetime
 import json
 from io import BytesIO
-from typing import Any, Dict, List, Tuple, Union, cast
+from typing import Any, Union, cast
 
 # 3rd party
 import flask
@@ -104,7 +104,7 @@ def watercourses_geojson() -> Response:
 	return resp
 
 
-def _get_all_walks() -> List[Dict[str, Any]]:
+def _get_all_walks() -> list[dict[str, Any]]:
 	data = []
 	with app.app_context():
 		walk: Walk
@@ -229,14 +229,14 @@ def main_page() -> Union[str, Response]:
 
 @app.route("/get-route/", methods=["POST"])
 @csrf.exempt
-def get_route() -> List[Coordinate]:
+def get_route() -> list[Coordinate]:
 	"""
 	Flask route to calculate a route along watercourses through points on a map.
 
 	:returns: A list of coordinates of nodes along the path.
 	"""
 
-	points: List[Tuple[float, float]] = []
+	points: list[tuple[float, float]] = []
 	for point in request.get_json():
 		if isinstance(point, dict):
 			points.append((cast(float, point["lat"]), cast(float, point["lng"])))
