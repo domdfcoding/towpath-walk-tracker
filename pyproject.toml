@@ -31,10 +31,24 @@ license-key = "MIT"
 package = "towpath_walk_tracker"
 additional-files = [
     "recursive-include towpath_walk_tracker/static *",
-    "recursive-include towpath_walk_tracker/templates *.jinja2",
+    "recursive-include towpath_walk_tracker/templates *",
 ]
 
 [tool.importcheck]
+always = [
+    "towpath_walk_tracker",
+    "towpath_walk_tracker.__main__",
+    "towpath_walk_tracker.flask",
+    "towpath_walk_tracker.folium",
+    "towpath_walk_tracker.forms",
+    "towpath_walk_tracker.map",
+    "towpath_walk_tracker.models",
+    "towpath_walk_tracker.network",
+    "towpath_walk_tracker.route",
+    "towpath_walk_tracker.templates",
+    "towpath_walk_tracker.util",
+    "towpath_walk_tracker.watercourses",
+]
 
 [tool.mypy]
 python_version = "3.11"

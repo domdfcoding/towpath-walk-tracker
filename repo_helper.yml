@@ -19,7 +19,7 @@ python_deploy_version: 3.11
 
 manifest_additional:
  - recursive-include towpath_walk_tracker/static *
- - recursive-include towpath_walk_tracker/templates *.jinja2
+ - recursive-include towpath_walk_tracker/templates *
 
 python_versions:
  - "3.9"
