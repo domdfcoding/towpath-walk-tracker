@@ -192,6 +192,8 @@
 	background-color: transparent; // For `<button>`s
 	border: 0; // For `<button>`s
 
+	@include border-radius(var(--#{$prefix}dropdown-item-border-radius, 0));
+
 	&:hover,
 	&:focus {
 		color: var(--#{$prefix}dropdown-link-hover-color);
