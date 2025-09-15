@@ -1253,8 +1253,8 @@ readers do not read off random characters that represent icons */
 // .#{$fa-css-prefix}-text-height:before { content: fa-content($fa-var-text-height); }
 // .#{$fa-css-prefix}-text-width:before { content: fa-content($fa-var-text-width); }
 // .#{$fa-css-prefix}-th:before { content: fa-content($fa-var-th); }
-// .#{$fa-css-prefix}-th-large:before { content: fa-content($fa-var-th-large); }
-// .#{$fa-css-prefix}-th-list:before { content: fa-content($fa-var-th-list); }
+.#{$fa-css-prefix}-th-large:before { content: fa-content($fa-var-th-large); }
+.#{$fa-css-prefix}-th-list:before { content: fa-content($fa-var-th-list); }
 // .#{$fa-css-prefix}-the-red-yeti:before { content: fa-content($fa-var-the-red-yeti); }
 // .#{$fa-css-prefix}-theater-masks:before { content: fa-content($fa-var-theater-masks); }
 // .#{$fa-css-prefix}-themeco:before { content: fa-content($fa-var-themeco); }
