@@ -4,7 +4,13 @@
 
 {% block content %}
     <div class="container pt-2">
-        <div class="row g-1">
+        <div class="col-md-12 d-flex justify-content-between p-1 rounded bg-secondary-subtle">
+            <h2>{{ title }}</h2>
+            <button id="gridToggleBtn" class="btn btn-secondary ml-auto me-0">
+                <i class="fas fa-th-large"></i>
+            </button>
+        </div>
+        <div class="row g-1" id="walkGrid">
             {% for walk in walks %}
                 <div class="col-md-6 walk-entry">
                     <div class="row h-100 border m-1">
@@ -38,3 +44,13 @@
     </div>
 
 {% endblock content %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script>
+        const walkListDisplay = new WalkListDisplay(walkGrid, gridToggleBtn);
+        walkListDisplay.applyURLParams();
+        gridToggleBtn.onclick = ((e) => walkListDisplay.toggleGridDisplay())
+    </script>
+{% endblock scripts %}

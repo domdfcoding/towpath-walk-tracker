@@ -18760,7 +18760,8 @@ function setupNavbarTitleScroll() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   checkForLatLngMistakes: () => (/* binding */ checkForLatLngMistakes)
+/* harmony export */   checkForLatLngMistakes: () => (/* binding */ checkForLatLngMistakes),
+/* harmony export */   updateQueryStringParam: () => (/* binding */ updateQueryStringParam)
 /* harmony export */ });
 function checkForLatLngMistakes(value) {
     // Check haven't tried to treat L.latLng as array or array as L.latLng
@@ -18768,6 +18769,12 @@ function checkForLatLngMistakes(value) {
         throw ({ value });
     }
     return value;
+}
+function updateQueryStringParam(key, value) {
+    const url = new URL(window.location.href);
+    url.searchParams.set(key, value.toString()); // Add or update the parameter
+    // window.history.pushState({}, null, url);
+    window.history.replaceState({}, '', url);
 }
 
 
@@ -19263,6 +19270,57 @@ function setupWalkFormValidation(formsToValidate, walkForm) {
 
 /***/ }),
 
+/***/ "./src/core/walk_list_display.ts":
+/*!***************************************!*\
+  !*** ./src/core/walk_list_display.ts ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WalkListDisplay: () => (/* binding */ WalkListDisplay)
+/* harmony export */ });
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./src/core/util.ts");
+
+class WalkListDisplay {
+    constructor(walkGrid, gridToggleBtn) {
+        this.walkGrid = walkGrid;
+        this.gridToggleBtn = gridToggleBtn;
+    }
+    applyURLParams() {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('view')) {
+            var view = url.searchParams.get('view');
+            console.log(view);
+            if (view == "list")
+                this.setListView();
+            // if (view == "grid") this.setGridView();
+        }
+    }
+    setListView() {
+        this.walkGrid.classList.remove("row");
+        this.gridToggleBtn.firstElementChild.classList.replace("fa-th-large", "fa-th-list");
+        (0,_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('view', "list");
+    }
+    setGridView() {
+        this.walkGrid.classList.add("row");
+        this.gridToggleBtn.firstElementChild.classList.replace("fa-th-list", "fa-th-large");
+        (0,_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('view', "grid");
+    }
+    toggleGridDisplay() {
+        if (this.walkGrid.classList.contains("row")) {
+            this.setListView();
+        }
+        else {
+            this.setGridView();
+        }
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/core/watercourses_geojson_utils.ts":
 /*!************************************************!*\
   !*** ./src/core/watercourses_geojson_utils.ts ***!
@@ -19346,21 +19404,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   setupZoomState: () => (/* binding */ setupZoomState),
 /* harmony export */   zoomStateFromURL: () => (/* binding */ zoomStateFromURL)
 /* harmony export */ });
-function updateQueryStringParam(key, value) {
-    const url = new URL(window.location.href);
-    url.searchParams.set(key, value.toString()); // Add or update the parameter
-    // window.history.pushState({}, null, url);
-    window.history.replaceState({}, '', url);
-}
+/* harmony import */ var _core_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./core/util */ "./src/core/util.ts");
+
 function setupZoomState(map) {
     map.on('zoomend', function () {
         const zoomLvl = map.getZoom();
-        updateQueryStringParam('zoom', zoomLvl);
+        (0,_core_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('zoom', zoomLvl);
     });
     map.on('moveend', function () {
         const centre = map.getCenter();
-        updateQueryStringParam('lat', centre.lat);
-        updateQueryStringParam('lng', centre.lng);
+        (0,_core_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('lat', centre.lat);
+        (0,_core_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('lng', centre.lng);
     });
 }
 function zoomStateFromURL(defaultZoom, defaultCentre) {
@@ -19477,6 +19531,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
 /* harmony import */ var _core_walk_form__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./core/walk_form */ "./src/core/walk_form.ts");
 /* harmony import */ var _core_navbar_title__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./core/navbar_title */ "./src/core/navbar_title.ts");
+/* harmony import */ var _core_walk_list_display__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./core/walk_list_display */ "./src/core/walk_list_display.ts");
+/* harmony import */ var _core_util__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./core/util */ "./src/core/util.ts");
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 // === Sidebar ===
@@ -19522,6 +19578,14 @@ window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.s
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupNavbarTitleScroll = _core_navbar_title__WEBPACK_IMPORTED_MODULE_11__.setupNavbarTitleScroll;
+// === WalkListDisplay ===
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.WalkListDisplay = _core_walk_list_display__WEBPACK_IMPORTED_MODULE_12__.WalkListDisplay;
+// === Util ===
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.updateQueryStringParam = _core_util__WEBPACK_IMPORTED_MODULE_13__.updateQueryStringParam;
 
 })();
 

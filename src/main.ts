@@ -60,3 +60,15 @@ import { setupNavbarTitleScroll } from './core/navbar_title';
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupNavbarTitleScroll = setupNavbarTitleScroll;
+
+// === WalkListDisplay ===
+import { WalkListDisplay } from './core/walk_list_display';
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.WalkListDisplay = WalkListDisplay;
+
+// === Util ===
+import { updateQueryStringParam } from './core/util';
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.updateQueryStringParam = updateQueryStringParam;
