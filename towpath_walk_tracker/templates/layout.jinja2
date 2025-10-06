@@ -18,21 +18,9 @@
        type="text/css"
        href="{{ url_for('static', filename='css/main.min.css') }}"> #}
         {% for stylesheet in extra_stylesheets %}<link rel="stylesheet" type="text/css" href="{{ stylesheet }}">{% endfor %}
-        {# <link rel="preload"
-              type="font/woff2"
-              as="font"
-              crossorigin="anonymous"
-              href="{{ url_for('static', filename='webfonts/fa-regular-400.woff2') }}">
-        <link rel="preload"
-              type="font/woff2"
-              as="font"
-              crossorigin="anonymous"
-              href="{{ url_for('static', filename='webfonts/fa-solid-900.woff2') }}">
-        <link rel="preload"
-              type="font/woff2"
-              as="font"
-              crossorigin="anonymous"
-              href="{{ url_for('static', filename='webfonts/fa-brands-400.woff2') }}"> #}
+        {# <link rel="preload" type="font/woff2" as="font" crossorigin="anonymous" href="{{ url_for('static', filename='webfonts/fa-regular-400.woff2') }}">
+        <link rel="preload" type="font/woff2" as="font" crossorigin="anonymous" href="{{ url_for('static', filename='webfonts/fa-solid-900.woff2') }}">
+        <link rel="preload" type="font/woff2" as="font" crossorigin="anonymous" href="{{ url_for('static', filename='webfonts/fa-brands-400.woff2') }}"> #}
 
         {% set home = home|default(False) %}
 

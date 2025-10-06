@@ -28,7 +28,8 @@ WTForms forms.
 
 # stdlib
 import itertools
-from typing import Any, Callable, Iterable, Optional, Sequence, Union
+from collections.abc import Iterable, Sequence
+from typing import Any, Callable, Optional, Union
 
 # 3rd party
 from flask_wtf import FlaskForm  # type: ignore[import-untyped]

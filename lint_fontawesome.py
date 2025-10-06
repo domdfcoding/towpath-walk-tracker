@@ -1,7 +1,8 @@
 # stdlib
 import re
 import sys
-from typing import Dict, Iterator, List, Tuple
+from collections.abc import Iterator
+from typing import Dict, List, Tuple
 
 # 3rd party
 import bs4
@@ -11,8 +12,8 @@ from domdf_python_tools.paths import PathPlus, unwanted_dirs
 icons_scss_file = PathPlus("scss/fontawesome/_icons.scss")
 icons_scss = icons_scss_file.read_lines()
 
-enabled_icons: Dict[str, int] = {}
-disabled_icons: Dict[str, int] = {}
+enabled_icons: dict[str, int] = {}
+disabled_icons: dict[str, int] = {}
 within_block_comment: bool = False
 
 
@@ -49,11 +50,11 @@ for lineno, line in enumerate(icons_scss):
 # TODO: html within python
 
 
-def get_icons_in_file(file: PathPlus) -> List[Tuple[str, int]]:  # Icon name and line number
+def get_icons_in_file(file: PathPlus) -> list[tuple[str, int]]:  # Icon name and line number
 	icon_names = []
 
 	soup = bs4.BeautifulSoup(file.read_text(), "html.parser")
-	i_tags: List[bs4.element.Tag] = soup.find_all('i')
+	i_tags: list[bs4.element.Tag] = soup.find_all('i')
 
 	if not i_tags:
 		return []
