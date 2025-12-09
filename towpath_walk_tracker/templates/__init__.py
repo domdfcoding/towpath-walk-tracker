@@ -1,1 +1,3 @@
-# For importlib.resources
+"""
+Jinja2 page templates.
+"""
