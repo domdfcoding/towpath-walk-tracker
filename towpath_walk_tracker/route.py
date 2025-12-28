@@ -107,7 +107,7 @@ class Route:
 		"""
 		Construct a :class:`~.Route` from the given JSON data.
 
-		:param nodes:
+		:param data:
 		"""
 
 		node_coordinates = {}

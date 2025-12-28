@@ -343,7 +343,7 @@ def query_overpass(
 	resp = requests.post(
 			interpreter_url,
 			data=query,
-			headers={"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
+			headers={"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"},
 			)
 	resp.raise_for_status()
 
@@ -372,6 +372,7 @@ def filter_watercourses(
 
 	:param data:
 	:param tags_to_exclude: Don't include these tags in the tooltip when hovering over a watercourse.
+	:param ids_to_exclude: Don't include these ids in the tooltip when hovering over a watercourse.
 	"""
 
 	filtered_data: FeatureCollection = {"type": "FeatureCollection", "features": []}

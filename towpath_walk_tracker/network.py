@@ -106,7 +106,7 @@ def build_kdtree(graph: networkx.Graph) -> KDTree:
 	"""
 	Construct a KDTree for finding the closest node to certain coordinates.
 
-	:graph:
+	:param graph:
 	"""
 
 	node_coordinates = get_node_coordinates(graph)

@@ -72,7 +72,7 @@ class PointForm(FlaskForm):
 			)
 
 
-class FieldListMinRequired(FieldList):
+class FieldListMinRequired(FieldList):  # noqa: PRM002
 	"""
 	Custom WTForms ``FieldList`` requiring a minimum number of entries.
 
@@ -98,7 +98,7 @@ class FieldListMinRequired(FieldList):
 				max_entries=max_entries,
 				separator=separator,
 				default=default,
-				**kwargs
+				**kwargs,
 				)
 		self.min_required_entries = min_required_entries
 

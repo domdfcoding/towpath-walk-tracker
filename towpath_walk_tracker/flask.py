@@ -158,7 +158,7 @@ walk_model = api.model(
 						fields.Url(example="/walk/1234/"),
 				"formatted_duration":
 						fields.String(example="1h 25mins"),
-				}
+				},
 		)
 
 all_walks_model = api.model("AllWalks", {
@@ -223,7 +223,7 @@ def main_page() -> Union[str, Response]:
 			header=root.header.render(),
 			body=root.html.render(),
 			script=root.script.render(),
-			scripts='\n'.join(scripts)
+			scripts='\n'.join(scripts),
 			)
 
 
@@ -263,7 +263,7 @@ class APIWalk(Resource):
 
 	@api.response(200, "Success", walk_model)
 	@api.response(404, "No walk found with that ID or not authorised to view it.")
-	def get(self, walk_id: int) -> Response:
+	def get(self, walk_id: int) -> Response:  # noqa: PRM002
 		"""
 		Returns data about the walk with the given ID.
 		"""
@@ -288,7 +288,7 @@ class APIWalkThumbnail(Resource):
 	@api.produces(["image/png"])
 	@api.response(404, "No walk found with that ID or not authorised to view it.")
 	@cache.memoize()
-	def get(self, walk_id: int) -> Response:
+	def get(self, walk_id: int) -> Response:  # noqa: PRM002
 		"""
 		Returns a 150x150px thumbnail PNG for the walk.
 		"""
@@ -374,6 +374,6 @@ def show_walk(walk_id: int) -> Response:
 					header=root.header.render(),
 					body=root.html.render(),
 					script=root.script.render(),
-					scripts='\n'.join(scripts)
+					scripts='\n'.join(scripts),
 					)
 			)
