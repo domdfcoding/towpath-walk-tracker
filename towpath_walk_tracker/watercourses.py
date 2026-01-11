@@ -324,7 +324,7 @@ exclude_tags: list[str] = [
 	"internet_access",
 	"power_supply",
 	"sanitary_dump_station",
-	]
+]
 # yapf: enable
 
 
