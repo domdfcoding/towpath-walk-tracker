@@ -126,7 +126,7 @@ point_or_node_model = api.model(
 				"latitude": fields.Float(example=51.50106771392076),
 				"longitude": fields.Float(example=-0.14247329116311055),
 				"id": fields.Integer(example=1234),
-				}
+				},
 		)
 
 walk_model = api.model(
@@ -138,7 +138,7 @@ walk_model = api.model(
 						fields.DateTime(
 								dt_format="rfc822",
 								example=http_date(datetime.datetime.now()),
-								description="Walk start time"
+								description="Walk start time",
 								),
 				"duration":
 						fields.Integer(example=85, description="Walk duration in minutes"),
@@ -161,9 +161,12 @@ walk_model = api.model(
 				},
 		)
 
-all_walks_model = api.model("AllWalks", {
-		'*': fields.List(fields.Nested(walk_model)),
-		})
+all_walks_model = api.model(
+		"AllWalks",
+		{
+				'*': fields.List(fields.Nested(walk_model)),
+				},
+		)
 
 
 @api.route("/all-walks/")
@@ -304,7 +307,7 @@ class APIWalkThumbnail(Resource):
 			fig, ax = route.plot_thumbnail(
 				figsize=(1.5, 1.5),
 				colour=cast(str, '#' + walk.colour),
-				)
+			)
 
 			buffer = BytesIO()
 			fig.savefig(buffer, format="png")
@@ -375,5 +378,5 @@ def show_walk(walk_id: int) -> Response:
 					body=root.html.render(),
 					script=root.script.render(),
 					scripts='\n'.join(scripts),
-					)
+					),
 			)

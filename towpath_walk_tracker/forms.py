@@ -106,7 +106,7 @@ class FieldListMinRequired(FieldList):  # noqa: PRM002
 		self,
 		form: Form,
 		extra_validators: Sequence[Callable] = (),
-		) -> bool:
+	) -> bool:
 
 		num_valid = 0
 		self.errors = []
@@ -120,7 +120,7 @@ class FieldListMinRequired(FieldList):  # noqa: PRM002
 			self.errors = []
 		else:
 			self.errors = [{
-					"id": [f"A minimum of {self.min_required_entries} entries are required; got {num_valid}."]
+					"id": [f"A minimum of {self.min_required_entries} entries are required; got {num_valid}."],
 					}]
 
 		chain = itertools.chain(self.validators, extra_validators)  # type: ignore[arg-type]

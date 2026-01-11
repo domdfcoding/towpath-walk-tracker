@@ -89,7 +89,7 @@ class ZoomStateJS(folium.MacroElement):
 		{% macro script(this, kwargs) %}
 			setupZoomState({{this._parent.get_name()}});
 		{% endmacro %}
-		"""
+		""",
 			)
 
 	def __init__(self):
@@ -190,7 +190,7 @@ class Sidebar(folium.MacroElement):
 		parent: folium.Map,  # type: ignore[override]
 		name: Optional[str] = None,
 		index: Optional[int] = None,
-		) -> "Sidebar":
+	) -> "Sidebar":
 		"""
 		Add element to a parent.
 		"""
