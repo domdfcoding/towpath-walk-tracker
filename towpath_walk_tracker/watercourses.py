@@ -403,7 +403,7 @@ def filter_watercourses(
 					f"{k} = {v}" for k, v in feature["properties"]["tags"].items() if k not in tags_to_exclude
 					)  # + f"<br>{len(feature['properties']['nodes'])} Nodes"
 			feature["properties"]["tags"] = tags
-			#feature["properties"]["gj_type"] = feature["geometry"]["type"]
+			# feature["properties"]["gj_type"] = feature["geometry"]["type"]
 			# feature["properties"] = {"id": feature["properties"]["id"], "tags": tags, "type": feature["properties"]["type"], "nodes": feature["properties"]["nodes"]}
 
 		filtered_data["features"].append(feature)
