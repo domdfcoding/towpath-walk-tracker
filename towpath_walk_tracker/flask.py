@@ -36,7 +36,7 @@ from typing import Any, Union, cast
 import flask
 from flask import Flask, Response, make_response, redirect, render_template, request, url_for
 from flask_caching import Cache
-from flask_compress import Compress  # type: ignore[import-untyped]
+from flask_compress import Compress
 from flask_restx import Api, Resource, fields  # type: ignore[import-untyped]
 from flask_sqlalchemy_lite import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect  # type: ignore[import-untyped]
