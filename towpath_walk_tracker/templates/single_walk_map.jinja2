@@ -142,7 +142,7 @@
         {# walkPreview.syncFromForm();  #}
 
         map_canal_towpath_walking.fitBounds(
-            feature_group_walk_markers.getBounds()
+            feature_group_walk_markers.getBounds().pad(0.05)
         );
 
 </script>
