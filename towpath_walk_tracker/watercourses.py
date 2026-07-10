@@ -387,6 +387,12 @@ def filter_watercourses(
 		if feature["properties"]["id"] in ids_to_exclude:
 			continue
 
+		if feature["geometry"]["type"].lower() != "linestring":
+			continue
+
+		if feature["properties"]["tags"].get("usage", '').lower() == "irrigation":
+			continue
+
 		feature = dict(feature)
 		feature["properties"] = dict(feature["properties"])
 
@@ -395,8 +401,9 @@ def filter_watercourses(
 		if "tags" in feature["properties"]:
 			tags = "<br>".join(
 					f"{k} = {v}" for k, v in feature["properties"]["tags"].items() if k not in tags_to_exclude
-					)
+					)  # + f"<br>{len(feature['properties']['nodes'])} Nodes"
 			feature["properties"]["tags"] = tags
+			#feature["properties"]["gj_type"] = feature["geometry"]["type"]
 			# feature["properties"] = {"id": feature["properties"]["id"], "tags": tags, "type": feature["properties"]["type"], "nodes": feature["properties"]["nodes"]}
 
 		filtered_data["features"].append(feature)
