@@ -289,6 +289,7 @@ class APIWalk(Resource):
 class APIWalkThumbnail(Resource):
 
 	@api.produces(["image/png"])
+	@api.response(200, "Success")
 	@api.response(404, "No walk found with that ID or not authorised to view it.")
 	@cache.memoize()
 	def get(self, walk_id: int) -> Response:  # noqa: PRM002
