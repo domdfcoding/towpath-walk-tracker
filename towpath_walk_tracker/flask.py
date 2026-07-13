@@ -48,6 +48,7 @@ from folium_about_button import render_markdown
 from werkzeug.http import http_date  # nodep
 
 # this package
+from towpath_walk_tracker.folium import RVC
 from towpath_walk_tracker.forms import WalkForm
 from towpath_walk_tracker.map import create_basic_map, create_map
 from towpath_walk_tracker.models import Walk
@@ -335,6 +336,7 @@ def show_walk(walk_id: int) -> Response:
 			cache.delete_memoized(APIWalkThumbnail.get, walk_id)
 
 		m = create_basic_map()
+		RVC().add_to(m)
 
 		root: Figure = m.get_root()  # type: ignore[assignment]
 

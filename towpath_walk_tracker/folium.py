@@ -31,11 +31,13 @@ from typing import Any, Optional, Union
 
 # 3rd party
 import folium
+from domdf_folium_tools.template import SubclassingTemplate
 from domdf_python_tools.compat import importlib_resources
 from folium import Figure
 from folium.map import Layer
 from folium.template import Template
 from folium.utilities import remove_empty
+from folium_reset_control import ResetViewControl
 
 __all__ = ["Map", "Sidebar", "WalkStartEnd"]
 
@@ -183,3 +185,24 @@ class Sidebar(folium.MacroElement):
 	# 			new_html[k] = v
 
 	# 	figure.html._children = new_html
+
+
+class RVC(ResetViewControl):
+	"""
+	ReserViewControl modified for use with single-walk maps.
+	"""
+
+	_template = SubclassingTemplate(
+			"""
+			{% macro script(this, kwargs) %}
+				const RVC = ResetViewControl.extend({
+					onClick(_e) {
+						const padding = walkEdit.classList.contains("d-none") ? 0.05 : 0.5;
+						map_canal_towpath_walking.fitBounds(feature_group_walk_markers.getBounds().pad(padding));
+					},
+				})
+				var {{this.get_name()}} = new RVC({}).addTo({{ this._parent.get_name() }});
+			{% endmacro %}
+			""",
+			ResetViewControl._template,
+			)

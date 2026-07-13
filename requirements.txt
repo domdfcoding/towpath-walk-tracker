@@ -14,6 +14,7 @@ flask-wtf>=1.2.2
 folium>=0.20.0
 folium-about-button>=0.2.0
 folium-layercontrols @ git+https://github.com/domdfcoding/folium-layercontrols
+folium-reset-control @ git+https://github.com/domdfcoding/folium-reset-control
 folium-zoom-state>=0.1.0
 geopandas>=1.0.0
 matplotlib>=3.9.4
