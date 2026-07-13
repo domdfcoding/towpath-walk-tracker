@@ -60,6 +60,12 @@ import { WalkListDisplay } from './core/walk_list_display';
 // @ts-expect-error  // Exporting to "window" global namespace
 window.WalkListDisplay = WalkListDisplay;
 
+// === SaveWatcher ===
+import { SaveWatcher } from './core/save_watcher';
+
+// @ts-expect-error  // Exporting to "window" global namespace
+window.saveWatcher = new SaveWatcher();
+
 // === Util ===
 import { updateQueryStringParam } from './core/util';
 

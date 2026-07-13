@@ -100,8 +100,11 @@
         walkEditBtn.addEventListener('click', (e) => {
             walkDetails.classList.add("d-none");
             walkEdit.classList.remove("d-none");
+            saveWatcher.enable();
             map_canal_towpath_walking.fitBounds(feature_group_walk_markers.getBounds().pad(0.5));
             });
+
+        document.getElementById("hidden_form").addEventListener("submit", (e) => {saveWatcher.disable()})
 
         const walkForm = new WalkForm(document.querySelector('table.walk-points'));
         walkForm.setupButtons();

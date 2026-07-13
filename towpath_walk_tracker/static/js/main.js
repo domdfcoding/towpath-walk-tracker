@@ -13531,6 +13531,8 @@
           console.log("Too few points!");
           event.preventDefault();
           event.stopPropagation();
+        } else {
+          saveWatcher.disable();
         }
       });
     });
@@ -13607,6 +13609,25 @@
     }
   };
 
+  // src/core/save_watcher.ts
+  var SaveWatcher = class {
+    constructor() {
+      this.enabled = false;
+    }
+    enable() {
+      this.enabled = true;
+      window.addEventListener("beforeunload", this.showmsg);
+    }
+    disable() {
+      this.enabled = false;
+      window.removeEventListener("beforeunload", this.showmsg);
+    }
+    showmsg(event) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  };
+
   // src/main.ts
   window.watercoursesZoomOnClick = watercoursesZoomOnClick;
   window.addWatercoursesGeoJson = addWatercoursesGeoJson;
@@ -13619,6 +13640,7 @@
   window.setupWalkFormValidation = setupWalkFormValidation;
   window.setupNavbarTitleScroll = setupNavbarTitleScroll;
   window.WalkListDisplay = WalkListDisplay;
+  window.saveWatcher = new SaveWatcher();
   window.updateQueryStringParam = updateQueryStringParam;
 })();
 /*! Bundled license information:
