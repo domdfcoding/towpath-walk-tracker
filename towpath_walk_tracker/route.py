@@ -29,7 +29,7 @@ Functions for finding a route through two or more points.
 # stdlib
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import TYPE_CHECKING, Literal, Union, cast
+from typing import TYPE_CHECKING, Literal, cast
 
 # 3rd party
 import contextily  # type: ignore[import-untyped]

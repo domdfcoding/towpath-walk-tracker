@@ -19291,25 +19291,25 @@ class WalkListDisplay {
     applyURLParams() {
         const url = new URL(window.location.href);
         if (url.searchParams.has('view')) {
-            var view = url.searchParams.get('view');
+            const view = url.searchParams.get('view');
             console.log(view);
-            if (view == "list")
+            if (view === 'list')
                 this.setListView();
-            // if (view == "grid") this.setGridView();
+            // if (view === "grid") this.setGridView();
         }
     }
     setListView() {
-        this.walkGrid.classList.remove("row");
-        this.gridToggleBtn.firstElementChild.classList.replace("fa-th-large", "fa-th-list");
-        (0,_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('view', "list");
+        this.walkGrid.classList.remove('row');
+        this.gridToggleBtn.firstElementChild.classList.replace('fa-th-large', 'fa-th-list');
+        (0,_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('view', 'list');
     }
     setGridView() {
-        this.walkGrid.classList.add("row");
-        this.gridToggleBtn.firstElementChild.classList.replace("fa-th-list", "fa-th-large");
-        (0,_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('view', "grid");
+        this.walkGrid.classList.add('row');
+        this.gridToggleBtn.firstElementChild.classList.replace('fa-th-list', 'fa-th-large');
+        (0,_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('view', 'grid');
     }
     toggleGridDisplay() {
-        if (this.walkGrid.classList.contains("row")) {
+        if (this.walkGrid.classList.contains('row')) {
             this.setListView();
         }
         else {
