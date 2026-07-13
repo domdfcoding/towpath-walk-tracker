@@ -2,8 +2,9 @@
   "compilerOptions": {
     "outDir": "./towpath_walk_tracker/static/js",
     "allowJs": true,
-    "target": "es2015",
-    "types": ["leaflet-geometryutil", "leaflet-polylinedecorator", "leaflet.awesome-markers"],
+    "target": "es2020",
+    "module": "es2020",
+    "types": ["leaflet", "leaflet-geometryutil", "leaflet-polylinedecorator", "leaflet.awesome-markers"],
     "moduleResolution": "node",
     "noImplicitReturns": true,
     "noImplicitAny": true,
@@ -14,9 +15,13 @@
     "strictFunctionTypes": true,
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
-    "allowUnreachableCode": false
+    "allowUnreachableCode": false,
+    "allowUmdGlobalAccess": true,
   },
   "exclude": ["./src/core/*"],
+  "include": [
+    "./src/**/*.ts"
+  ],
   "noEmit": true,
   "noEmitOnError": false
 }

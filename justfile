@@ -25,7 +25,7 @@ lint: unused-imports incomplete-defs bare-ignore fontawesome myts
 	tox -n qa
 
 myts:
-	npx tsc --noEmit -p tsconfig_all.json
+	npx tsc --noEmit -p tsconfig.json
 
 js:
 	- npx esbuild src/main.ts --bundle --outfile=towpath_walk_tracker/static/js/main.js --sourcemap
