@@ -10865,20 +10865,32 @@
       }
     }
   };
+  var CustomPolylineDecorator = L2.PolylineDecorator.extend({
+    redraw: function() {
+      if (!this._map) {
+        return;
+      }
+      this.clearLayers();
+      if (this._map.getZoom() >= this.options.minZoom) {
+        this._draw();
+      }
+    }
+  });
   function drawWalk(coords, layerGroup, lineColour, interactive = true) {
     const walkPolyLine = L2.polyline(
       coords,
       { interactive, bubblingMouseEvents: true, color: lineColour, fill: false, fillOpacity: 0.2, fillRule: "evenodd", lineCap: "round", lineJoin: "round", noClip: false, opacity: 1, smoothFactor: 1, stroke: true, weight: 3 }
     ).addTo(layerGroup);
-    L2.polylineDecorator(walkPolyLine, {
+    new CustomPolylineDecorator(walkPolyLine, {
+      minZoom: 8,
       patterns: [
         // { offset: '10%', repeat: '20%',
         { offset: "10%", repeat: "100px", symbol: L2.Symbol.arrowHead({ pixelSize: 12, pathOptions: { stroke: true, fillOpacity: 1, color: lineColour, fill: true, fillColor: lineColour } }) }
       ]
     }).addTo(layerGroup);
     const hammerHead = L2.Symbol.arrowHead({ pixelSize: 15, headAngle: 180, polygon: false, pathOptions: { stroke: true, color: lineColour } });
-    L2.polylineDecorator(walkPolyLine, { patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(layerGroup);
-    L2.polylineDecorator(walkPolyLine, { patterns: [{ repeat: 0, offset: "100%", symbol: hammerHead }] }).addTo(layerGroup);
+    new CustomPolylineDecorator(walkPolyLine, { minZoom: 9, patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(layerGroup);
+    new CustomPolylineDecorator(walkPolyLine, { minZoom: 9, patterns: [{ repeat: 0, offset: "100%", symbol: hammerHead }] }).addTo(layerGroup);
     return walkPolyLine;
   }
   function makePreviousWalkTooltip(walk) {

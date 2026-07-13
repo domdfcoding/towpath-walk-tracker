@@ -168,6 +168,19 @@ export class LeafletWalkPreview {
 	}
 }
 
+const CustomPolylineDecorator = L.PolylineDecorator.extend({
+    redraw: function() {
+        if (!this._map) {
+            return;
+        }
+        this.clearLayers();
+
+		if (this._map.getZoom() >= this.options.minZoom) {
+        	this._draw();
+		}
+    },
+})
+
 export function drawWalk (
 	coords: L.LatLngExpression[],
 	layerGroup: L.LayerGroup,
@@ -181,8 +194,10 @@ export function drawWalk (
 	).addTo(layerGroup);
 
 	// Arrows along route
-	// TODO: hide arrows below zoom=8
-	L.polylineDecorator(walkPolyLine, {
+
+	// @ts-expect-error // Thinks it takes no arguments when it clearly does
+	new CustomPolylineDecorator(walkPolyLine, {
+		minZoom: 8,
 		patterns: [
 			// { offset: '10%', repeat: '20%',
 			{ offset: '10%', repeat: '100px', symbol: L.Symbol.arrowHead({ pixelSize: 12, pathOptions: { stroke: true, fillOpacity: 1, color: lineColour, fill: true, fillColor: lineColour } }) }
@@ -191,8 +206,10 @@ export function drawWalk (
 
 	// Hammerhead at either end
 	const hammerHead = L.Symbol.arrowHead({ pixelSize: 15, headAngle: 180, polygon: false, pathOptions: { stroke: true, color: lineColour } });
-	L.polylineDecorator(walkPolyLine, { patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(layerGroup);
-	L.polylineDecorator(walkPolyLine, { patterns: [{ repeat: 0, offset: '100%', symbol: hammerHead }] }).addTo(layerGroup);
+	// @ts-expect-error // Thinks it takes no arguments when it clearly does
+	new CustomPolylineDecorator(walkPolyLine, { minZoom: 9, patterns: [{ repeat: 0, symbol: hammerHead }] }).addTo(layerGroup);
+	// @ts-expect-error // Thinks it takes no arguments when it clearly does
+	new CustomPolylineDecorator(walkPolyLine, { minZoom: 9, patterns: [{ repeat: 0, offset: '100%', symbol: hammerHead }] }).addTo(layerGroup);
 
 	return walkPolyLine;
 }
