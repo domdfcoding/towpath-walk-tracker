@@ -1,5 +1,3 @@
-/* global saveWatcher */
-
 import * as L from 'leaflet';
 import { NullOrUndefinedOr } from './types';
 import { checkForLatLngMistakes } from './util';
@@ -275,7 +273,10 @@ export function setupWalkFormValidation (
 				console.log('Too few points!');
 				event.preventDefault();
 				event.stopPropagation();
-			} else { saveWatcher.disable(); }
+			} else {
+				// @ts-expect-error // Global value
+				saveWatcher.disable();
+			}
 		});
 	});
 
