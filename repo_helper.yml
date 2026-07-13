@@ -20,6 +20,7 @@ python_deploy_version: 3.11
 manifest_additional:
  - recursive-include towpath_walk_tracker/static *
  - recursive-include towpath_walk_tracker/templates *
+ - recursive-include towpath_walk_tracker/pages *
 
 python_versions:
  - "3.10"

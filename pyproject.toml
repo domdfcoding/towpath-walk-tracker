@@ -32,6 +32,7 @@ package = "towpath_walk_tracker"
 additional-files = [
     "recursive-include towpath_walk_tracker/static *",
     "recursive-include towpath_walk_tracker/templates *",
+    "recursive-include towpath_walk_tracker/pages *",
 ]
 
 [tool.importcheck]
