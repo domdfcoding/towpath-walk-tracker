@@ -160,7 +160,7 @@ class Route:
 	def plot_thumbnail(
 			self,
 			figsize: tuple[float, float] = (2, 2),
-			zoom: Union[Literal["auto"], int] = "auto",
+			zoom: Literal["auto"] | int = "auto",
 			zoom_adjust: int = -2,
 			colour: str = "#139c25",
 			linewidth: int = 5,

@@ -30,7 +30,7 @@ Flask routes and helper functions.
 import datetime
 import json
 from io import BytesIO
-from typing import Any, Union, cast
+from typing import Any, cast
 
 # 3rd party
 import flask
@@ -41,7 +41,7 @@ from flask_compress import Compress
 from flask_restx import Api, Resource, fields  # type: ignore[import-untyped]
 from flask_sqlalchemy_lite import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect  # type: ignore[import-untyped]
-from folium import Figure, JavascriptLink
+from folium import Figure
 from werkzeug.http import http_date  # nodep
 
 # this package
@@ -192,7 +192,7 @@ def walk_list() -> Response:
 
 
 @app.route('/', methods=["GET", "POST"])
-def main_page() -> Union[str, Response]:
+def main_page() -> str | Response:
 	"""
 	Flask route for the main page.
 	"""

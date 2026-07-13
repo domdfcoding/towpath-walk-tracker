@@ -89,7 +89,7 @@ class WatercoursesGeoJson(folium.GeoJson):
 			overlay: bool = True,
 			control: bool = True,
 			show: bool = True,
-			smooth_factor: Optional[float] = None,
+			smooth_factor: float | None = None,
 			tooltip: Union[str, folium.Tooltip, "folium.GeoJsonTooltip", None] = None,
 			popup: Optional["folium.GeoJsonPopup"] = None,
 			zoom_on_click: bool = False,
@@ -100,7 +100,7 @@ class WatercoursesGeoJson(folium.GeoJson):
 		Layer.__init__(self, name="Watercourses", overlay=overlay, control=control, show=show)
 		self._name = "GeoJson"
 		self.embed = False
-		self.embed_link: Optional[str] = data
+		self.embed_link: str | None = data
 		self.json = None
 		self.parent_map = None
 		self.smooth_factor = smooth_factor
@@ -159,8 +159,8 @@ class Sidebar(folium.MacroElement):
 	def add_to(  # noqa: PRM002
 		self,
 		parent: folium.Map,  # type: ignore[override]
-		name: Optional[str] = None,
-		index: Optional[int] = None,
+		name: str | None = None,
+		index: int | None = None,
 	) -> "Sidebar":
 		"""
 		Add element to a parent.

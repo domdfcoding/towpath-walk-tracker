@@ -28,8 +28,8 @@ WTForms forms.
 
 # stdlib
 import itertools
-from collections.abc import Iterable, Sequence
-from typing import Any, Callable, Optional, Union
+from collections.abc import Callable, Iterable, Sequence
+from typing import Any
 
 # 3rd party
 from flask_wtf import FlaskForm  # type: ignore[import-untyped]
@@ -82,12 +82,12 @@ class FieldListMinRequired(FieldList):  # noqa: PRM002
 	def __init__(
 			self,
 			unbound_field: Field,
-			label: Optional[str] = None,
+			label: str | None = None,
 			min_required_entries: int = 0,
 			min_entries: int = 0,
-			max_entries: Optional[int] = None,
+			max_entries: int | None = None,
 			separator: str = '-',
-			default: Union[Iterable[Any], Callable[[], Iterable[Any]]] = (),
+			default: Iterable[Any] | Callable[[], Iterable[Any]] = (),
 			**kwargs,
 			):
 		super().__init__(
