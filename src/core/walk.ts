@@ -37,6 +37,11 @@ export class LeafletWalkPreview {
 		this.placedMarkerCount = 0;
 	}
 
+	getEditWalkColour (): string {
+		// Returns the colour to use for a walk being edited (red for new, from colour picker for others)
+		return '#ff0000';
+	}
+
 	refresh (propagate = true): void {
 		const currentWalkLayer: L.FeatureGroup = feature_group_current_walk; // eslint-disable-line camelcase
 
@@ -58,7 +63,7 @@ export class LeafletWalkPreview {
 				.then(res => res.json())
 				.then((coords: Array<L.LatLng>) => {
 					currentWalkLayer.clearLayers();
-					this.polyLineWalk = drawWalk(coords, currentWalkLayer, '#ff0000', false);
+					this.polyLineWalk = drawWalk(coords, currentWalkLayer, this.getEditWalkColour(), false);
 					console.log('Request complete! response:', coords);
 				}).catch(function (error) {
 					if (error instanceof DOMException && error.name === 'AbortError') {
@@ -169,17 +174,17 @@ export class LeafletWalkPreview {
 }
 
 const CustomPolylineDecorator = L.PolylineDecorator.extend({
-    redraw: function() {
-        if (!this._map) {
-            return;
-        }
-        this.clearLayers();
+	redraw: function () {
+		if (!this._map) {
+			return;
+		}
+		this.clearLayers();
 
 		if (this._map.getZoom() >= this.options.minZoom) {
-        	this._draw();
+			this._draw();
 		}
-    },
-})
+	}
+});
 
 export function drawWalk (
 	coords: L.LatLngExpression[],

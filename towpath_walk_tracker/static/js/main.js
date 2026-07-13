@@ -10770,6 +10770,9 @@
       for (const m of this.#getMarkers()) m.remove();
       this.placedMarkerCount = 0;
     }
+    getEditWalkColour() {
+      return "#ff0000";
+    }
     refresh(propagate = true) {
       const currentWalkLayer = feature_group_current_walk;
       const placedMarkerLatLng = this.walkForm.getCoordinates();
@@ -10784,7 +10787,7 @@
           body: JSON.stringify(placedMarkerLatLng)
         }).then((res) => res.json()).then((coords) => {
           currentWalkLayer.clearLayers();
-          this.polyLineWalk = drawWalk(coords, currentWalkLayer, "#ff0000", false);
+          this.polyLineWalk = drawWalk(coords, currentWalkLayer, this.getEditWalkColour(), false);
           console.log("Request complete! response:", coords);
         }).catch(function(error) {
           if (error instanceof DOMException && error.name === "AbortError") {
