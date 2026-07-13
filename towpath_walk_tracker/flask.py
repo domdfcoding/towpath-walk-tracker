@@ -34,6 +34,7 @@ from typing import Any, Union, cast
 
 # 3rd party
 import flask
+from domdf_folium_tools.elements import render_figure
 from flask import Flask, Response, make_response, redirect, render_template, request, url_for
 from flask_caching import Cache
 from flask_compress import Compress
@@ -204,15 +205,7 @@ def main_page() -> Union[str, Response]:
 
 	root: Figure = m.get_root()  # type: ignore[assignment]
 
-	js_libs = m.default_js
-	m.default_js = []
-
-	scripts = []
-	for lib in js_libs:
-		scripts.append(JavascriptLink(lib[1]).render())
-
-	for child in root._children.values():
-		child.render()
+	rendered_root = render_figure(root)
 
 	form = WalkForm()
 	if form.validate_on_submit():
@@ -223,10 +216,10 @@ def main_page() -> Union[str, Response]:
 	return render_template(
 			"map.jinja2",
 			form=form,
-			header=root.header.render(),
-			body=root.html.render(),
-			script=root.script.render(),
-			scripts='\n'.join(scripts),
+			header=rendered_root.header,
+			body=rendered_root.body,
+			script=rendered_root.script,
+			scripts=rendered_root.scripts,
 			)
 
 
@@ -342,15 +335,7 @@ def show_walk(walk_id: int) -> Response:
 
 		root: Figure = m.get_root()  # type: ignore[assignment]
 
-		js_libs = m.default_js
-		m.default_js = []
-
-		scripts = []
-		for lib in js_libs:
-			scripts.append(JavascriptLink(lib[1]).render())
-
-		for child in root._children.values():
-			child.render()
+		rendered_root = render_figure(root)
 
 		form.title.default = cast(str, walk.title)
 		form.start.default = cast(datetime.datetime, walk.start)
@@ -375,9 +360,9 @@ def show_walk(walk_id: int) -> Response:
 					walk_points=walk_points,
 					walk_route=walk_route,
 					walk_colour='#' + walk.colour,
-					header=root.header.render(),
-					body=root.html.render(),
-					script=root.script.render(),
-					scripts='\n'.join(scripts),
+					header=rendered_root.header,
+					body=rendered_root.body,
+					script=rendered_root.script,
+					scripts=rendered_root.scripts,
 					),
 			)

@@ -28,6 +28,7 @@ The map of watercourses and those which have been walked along.
 
 # 3rd party
 import folium
+from folium_layercontrols.toggle import ToggleLayerControl
 from folium_zoom_state import ZoomStateJS
 from xyzservices.lib import TileProvider  # type: ignore[import-untyped]
 
@@ -89,7 +90,7 @@ def create_map(
 
 	m.keep_in_front(g, feature_group_walks, feature_group_current_walk)  # type: ignore[arg-type]
 
-	LayerControl().add_to(m)
+	ToggleLayerControl().add_to(m)
 	WalkStartEnd().add_to(m)
 
 	return m
@@ -116,13 +117,6 @@ class FeatureGroupWalks(folium.FeatureGroup):
 		self._id = "walks"
 
 
-class LayerControl(folium.LayerControl):
-
-	def __init__(self):
-		super().__init__()
-		self._id = "layer_control"
-
-
 def create_basic_map() -> Map:
 
 	m = Map(control_scale=True)
@@ -133,7 +127,7 @@ def create_basic_map() -> Map:
 	FeatureGroupCurrentWalk().add_to(m)
 
 	ZoomStateJS().add_to(m)
-	LayerControl().add_to(m)
+	ToggleLayerControl().add_to(m)
 	WalkStartEnd().add_to(m)
 
 	return m
