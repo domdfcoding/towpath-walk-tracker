@@ -126,7 +126,7 @@ def create_basic_map() -> Map:
 	FeatureGroupWalkMarkers().add_to(m)
 	FeatureGroupCurrentWalk().add_to(m)
 
-	ZoomStateJS().add_to(m)
+	# ZoomStateJS().add_to(m)
 	ToggleLayerControl().add_to(m)
 	WalkStartEnd().add_to(m)
 
