@@ -12,6 +12,7 @@ flask-restx>=0.5.0
 flask-sqlalchemy-lite>=0.1.0
 flask-wtf>=1.2.2
 folium>=0.20.0
+folium-about-button>=0.2.0
 folium-layercontrols @ git+https://github.com/domdfcoding/folium-layercontrols
 folium-zoom-state>=0.1.0
 geopandas>=1.0.0

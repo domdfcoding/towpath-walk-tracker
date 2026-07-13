@@ -1,0 +1,25 @@
+{% extends "layout.jinja2" %}
+
+{% block extrahead %}
+<style>
+	.markdown-body {
+	--bs-body-font-size: 1.2rem;
+	font-size: var(--bs-body-font-size);
+	}
+</style>
+{% endblock extrahead %}
+
+{% macro github_link(name) %}
+	<a href="https://github.com/{{ name }}" class="github-link"><i class="fab fa-github"></i></a>
+{% endmacro %}
+
+{% macro docs_link(href) %}
+	<a href="{{ href }}" class="docs-link"><i class="fas fa-book"></i></a>
+{% endmacro %}
+
+{% block content %}
+	<div class="container markdown-body pt-2">
+		{{ body|safe }}
+	</div>
+
+{% endblock content %}

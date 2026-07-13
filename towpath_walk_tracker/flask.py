@@ -34,7 +34,9 @@ from typing import Any, cast
 
 # 3rd party
 import flask
+import jinja2
 from domdf_folium_tools.elements import render_figure
+from domdf_python_tools.compat import importlib_resources
 from flask import Flask, Response, make_response, redirect, render_template, request, url_for
 from flask_caching import Cache
 from flask_compress import Compress
@@ -42,6 +44,7 @@ from flask_restx import Api, Resource, fields  # type: ignore[import-untyped]
 from flask_sqlalchemy_lite import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect  # type: ignore[import-untyped]
 from folium import Figure
+from folium_about_button import render_markdown
 from werkzeug.http import http_date  # nodep
 
 # this package
@@ -366,3 +369,54 @@ def show_walk(walk_id: int) -> Response:
 					scripts=rendered_root.scripts,
 					),
 			)
+
+
+def render_markdown_page(filename: str, template: str = "markdown.jinja2") -> Response:
+	"""
+	Render a markdown page to HTML.
+
+	:param filename:
+	:param template:
+	"""
+
+	# Expand "macros"
+	raw = importlib_resources.read_text("towpath_walk_tracker.pages", filename)
+	text = jinja2.Template(raw).render().splitlines()
+
+	while not text[0].strip():
+		text.pop(0)
+	if text[0].startswith("# "):
+		title = text[0][2:].strip()
+	else:
+		title = ''
+
+	body = render_markdown('\n'.join(text))
+
+	rendered = render_template(
+			template,
+			body=body,
+			title=title,
+			)
+
+	response = make_response(rendered)
+	response.add_etag()
+	response.make_conditional(request)
+	return response
+
+
+@app.route("/about/")
+def about() -> Response:
+	"""
+	Route for displaying the "about" page.
+	"""
+
+	return render_markdown_page("about.md")
+
+
+@app.route("/usage/")
+def usage() -> Response:
+	"""
+	Route for displaying the "usage" page.
+	"""
+
+	return render_markdown_page("usage.md")
