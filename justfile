@@ -29,6 +29,7 @@ myts:
 
 js:
 	- npx esbuild src/main.ts --bundle --outfile=towpath_walk_tracker/static/js/main.js --sourcemap
+	- just --justfile "{{justfile()}}" clean-js
 
 clean-js:
 	- pre-commit run trailing-whitespace --files towpath_walk_tracker/static/**/*.js

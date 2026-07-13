@@ -9989,9 +9989,9 @@
         L4.GeometryUtil = L4.extend(L4.GeometryUtil || {}, {
           /**
                   Shortcut function for planar distance between two {L.LatLng} at current zoom.
-          
+
                   @tutorial distance-length
-          
+
                   @param {L.Map} map Leaflet map to be used for this method
                   @param {L.LatLng} latlngA geographical point A
                   @param {L.LatLng} latlngB geographical point B
@@ -10080,9 +10080,9 @@
           },
           /**
                   Returns the closest point of a {L.LatLng} on the segment (A-B)
-          
+
                   @tutorial closest
-          
+
                   @param {L.Map} map Leaflet map to be used for this method
                   @param {L.LatLng} latlng - The position to search
                   @param {L.LatLng} latlngA geographical point A of the segment
@@ -10098,9 +10098,9 @@
           },
           /**
               Returns the closest point of a {L.LatLng} on a {L.Circle}
-          
+
               @tutorial closest
-          
+
               @param {L.LatLng} latlng - The position to search
               @param {L.Circle} circle - A Circle defined by a center and a radius
               @returns {L.LatLng} Closest geographical point on the circle circumference
@@ -10122,11 +10122,11 @@
           },
           /**
                   Returns the closest latlng on layer.
-          
+
                   Accept nested arrays
-          
+
                   @tutorial closest
-          
+
                   @param {L.Map} map Leaflet map to be used for this method
                   @param {Array<L.LatLng>|Array<Array<L.LatLng>>|L.PolyLine|L.Polygon} layer - Layer that contains the result
                   @param {L.LatLng} latlng - The position to search
@@ -10202,9 +10202,9 @@
           },
           /**
                   Returns the closest layer to latlng among a list of layers.
-          
+
                   @tutorial closest
-          
+
                   @param {L.Map} map Leaflet map to be used for this method
                   @param {Array<L.ILayer>} layers Set of layers
                   @param {L.LatLng} latlng - The position to search
@@ -10241,7 +10241,7 @@
           },
           /**
                   Returns the n closest layers to latlng among a list of input layers.
-          
+
                   @param {L.Map} map - Leaflet map to be used for this method
                   @param {Array<L.ILayer>} layers - Set of layers
                   @param {L.LatLng} latlng - The position to search
@@ -10317,9 +10317,9 @@
           /**
                   Returns the closest position from specified {LatLng} among specified layers,
                   with a maximum tolerance in pixels, providing snapping behaviour.
-          
+
                   @tutorial closest
-          
+
                   @param {L.Map} map Leaflet map to be used for this method
                   @param {Array<ILayer>} layers - A list of layers to snap on.
                   @param {L.LatLng} latlng - The position to snap
