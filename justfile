@@ -27,13 +27,8 @@ lint: unused-imports incomplete-defs bare-ignore fontawesome myts
 myts:
 	npx tsc --noEmit -p tsconfig_all.json
 
-webpack-dev:
-	- npm run dev
-	- just --justfile "{{justfile()}}" clean-js
-
-webpack:
-	- npm run prod
-	- just --justfile "{{justfile()}}" clean-js
+js:
+	- npx esbuild src/main.ts --bundle --outfile=towpath_walk_tracker/static/js/main.js --sourcemap
 
 clean-js:
 	- pre-commit run trailing-whitespace --files towpath_walk_tracker/static/**/*.js
@@ -44,10 +39,10 @@ clean-js:
 scss:
 	- pre-commit run compile-css --all-files
 
-run: scss webpack-dev
+run: scss js
 	python3 -m towpath_walk_tracker run
 
-build: scss webpack
+build: scss js
 	tox -e build
 
 licence-report:
