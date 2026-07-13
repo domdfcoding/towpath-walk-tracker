@@ -37,7 +37,7 @@ from folium.map import Layer
 from folium.template import Template
 from folium.utilities import remove_empty
 
-__all__ = ["Map", "Sidebar", "WalkStartEnd", "ZoomStateJS"]
+__all__ = ["Map", "Sidebar", "WalkStartEnd"]
 
 
 def _load_template(name: str) -> Template:
@@ -77,35 +77,6 @@ class WalkStartEnd(folium.MacroElement):
 	def __init__(self):
 		super().__init__()
 		self._name = "WalkStartEnd"
-
-
-class ZoomStateJS(folium.MacroElement):
-	"""
-	Update URL with current zoom/position.
-	"""
-
-	_template = Template(
-			"""
-		{% macro script(this, kwargs) %}
-			setupZoomState({{this._parent.get_name()}});
-		{% endmacro %}
-		""",
-			)
-
-	def __init__(self):
-		super().__init__()
-		self._name = "ZoomStateJS"
-
-	# def add_to(  # noqa: D102
-	# 	self,
-	# 	parent: folium.Element,
-	# 	name: Optional[str] = None,
-	# 	index: Optional[int] = None,
-	# 	) -> "ZoomStateJS":
-	# 	super().add_to(parent, name, index)
-	# 	assert isinstance(parent, folium.Map)
-	# 	parent.add_js_link("zoom-state", "/static/js/zoom_state.js")
-	# 	return self
 
 
 class WatercoursesGeoJson(folium.GeoJson):

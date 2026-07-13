@@ -19390,52 +19390,6 @@ L.Control.Sidebar = L.Control.extend({ includes: L.Evented.prototype || L.Mixin.
     } return L.DomUtil.hasClass(this._sidebar, "collapsed") || (this.fire("closing"), L.DomUtil.addClass(this._sidebar, "collapsed")), this; }, _onClick: function () { L.DomUtil.hasClass(this, "active") ? this._sidebar.close() : L.DomUtil.hasClass(this, "disabled") || this._sidebar.open(this.querySelector("a").hash.slice(1)); }, _onCloseClick: function () { this.close(); } }), L.control.sidebar = function (t, s) { return new L.Control.Sidebar(t, s); };
 
 
-/***/ }),
-
-/***/ "./src/zoom_state.ts":
-/*!***************************!*\
-  !*** ./src/zoom_state.ts ***!
-  \***************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   setupZoomState: () => (/* binding */ setupZoomState),
-/* harmony export */   zoomStateFromURL: () => (/* binding */ zoomStateFromURL)
-/* harmony export */ });
-/* harmony import */ var _core_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./core/util */ "./src/core/util.ts");
-
-function setupZoomState(map) {
-    map.on('zoomend', function () {
-        const zoomLvl = map.getZoom();
-        (0,_core_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('zoom', zoomLvl);
-    });
-    map.on('moveend', function () {
-        const centre = map.getCenter();
-        (0,_core_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('lat', centre.lat);
-        (0,_core_util__WEBPACK_IMPORTED_MODULE_0__.updateQueryStringParam)('lng', centre.lng);
-    });
-}
-function zoomStateFromURL(defaultZoom, defaultCentre) {
-    const url = new URL(window.location.href);
-    // let zoomLvl = map.getZoom();
-    let zoomLvl = defaultZoom;
-    if (url.searchParams.has('zoom')) {
-        zoomLvl = parseInt(url.searchParams.get('zoom'));
-    }
-    // const centre = map.getCenter();
-    const centre = defaultCentre;
-    if (url.searchParams.has('lat')) {
-        centre.lat = parseFloat(url.searchParams.get('lat'));
-    }
-    if (url.searchParams.has('lng')) {
-        centre.lng = parseFloat(url.searchParams.get('lng'));
-    }
-    return { centre, zoomLvl };
-}
-
-
 /***/ })
 
 /******/ 	});
@@ -19526,13 +19480,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var leaflet_awesome_markers__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(leaflet_awesome_markers__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _core_walk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./core/walk */ "./src/core/walk.ts");
 /* harmony import */ var _core_watercourses_geojson_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./core/watercourses_geojson_utils */ "./src/core/watercourses_geojson_utils.ts");
-/* harmony import */ var _zoom_state__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./zoom_state */ "./src/zoom_state.ts");
-/* harmony import */ var _core_map__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./core/map */ "./src/core/map.ts");
-/* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
-/* harmony import */ var _core_walk_form__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./core/walk_form */ "./src/core/walk_form.ts");
-/* harmony import */ var _core_navbar_title__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./core/navbar_title */ "./src/core/navbar_title.ts");
-/* harmony import */ var _core_walk_list_display__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./core/walk_list_display */ "./src/core/walk_list_display.ts");
-/* harmony import */ var _core_util__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./core/util */ "./src/core/util.ts");
+/* harmony import */ var _core_map__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./core/map */ "./src/core/map.ts");
+/* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
+/* harmony import */ var _core_walk_form__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./core/walk_form */ "./src/core/walk_form.ts");
+/* harmony import */ var _core_navbar_title__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./core/navbar_title */ "./src/core/navbar_title.ts");
+/* harmony import */ var _core_walk_list_display__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./core/walk_list_display */ "./src/core/walk_list_display.ts");
+/* harmony import */ var _core_util__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./core/util */ "./src/core/util.ts");
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 // === Sidebar ===
@@ -19558,34 +19511,29 @@ window.drawWalk = _core_walk__WEBPACK_IMPORTED_MODULE_5__.drawWalk;
 window.drawPreviousWalks = _core_walk__WEBPACK_IMPORTED_MODULE_5__.drawPreviousWalks;
 // === Map ===
 
-
 // @ts-expect-error  // Exporting to "window" global namespace
-window.setupZoomState = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.setupZoomState;
-// @ts-expect-error  // Exporting to "window" global namespace
-window.zoomStateFromURL = _zoom_state__WEBPACK_IMPORTED_MODULE_7__.zoomStateFromURL;
-// @ts-expect-error  // Exporting to "window" global namespace
-window.setupResizeObserver = _core_map__WEBPACK_IMPORTED_MODULE_8__.setupResizeObserver;
+window.setupResizeObserver = _core_map__WEBPACK_IMPORTED_MODULE_7__.setupResizeObserver;
 // === Walk Form ===
 
 
 // @ts-expect-error  // Exporting to "window" global namespace
-window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.WalkForm;
+window.WalkForm = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.WalkForm;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.walkPointsChangedEvent;
+window.walkPointsChangedEvent = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.walkPointsChangedEvent;
 // @ts-expect-error  // Exporting to "window" global namespace
-window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_10__.setupWalkFormValidation;
+window.setupWalkFormValidation = _core_walk_form__WEBPACK_IMPORTED_MODULE_9__.setupWalkFormValidation;
 // === Navbar Title Scroll ===
 
 // @ts-expect-error  // Exporting to "window" global namespace
-window.setupNavbarTitleScroll = _core_navbar_title__WEBPACK_IMPORTED_MODULE_11__.setupNavbarTitleScroll;
+window.setupNavbarTitleScroll = _core_navbar_title__WEBPACK_IMPORTED_MODULE_10__.setupNavbarTitleScroll;
 // === WalkListDisplay ===
 
 // @ts-expect-error  // Exporting to "window" global namespace
-window.WalkListDisplay = _core_walk_list_display__WEBPACK_IMPORTED_MODULE_12__.WalkListDisplay;
+window.WalkListDisplay = _core_walk_list_display__WEBPACK_IMPORTED_MODULE_11__.WalkListDisplay;
 // === Util ===
 
 // @ts-expect-error  // Exporting to "window" global namespace
-window.updateQueryStringParam = _core_util__WEBPACK_IMPORTED_MODULE_13__.updateQueryStringParam;
+window.updateQueryStringParam = _core_util__WEBPACK_IMPORTED_MODULE_12__.updateQueryStringParam;
 
 })();
 

@@ -24,11 +24,6 @@ bare-ignore:
 lint: unused-imports incomplete-defs bare-ignore fontawesome myts
 	tox -n qa
 
-tsc:
-	- npx tsc
-	- pre-commit run eslint --files towpath_walk_tracker/static/**/*.js
-	- just --justfile "{{justfile()}}" clean-js
-
 myts:
 	npx tsc --noEmit -p tsconfig_all.json
 
@@ -49,10 +44,10 @@ clean-js:
 scss:
 	- pre-commit run compile-css --all-files
 
-run: scss tsc webpack-dev
+run: scss webpack-dev
 	python3 -m towpath_walk_tracker run
 
-build: scss tsc webpack
+build: scss webpack
 	tox -e build
 
 licence-report:

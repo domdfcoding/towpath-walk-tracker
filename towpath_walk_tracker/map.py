@@ -28,6 +28,7 @@ The map of watercourses and those which have been walked along.
 
 # 3rd party
 import folium
+from folium_zoom_state import ZoomStateJS
 from xyzservices.lib import TileProvider  # type: ignore[import-untyped]
 
 # this package
@@ -37,7 +38,6 @@ from towpath_walk_tracker.folium import (
 		Sidebar,
 		WalkStartEnd,
 		WatercoursesGeoJson,
-		ZoomStateJS
 		)
 
 __all__ = ["create_map"]
@@ -132,6 +132,7 @@ def create_basic_map() -> Map:
 	FeatureGroupWalkMarkers().add_to(m)
 	FeatureGroupCurrentWalk().add_to(m)
 
+	ZoomStateJS().add_to(m)
 	LayerControl().add_to(m)
 	WalkStartEnd().add_to(m)
 

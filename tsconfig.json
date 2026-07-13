@@ -16,7 +16,6 @@
     "noFallthroughCasesInSwitch": true,
     "allowUnreachableCode": false
   },
-  "include": ["./src/zoom_state.ts"],
   "exclude": ["./src/core/*"],
   "noEmit": true,
   "noEmitOnError": false

@@ -30,14 +30,7 @@ window.drawWalk = drawWalk;
 window.drawPreviousWalks = drawPreviousWalks;
 
 // === Map ===
-import { setupZoomState, zoomStateFromURL } from './zoom_state';
 import { setupResizeObserver } from './core/map';
-
-// @ts-expect-error  // Exporting to "window" global namespace
-window.setupZoomState = setupZoomState;
-
-// @ts-expect-error  // Exporting to "window" global namespace
-window.zoomStateFromURL = zoomStateFromURL;
 
 // @ts-expect-error  // Exporting to "window" global namespace
 window.setupResizeObserver = setupResizeObserver;
