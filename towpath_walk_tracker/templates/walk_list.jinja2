@@ -21,10 +21,11 @@
                                 </h3>
                             </div>
                             <div class="row mt-1">
+                                <div class="col-sm-12 col-xl-2 mb-0">{{ walk.approx_distance }}</div>
                                 <div class="col-sm-12 col-xl-6 mb-0">
                                     <strong>Start</strong> {{ walk.start }}
                                 </div>
-                                <div class="col-sm-12 col-xl-6 mb-0">
+                                <div class="col-sm-12 col-xl-4 mb-0">
                                     <strong>Duration</strong> {{ walk.duration // 60 }}h {{ format(walk.duration % 60, '02d') }}mins
                                 </div>
                             </div>

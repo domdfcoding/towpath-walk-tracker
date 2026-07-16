@@ -28,7 +28,7 @@ Database models.
 
 # stdlib
 import datetime
-from typing import Any, cast
+from typing import Any, TypedDict, cast
 
 # 3rd party
 from flask_sqlalchemy_lite import SQLAlchemy
@@ -286,6 +286,12 @@ class Point(Model):
 				}
 
 
+class NodeDict(TypedDict):
+	latitude: float
+	longitude: float
+	id: int
+
+
 class Node(Model):
 	"""
 	Model for an OpenStreetMap node.
@@ -300,13 +306,13 @@ class Node(Model):
 	def __repr__(self) -> str:
 		return f"<Node({self.id}, {self.latitude}, {self.longitude})>"
 
-	def to_json(self) -> dict[str, Any]:
+	def to_json(self) -> NodeDict:
 		"""
 		Return a JSON representation of the node.
 		"""
 
 		return {
-				"latitude": self.latitude,
-				"longitude": self.longitude,
-				"id": self.id,
+				"latitude": float(self.latitude),
+				"longitude": float(self.longitude),
+				"id": int(self.id),
 				}

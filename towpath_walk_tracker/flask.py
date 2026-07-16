@@ -49,6 +49,7 @@ from folium_about_button import render_markdown
 from werkzeug.http import http_date  # nodep
 
 # this package
+from towpath_walk_tracker.distance import calculate_walk_distance, format_distance
 from towpath_walk_tracker.folium import RVC
 from towpath_walk_tracker.forms import WalkForm
 from towpath_walk_tracker.map import create_basic_map, create_map
@@ -121,6 +122,9 @@ def _get_all_walks() -> list[dict[str, Any]]:
 			walk_data["walk_url"] = url_for("show_walk", walk_id=walk_data["id"])
 			formatted_duration = f"{ walk_data['duration'] // 60 }h { format(walk_data['duration'] % 60, '02d') }mins"
 			walk_data["formatted_duration"] = formatted_duration
+			walk_data["approx_distance"] = format_distance(
+					calculate_walk_distance([node.to_json() for node in walk.route]),
+					)
 			data.append(walk_data)
 
 	return data
@@ -370,6 +374,7 @@ def show_walk(walk_id: int) -> Response:
 					body=rendered_root.body,
 					script=rendered_root.script,
 					scripts=rendered_root.scripts,
+					walk_distance=format_distance(calculate_walk_distance(walk_route)),
 					),
 			)
 

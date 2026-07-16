@@ -48,9 +48,16 @@
                             <strong>Start</strong> {{ form.start.default }}
                         </p>
                     </div>
-                    <p>
-                        <strong>Duration</strong> {{ form.duration_hrs.default }}h {{ format(form.duration_mins.default, '02d') }}mins
-                    </p>
+                    <div class="me-4">
+                        <p>
+                            <strong>Duration</strong> {{ form.duration_hrs.default }}h {{ format(form.duration_mins.default, '02d') }}mins
+                        </p>
+                    </div>
+                    <div class="me-4">
+                        <p>
+                            <strong><abbr title="Approximate Distance">Distance</abbr></strong> {{ walk_distance }}
+                        </p>
+                    </div>
                 </div>
                 <div class="border mt-0 mb-2">
                     <h5 class="mt-1">Notes</h5>
