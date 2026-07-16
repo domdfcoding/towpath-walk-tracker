@@ -6,6 +6,9 @@
         <meta name="viewport"
               content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
         <meta name="theme-color" content="#5f788a" />
+        <link rel="icon"
+              type="image/svg+xml"
+              href="data:image/svg+xml;base64,{% filter base64_encode %}{% include "route-solid.svg" %}{% endfilter %}">
         {% if description %}<meta name="description" content="{{ description }}">{% endif %}
 
         {% block extrahead %}

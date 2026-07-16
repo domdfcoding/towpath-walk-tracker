@@ -27,6 +27,7 @@ Flask routes and helper functions.
 #
 
 # stdlib
+import base64
 import datetime
 import json
 from io import BytesIO
@@ -422,3 +423,16 @@ def usage() -> Response:
 	"""
 
 	return render_markdown_page("usage.md")
+
+
+def base64_encode(value: str) -> str:
+	"""
+	Encode the given string as base64.
+
+	:param value:
+	"""
+
+	return base64.b64encode(value.encode("utf-8")).decode("utf-8")
+
+
+app.jinja_env.filters["base64_encode"] = base64_encode
