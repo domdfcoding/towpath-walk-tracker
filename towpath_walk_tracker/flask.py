@@ -57,7 +57,7 @@ from towpath_walk_tracker.models import Walk
 from towpath_walk_tracker.route import Route
 from towpath_walk_tracker.util import Coordinate, _get_filtered_watercourses
 
-__all__ = ["add_walk", "leaflet_map", "watercourses_geojson"]
+__all__ = ["base64_encode", "render_markdown_page"]
 
 app = Flask(__name__)
 

@@ -35,7 +35,7 @@ from xyzservices.lib import TileProvider  # type: ignore[import-untyped]
 # this package
 from towpath_walk_tracker.folium import GeoJsonTooltip, Map, Sidebar, WalkStartEnd, WatercoursesGeoJson
 
-__all__ = ["create_map"]
+__all__ = ["create_basic_map", "create_map"]
 
 tooltip_style: str = """
 background-color: #F0EFEF;
