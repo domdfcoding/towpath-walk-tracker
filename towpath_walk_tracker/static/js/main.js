@@ -10952,7 +10952,7 @@
     const imageTag = clone.getElementById("walkTemplateImg");
     imageTag.removeAttribute("id");
     imageTag.setAttribute("src", walk.thumbnail_url);
-    document.getElementById("walksContent")?.appendChild(clone);
+    document.getElementById("walks-content")?.appendChild(clone);
   }
 
   // src/core/watercourses_geojson_utils.ts

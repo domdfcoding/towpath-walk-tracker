@@ -306,5 +306,5 @@ function renderSidebarWalkTemplate (walk: WalkDictionary) {
 	imageTag.removeAttribute('id');
 	imageTag.setAttribute('src', walk.thumbnail_url);
 
-	document.getElementById('walksContent')?.appendChild(clone);
+	document.getElementById('walks-content')?.appendChild(clone);
 }
