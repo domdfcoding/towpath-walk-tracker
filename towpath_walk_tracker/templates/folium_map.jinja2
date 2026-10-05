@@ -26,8 +26,7 @@ MIT Licenced
 {% endmacro %}
 
 {% macro html(this, kwargs) %}
-    <div class="folium-map sidebar-map" id={{ this.get_name() |tojson }}>
-    </div>
+    <div class="folium-map sidebar-map" id="{{ this.get_name() |tojson }}"></div>
 {% endmacro %}
 
 {# djlint:off #}
