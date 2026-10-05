@@ -20,7 +20,7 @@
         {# <link rel="stylesheet"
        type="text/css"
        href="{{ url_for('static', filename='css/main.min.css') }}"> #}
-        {% for stylesheet in extra_stylesheets %}<link rel="stylesheet" type="text/css" href="{{ stylesheet }}">{% endfor %}
+        {% for stylesheet in extra_stylesheets %}<link rel="stylesheet" href="{{ stylesheet }}">{% endfor %}
         {# <link rel="preload"
               type="font/woff2"
               as="font"
